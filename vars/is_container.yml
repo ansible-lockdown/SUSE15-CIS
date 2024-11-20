@@ -1,0 +1,89 @@
+---
+
+# File to skip controls if container
+# Based on standard image no changes
+# it expected all pkgs required for the container are alreday installed
+
+## controls
+
+# Firewall
+suse15cis_firewall: None
+
+# SElinux
+suse15cis_selinux_disable: true
+
+## Related individual rules
+# Aide
+suse15cis_rule_1_4_1: false
+suse15cis_rule_1_4_2: false
+
+# auditd
+suse15cis_rule_4_1_1_1: false
+suse15cis_rule_4_1_2_1: false
+suse15cis_rule_4_1_2_2: false
+suse15cis_rule_4_1_2_3: false
+
+# time sync
+suse15cis_rule_2_2_1_1: false
+suse15cis_rule_2_2_1_2: false
+
+# cron
+suse15cis_rule_5_1_1: false
+suse15cis_rule_5_1_2: false
+suse15cis_rule_5_1_3: false
+suse15cis_rule_5_1_4: false
+suse15cis_rule_5_1_5: false
+suse15cis_rule_5_1_6: false
+suse15cis_rule_5_1_7: false
+suse15cis_rule_5_1_8: false
+
+# crypto
+suse15cis_rule_1_10: false
+
+# grub
+suse15cis_rule_1_5_1: false
+suse15cis_rule_1_5_2: false
+suse15cis_rule_1_5_3: false
+
+## mounts
+# /tmp
+suse15cis_rule_1_1_2: false
+suse15cis_rule_1_1_3: false
+suse15cis_rule_1_1_4: false
+suse15cis_rule_1_1_5: false
+# /var
+suse15cis_rule_1_1_6: false
+# /var/tmp
+suse15cis_rule_1_1_7: false
+suse15cis_rule_1_1_8: false
+suse15cis_rule_1_1_9: false
+suse15cis_rule_1_1_10: false
+# /var/log
+suse15cis_rule_1_1_11: false
+# /var/log/audit
+suse15cis_rule_1_1_12: false
+# /home
+suse15cis_rule_1_1_13: false
+suse15cis_rule_1_1_14: false
+# /dev/shm
+suse15cis_rule_1_1_15: false
+suse15cis_rule_1_1_16: false
+suse15cis_rule_1_1_17: false
+# usb-storage
+suse15cis_rule_1_1_23: false
+
+# logging
+suse15cis_rule_4_2_1_1: false
+suse15cis_rule_4_2_1_2: false
+suse15cis_rule_4_2_1_3: false
+suse15cis_rule_4_2_1_4: false
+suse15cis_rule_4_2_1_5: false
+suse15cis_rule_4_2_1_6: false
+suse15cis_rule_4_2_2_1: false
+suse15cis_rule_4_2_2_2: false
+suse15cis_rule_4_2_2_3: false
+
+# systemd
+
+# Users/passwords/accounts
+suse15cis_rule_5_5_2: false

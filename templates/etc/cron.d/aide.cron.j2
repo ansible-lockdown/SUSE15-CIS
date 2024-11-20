@@ -1,0 +1,8 @@
+# Run AIDE integrity check
+## Ansible controlled file
+# Added as part of ansible-lockdown CIS baseline
+# provided by MindPointGroup LLC
+### YOUR CHANGES WILL BE LOST!
+# CIS 1.3.2
+
+{{ suse15cis_aide_cron['aide_minute'] }} {{ suse15cis_aide_cron['aide_hour'] }} {{ suse15cis_aide_cron['aide_month'] }} {{ suse15cis_aide_cron['aide_weekday'] }} {{ suse15cis_aide_cron['aide_job'] }}

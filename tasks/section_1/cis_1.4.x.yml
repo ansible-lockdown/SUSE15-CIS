@@ -1,0 +1,37 @@
+---
+
+- name: "1.4.1 | PATCH | Ensure bootloader password is set"
+  when:
+    - suse15cis_set_boot_pass
+    - suse15cis_rule_1_4_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - grub
+    - patch
+    - rule_1.4.1
+  ansible.builtin.template:
+    src: etc/grub.d/00_user.j2
+    dest: "{{ suse15cis_grub_user_file }}"
+    owner: root
+    group: root
+    mode: '0755'
+  notify: Grub update
+
+- name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
+  when:
+    - suse15cis_rule_1_4_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - grub
+    - patch
+    - rule_1.4.2
+  ansible.builtin.file:
+    path: /boot/grub2/grub.cfg
+    owner: root
+    group: root'
+    mode: 'og-rwx'
+    state: touch
+    modification_time: preserve
+    access_time: preserve

@@ -1,0 +1,526 @@
+
+## This file is managed by Ansible, YOUR CHANGED WILL BE LOST!
+## metadata for benchmark
+
+## metadata for Audit benchmark
+benchmark_version: '1.0.0'
+
+# Set if genuine RHEL (subscription manager check) not for derivatives e.g. CentOS
+# If run via script this is discovered and set
+host_os_distribution: {{ ansible_facts.distribution | lower }}
+
+#  timeout for each command to run where set - default = 10seconds/10000ms
+timeout_ms: {{ audit_cmd_timeout }}
+
+# Taken from LE rhel9-cis
+suse15cis_section1: {{ suse15cis_section1 }}
+suse15cis_section2: {{ suse15cis_section2 }}
+suse15cis_section3: {{ suse15cis_section3 }}
+suse15cis_section4: {{ suse15cis_section4 }}
+suse15cis_section5: {{ suse15cis_section5 }}
+suse15cis_section6: {{ suse15cis_section6 }}
+
+suse15cis_level_1: {{ suse15cis_level_1 }}
+suse15cis_level_2: {{ suse15cis_level_2 }}
+
+suse15cis_selinux_disable: {{ suse15cis_selinux_disable }}
+
+#  to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
+run_heavy_tests: true
+
+#  True is BIOS based system else set to false
+{% if suse15cis_legacy_boot is defined %}
+suse15cis_legacy_boot: {{ suse15cis_legacy_boot }}
+{% endif %}
+
+suse15cis_set_boot_pass: {{ suse15cis_set_boot_pass }}
+
+# These variables correspond with the CIS rule IDs or paragraph numbers defined in
+# the CIS benchmark documents.
+# PLEASE NOTE: These work in coordination with the section # group variables and tags.
+# You must enable an entire section in order for the variables below to take effect.
+# Section 1 rules
+# 1.1 Filesystems
+# 1.1.1 Configure Filesystem Kernel Modules
+suse15cis_rule_1_1_1_1: "{{ suse15cis_rule_1_1_1_1 }}"
+suse15cis_rule_1_1_1_2: "{{ suse15cis_rule_1_1_1_2 }}"
+suse15cis_rule_1_1_1_3: "{{ suse15cis_rule_1_1_1_3 }}"
+suse15cis_rule_1_1_1_4: "{{ suse15cis_rule_1_1_1_4 }}"
+suse15cis_rule_1_1_1_5: "{{ suse15cis_rule_1_1_1_5 }}"
+suse15cis_rule_1_1_1_6: "{{ suse15cis_rule_1_1_1_6 }}"
+suse15cis_rule_1_1_1_7: "{{ suse15cis_rule_1_1_1_7 }}"
+suse15cis_rule_1_1_1_8: "{{ suse15cis_rule_1_1_1_8 }}"
+suse15cis_rule_1_1_1_9: "{{ suse15cis_rule_1_1_1_9 }}"
+suse15cis_rule_1_1_1_10: "{{ suse15cis_rule_1_1_1_10 }}"
+
+# 1.1.2 Configure Filesystem Partitions
+# /tmp
+suse15cis_rule_1_1_2_1_1: "{{ suse15cis_rule_1_1_2_1_1 }}"
+suse15cis_rule_1_1_2_1_2: "{{ suse15cis_rule_1_1_2_1_2 }}"
+suse15cis_rule_1_1_2_1_3: "{{ suse15cis_rule_1_1_2_1_3 }}"
+suse15cis_rule_1_1_2_1_4: "{{ suse15cis_rule_1_1_2_1_4 }}"
+
+# /dev/shm
+suse15cis_rule_1_1_2_2_1: "{{ suse15cis_rule_1_1_2_2_1 }}"
+suse15cis_rule_1_1_2_2_2: "{{ suse15cis_rule_1_1_2_2_2 }}"
+suse15cis_rule_1_1_2_2_3: "{{ suse15cis_rule_1_1_2_2_3 }}"
+suse15cis_rule_1_1_2_2_4: "{{ suse15cis_rule_1_1_2_2_4 }}"
+
+# /home
+suse15cis_rule_1_1_2_3_1: "{{ suse15cis_rule_1_1_2_3_1 }}"
+suse15cis_rule_1_1_2_3_2: "{{ suse15cis_rule_1_1_2_3_2 }}"
+suse15cis_rule_1_1_2_3_3: "{{ suse15cis_rule_1_1_2_3_3 }}"
+
+# /var
+suse15cis_rule_1_1_2_4_1: "{{ suse15cis_rule_1_1_2_4_1 }}"
+suse15cis_rule_1_1_2_4_2: "{{ suse15cis_rule_1_1_2_4_2 }}"
+suse15cis_rule_1_1_2_4_3: "{{ suse15cis_rule_1_1_2_4_3 }}"
+
+# /var/tmp
+suse15cis_rule_1_1_2_5_1: "{{ suse15cis_rule_1_1_2_5_1 }}"
+suse15cis_rule_1_1_2_5_2: "{{ suse15cis_rule_1_1_2_5_2 }}"
+suse15cis_rule_1_1_2_5_3: "{{ suse15cis_rule_1_1_2_5_3 }}"
+suse15cis_rule_1_1_2_5_4: "{{ suse15cis_rule_1_1_2_5_4 }}"
+
+# /var/log
+suse15cis_rule_1_1_2_6_1: "{{ suse15cis_rule_1_1_2_6_1 }}"
+suse15cis_rule_1_1_2_6_2: "{{ suse15cis_rule_1_1_2_6_2 }}"
+suse15cis_rule_1_1_2_6_3: "{{ suse15cis_rule_1_1_2_6_3 }}"
+suse15cis_rule_1_1_2_6_4: "{{ suse15cis_rule_1_1_2_6_4 }}"
+
+# /var/log/audit
+suse15cis_rule_1_1_2_7_1: "{{ suse15cis_rule_1_1_2_7_1 }}"
+suse15cis_rule_1_1_2_7_2: "{{ suse15cis_rule_1_1_2_7_2 }}"
+suse15cis_rule_1_1_2_7_3: "{{ suse15cis_rule_1_1_2_7_3 }}"
+suse15cis_rule_1_1_2_7_4: "{{ suse15cis_rule_1_1_2_7_4 }}"
+
+# 1.2 Package mgmt
+# 1.2.1 Configure Package repositories
+suse15cis_rule_1_2_1_1: "{{ suse15cis_rule_1_2_1_1 }}"
+suse15cis_rule_1_2_1_2: "{{ suse15cis_rule_1_2_1_2 }}"
+# 1.2.2 Configure Package updates
+suse15cis_rule_1_2_2_1: "{{ suse15cis_rule_1_2_2_1 }}"
+
+# 1.3 Mandatory Access Control
+## 1.3.1 Configure AppArmor
+suse15cis_rule_1_3_1_1: "{{ suse15cis_rule_1_3_1_1 }}"
+suse15cis_rule_1_3_1_2: "{{ suse15cis_rule_1_3_1_2 }}"
+suse15cis_rule_1_3_1_3: "{{ suse15cis_rule_1_3_1_3 }}"
+suse15cis_rule_1_3_1_4: "{{ suse15cis_rule_1_3_1_4 }}"
+
+# 1.4 Configure Bootloader
+suse15cis_rule_1_4_1: "{{ suse15cis_rule_1_4_1 }}"
+suse15cis_rule_1_4_2: "{{ suse15cis_rule_1_4_2 }}"
+
+# 1.5 Configure additional Process Hardening
+suse15cis_rule_1_5_1: "{{ suse15cis_rule_1_5_1 }}"
+suse15cis_rule_1_5_2: "{{ suse15cis_rule_1_5_2 }}"
+suse15cis_rule_1_5_3: "{{ suse15cis_rule_1_5_3 }}"
+suse15cis_rule_1_5_4: "{{ suse15cis_rule_1_5_4 }}"
+suse15cis_rule_1_5_5: "{{ suse15cis_rule_1_5_5 }}"
+
+# 1.6 Configure System Wide cryptopolicy
+suse15cis_rule_1_6_1: "{{ suse15cis_rule_1_6_1 }}"
+suse15cis_rule_1_6_2: "{{ suse15cis_rule_1_6_2 }}"
+suse15cis_rule_1_6_3: "{{ suse15cis_rule_1_6_3 }}"
+suse15cis_rule_1_6_4: "{{ suse15cis_rule_1_6_4 }}"
+suse15cis_rule_1_6_5: "{{ suse15cis_rule_1_6_5 }}"
+suse15cis_rule_1_6_6: "{{ suse15cis_rule_1_6_6 }}"
+suse15cis_rule_1_6_7: "{{ suse15cis_rule_1_6_7 }}"
+
+# 1.7 Configure Command Line Warning Banners
+suse15cis_rule_1_7_1: "{{ suse15cis_rule_1_7_1 }}"
+suse15cis_rule_1_7_2: "{{ suse15cis_rule_1_7_2 }}"
+suse15cis_rule_1_7_3: "{{ suse15cis_rule_1_7_3 }}"
+suse15cis_rule_1_7_4: "{{ suse15cis_rule_1_7_4 }}"
+suse15cis_rule_1_7_5: "{{ suse15cis_rule_1_7_5 }}"
+suse15cis_rule_1_7_6: "{{ suse15cis_rule_1_7_6 }}"
+
+# 1.7 Configure GNOME Display Manager
+suse15cis_rule_1_8_1: "{{ suse15cis_rule_1_8_1 }}"
+suse15cis_rule_1_8_2: "{{ suse15cis_rule_1_8_2 }}"
+suse15cis_rule_1_8_3: "{{ suse15cis_rule_1_8_3 }}"
+suse15cis_rule_1_8_4: "{{ suse15cis_rule_1_8_4 }}"
+suse15cis_rule_1_8_5: "{{ suse15cis_rule_1_8_5 }}"
+suse15cis_rule_1_8_6: "{{ suse15cis_rule_1_8_6 }}"
+suse15cis_rule_1_8_7: "{{ suse15cis_rule_1_8_7 }}"
+suse15cis_rule_1_8_8: "{{ suse15cis_rule_1_8_8 }}"
+suse15cis_rule_1_8_9: "{{ suse15cis_rule_1_8_9 }}"
+suse15cis_rule_1_8_10: "{{ suse15cis_rule_1_8_10 }}"
+
+# section 2
+# Services
+# 2.1 Time Synchronization
+suse15cis_rule_2_1_1: {{ suse15cis_rule_2_1_1 }}
+suse15cis_rule_2_1_2: {{ suse15cis_rule_2_1_2 }}
+# 2.2 Special Purpose Services
+suse15cis_rule_2_2_1: {{ suse15cis_rule_2_2_1 }}
+suse15cis_rule_2_2_2: {{ suse15cis_rule_2_2_2 }}
+suse15cis_rule_2_2_3: {{ suse15cis_rule_2_2_3 }}
+suse15cis_rule_2_2_4: {{ suse15cis_rule_2_2_4 }}
+suse15cis_rule_2_2_5: {{ suse15cis_rule_2_2_5 }}
+suse15cis_rule_2_2_6: {{ suse15cis_rule_2_2_6 }}
+suse15cis_rule_2_2_7: {{ suse15cis_rule_2_2_7 }}
+suse15cis_rule_2_2_8: {{ suse15cis_rule_2_2_8 }}
+suse15cis_rule_2_2_9: {{ suse15cis_rule_2_2_9 }}
+suse15cis_rule_2_2_10: {{ suse15cis_rule_2_2_10 }}
+suse15cis_rule_2_2_11: {{ suse15cis_rule_2_2_11 }}
+suse15cis_rule_2_2_12: {{ suse15cis_rule_2_2_12 }}
+suse15cis_rule_2_2_13: {{ suse15cis_rule_2_2_13 }}
+suse15cis_rule_2_2_14: {{ suse15cis_rule_2_2_14 }}
+suse15cis_rule_2_2_15: {{ suse15cis_rule_2_2_15 }}
+suse15cis_rule_2_2_16: {{ suse15cis_rule_2_2_16 }}
+suse15cis_rule_2_2_17: {{ suse15cis_rule_2_2_17 }}
+suse15cis_rule_2_2_18: {{ suse15cis_rule_2_2_18 }}
+# 2.3 service clients
+suse15cis_rule_2_3_1: {{ suse15cis_rule_2_3_1 }}
+suse15cis_rule_2_3_2: {{ suse15cis_rule_2_3_2 }}
+suse15cis_rule_2_3_3: {{ suse15cis_rule_2_3_3 }}
+suse15cis_rule_2_3_4: {{ suse15cis_rule_2_3_4 }}
+
+suse15cis_rule_2_4: true
+
+# Section 3 rules
+# 3.1 Disable unused network protocols and devices
+suse15cis_rule_3_1_1: {{ suse15cis_rule_3_1_1 }}
+suse15cis_rule_3_1_2: {{ suse15cis_rule_3_1_2 }}
+suse15cis_rule_3_1_3: {{ suse15cis_rule_3_1_3 }}
+# 3.2 Network Parameters (Host Only)
+suse15cis_rule_3_2_1: {{ suse15cis_rule_3_2_1 }}
+suse15cis_rule_3_2_2: {{ suse15cis_rule_3_2_2 }}
+# 3.3 Network Parameters (Host and Router)
+suse15cis_rule_3_3_1: {{ suse15cis_rule_3_3_1 }}
+suse15cis_rule_3_3_2: {{ suse15cis_rule_3_3_2 }}
+suse15cis_rule_3_3_3: {{ suse15cis_rule_3_3_3 }}
+suse15cis_rule_3_3_4: {{ suse15cis_rule_3_3_4 }}
+suse15cis_rule_3_3_5: {{ suse15cis_rule_3_3_5 }}
+suse15cis_rule_3_3_6: {{ suse15cis_rule_3_3_6 }}
+suse15cis_rule_3_3_7: {{ suse15cis_rule_3_3_7 }}
+suse15cis_rule_3_3_8: {{ suse15cis_rule_3_3_8 }}
+suse15cis_rule_3_3_9: {{ suse15cis_rule_3_3_9 }}
+# 3.4.1 Configure firewalld
+suse15cis_rule_3_4_1_1: {{ suse15cis_rule_3_4_1_1 }}
+suse15cis_rule_3_4_1_2: {{ suse15cis_rule_3_4_1_2 }}
+
+# 3.4.1 Configure nftables
+suse15cis_rule_3_4_2_1: {{ suse15cis_rule_3_4_2_1 }}
+suse15cis_rule_3_4_2_2: {{ suse15cis_rule_3_4_2_2 }}
+suse15cis_rule_3_4_2_3: {{ suse15cis_rule_3_4_2_3 }}
+suse15cis_rule_3_4_2_4: {{ suse15cis_rule_3_4_2_4 }}
+suse15cis_rule_3_4_2_5: {{ suse15cis_rule_3_4_2_5 }}
+suse15cis_rule_3_4_2_6: {{ suse15cis_rule_3_4_2_6 }}
+suse15cis_rule_3_4_2_7: {{ suse15cis_rule_3_4_2_7 }}
+
+#  Section 4 rules
+# 4.1 Configure System Accounting
+suse15cis_rule_4_1_1_1: {{ suse15cis_rule_4_1_1_1 }}
+suse15cis_rule_4_1_1_2: {{ suse15cis_rule_4_1_1_2 }}
+suse15cis_rule_4_1_1_3: {{ suse15cis_rule_4_1_1_3 }}
+suse15cis_rule_4_1_1_4: {{ suse15cis_rule_4_1_1_4 }}
+
+# 4.1.2 Configure Data retention
+suse15cis_rule_4_1_2_1: {{ suse15cis_rule_4_1_2_1 }}
+suse15cis_rule_4_1_2_2: {{ suse15cis_rule_4_1_2_2 }}
+suse15cis_rule_4_1_2_3: {{ suse15cis_rule_4_1_2_3 }}
+
+# 4.1.3 Configure auditd rules
+suse15cis_rule_4_1_3_1: {{ suse15cis_rule_4_1_3_1 }}
+suse15cis_rule_4_1_3_2: {{ suse15cis_rule_4_1_3_2 }}
+suse15cis_rule_4_1_3_3: {{ suse15cis_rule_4_1_3_3 }}
+suse15cis_rule_4_1_3_4: {{ suse15cis_rule_4_1_3_4 }}
+suse15cis_rule_4_1_3_5: {{ suse15cis_rule_4_1_3_5 }}
+suse15cis_rule_4_1_3_6: {{ suse15cis_rule_4_1_3_6 }}
+suse15cis_rule_4_1_3_7: {{ suse15cis_rule_4_1_3_7 }}
+suse15cis_rule_4_1_3_8: {{ suse15cis_rule_4_1_3_8 }}
+suse15cis_rule_4_1_3_9: {{ suse15cis_rule_4_1_3_9 }}
+suse15cis_rule_4_1_3_10: {{ suse15cis_rule_4_1_3_10 }}
+suse15cis_rule_4_1_3_11: {{ suse15cis_rule_4_1_3_11 }}
+suse15cis_rule_4_1_3_12: {{ suse15cis_rule_4_1_3_12 }}
+suse15cis_rule_4_1_3_13: {{ suse15cis_rule_4_1_3_13 }}
+suse15cis_rule_4_1_3_14: {{ suse15cis_rule_4_1_3_14 }}
+suse15cis_rule_4_1_3_15: {{ suse15cis_rule_4_1_3_15 }}
+suse15cis_rule_4_1_3_16: {{ suse15cis_rule_4_1_3_16 }}
+suse15cis_rule_4_1_3_17: {{ suse15cis_rule_4_1_3_17 }}
+suse15cis_rule_4_1_3_18: {{ suse15cis_rule_4_1_3_18 }}
+suse15cis_rule_4_1_3_19: {{ suse15cis_rule_4_1_3_19 }}
+suse15cis_rule_4_1_3_20: {{ suse15cis_rule_4_1_3_20 }}
+suse15cis_rule_4_1_3_21: {{ suse15cis_rule_4_1_3_21 }}
+
+# 4.1.4 Configure auditd file Access
+suse15cis_rule_4_1_4_1: {{ suse15cis_rule_4_1_4_1 }}
+suse15cis_rule_4_1_4_2: {{ suse15cis_rule_4_1_4_2 }}
+suse15cis_rule_4_1_4_3: {{ suse15cis_rule_4_1_4_3 }}
+suse15cis_rule_4_1_4_4: {{ suse15cis_rule_4_1_4_4 }}
+suse15cis_rule_4_1_4_5: {{ suse15cis_rule_4_1_4_5 }}
+suse15cis_rule_4_1_4_6: {{ suse15cis_rule_4_1_4_6 }}
+suse15cis_rule_4_1_4_7: {{ suse15cis_rule_4_1_4_7 }}
+suse15cis_rule_4_1_4_8: {{ suse15cis_rule_4_1_4_8 }}
+suse15cis_rule_4_1_4_9: {{ suse15cis_rule_4_1_4_9 }}
+suse15cis_rule_4_1_4_10: {{ suse15cis_rule_4_1_4_10 }}
+
+# 4.2.1 Configure rsyslog
+suse15cis_rule_4_2_1_1: {{ suse15cis_rule_4_2_1_1 }}
+suse15cis_rule_4_2_1_2: {{ suse15cis_rule_4_2_1_2 }}
+suse15cis_rule_4_2_1_3: {{ suse15cis_rule_4_2_1_3 }}
+suse15cis_rule_4_2_1_4: {{ suse15cis_rule_4_2_1_4 }}
+suse15cis_rule_4_2_1_5: {{ suse15cis_rule_4_2_1_5 }}
+suse15cis_rule_4_2_1_6: {{ suse15cis_rule_4_2_1_6 }}
+suse15cis_rule_4_2_1_7: {{ suse15cis_rule_4_2_1_7 }}
+
+# 4.2.2 Configure journald
+suse15cis_rule_4_2_2_1_1: {{ suse15cis_rule_4_2_2_1_1 }}
+suse15cis_rule_4_2_2_1_2: {{ suse15cis_rule_4_2_2_1_2 }}
+suse15cis_rule_4_2_2_1_3: {{ suse15cis_rule_4_2_2_1_3 }}
+suse15cis_rule_4_2_2_1_4: {{ suse15cis_rule_4_2_2_1_4 }}
+suse15cis_rule_4_2_2_2: {{ suse15cis_rule_4_2_2_2 }}
+suse15cis_rule_4_2_2_3: {{ suse15cis_rule_4_2_2_3 }}
+suse15cis_rule_4_2_2_4: {{ suse15cis_rule_4_2_2_4 }}
+suse15cis_rule_4_2_2_5: {{ suse15cis_rule_4_2_2_5 }}
+suse15cis_rule_4_2_2_6: {{ suse15cis_rule_4_2_2_6 }}
+suse15cis_rule_4_2_2_7: {{ suse15cis_rule_4_2_2_7 }}
+suse15cis_rule_4_2_3: {{ suse15cis_rule_4_2_3 }}
+
+# 4.3 Logrotate
+suse15cis_rule_4_3: {{ suse15cis_rule_4_3 }}
+
+# Section 5
+#  Authentication and Authorization
+# 5.1 Configure time-based job schedulers
+suse15cis_rule_5_1_1: {{ suse15cis_rule_5_1_1 }}
+suse15cis_rule_5_1_2: {{ suse15cis_rule_5_1_2 }}
+suse15cis_rule_5_1_3: {{ suse15cis_rule_5_1_3 }}
+suse15cis_rule_5_1_4: {{ suse15cis_rule_5_1_4 }}
+suse15cis_rule_5_1_5: {{ suse15cis_rule_5_1_5 }}
+suse15cis_rule_5_1_6: {{ suse15cis_rule_5_1_6 }}
+suse15cis_rule_5_1_7: {{ suse15cis_rule_5_1_7 }}
+suse15cis_rule_5_1_8: {{ suse15cis_rule_5_1_8 }}
+suse15cis_rule_5_1_9: {{ suse15cis_rule_5_1_9 }}
+
+# 5.2 Configure SSH Server
+suse15cis_rule_5_2_1: {{ suse15cis_rule_5_2_1 }}
+suse15cis_rule_5_2_2: {{ suse15cis_rule_5_2_2 }}
+suse15cis_rule_5_2_3: {{ suse15cis_rule_5_2_3 }}
+suse15cis_rule_5_2_4: {{ suse15cis_rule_5_2_4 }}
+suse15cis_rule_5_2_5: {{ suse15cis_rule_5_2_5 }}
+suse15cis_rule_5_2_6: {{ suse15cis_rule_5_2_6 }}
+suse15cis_rule_5_2_7: {{ suse15cis_rule_5_2_7 }}
+suse15cis_rule_5_2_8: {{ suse15cis_rule_5_2_8 }}
+suse15cis_rule_5_2_9: {{ suse15cis_rule_5_2_9 }}
+suse15cis_rule_5_2_10: {{ suse15cis_rule_5_2_10 }}
+suse15cis_rule_5_2_11: {{ suse15cis_rule_5_2_11 }}
+suse15cis_rule_5_2_12: {{ suse15cis_rule_5_2_12 }}
+suse15cis_rule_5_2_13: {{ suse15cis_rule_5_2_13 }}
+suse15cis_rule_5_2_14: {{ suse15cis_rule_5_2_14 }}
+suse15cis_rule_5_2_15: {{ suse15cis_rule_5_2_15 }}
+suse15cis_rule_5_2_16: {{ suse15cis_rule_5_2_16 }}
+suse15cis_rule_5_2_17: {{ suse15cis_rule_5_2_17 }}
+suse15cis_rule_5_2_18: {{ suse15cis_rule_5_2_18 }}
+suse15cis_rule_5_2_19: {{ suse15cis_rule_5_2_19 }}
+suse15cis_rule_5_2_20: {{ suse15cis_rule_5_2_20 }}
+# 5.3 Configure privilege escalation
+suse15cis_rule_5_3_1: {{ suse15cis_rule_5_3_1 }}
+suse15cis_rule_5_3_2: {{ suse15cis_rule_5_3_2 }}
+suse15cis_rule_5_3_3: {{ suse15cis_rule_5_3_3 }}
+suse15cis_rule_5_3_4: {{ suse15cis_rule_5_3_4 }}
+suse15cis_rule_5_3_5: {{ suse15cis_rule_5_3_5 }}
+suse15cis_rule_5_3_6: {{ suse15cis_rule_5_3_6 }}
+suse15cis_rule_5_3_7: {{ suse15cis_rule_5_3_7 }}
+
+# 5.4 Configure authselect
+
+suse15cis_rule_5_4_1: {{ suse15cis_rule_5_4_1 }}
+suse15cis_rule_5_4_2: {{ suse15cis_rule_5_4_2 }}
+
+# 5.5 Configure PAM
+suse15cis_rule_5_5_1: {{ suse15cis_rule_5_5_1 }}
+suse15cis_rule_5_5_2: {{ suse15cis_rule_5_5_2 }}
+suse15cis_rule_5_5_3: {{ suse15cis_rule_5_5_3 }}
+suse15cis_rule_5_5_4: {{ suse15cis_rule_5_5_4 }}
+
+# 5.6 User Accounts and Environment
+# 5.6.1 Set Shadow Password Suite Parameters
+suse15cis_rule_5_6_1_1: {{ suse15cis_rule_5_6_1_1 }}
+suse15cis_rule_5_6_1_2: {{ suse15cis_rule_5_6_1_2 }}
+suse15cis_rule_5_6_1_3: {{ suse15cis_rule_5_6_1_3 }}
+suse15cis_rule_5_6_1_4: {{ suse15cis_rule_5_6_1_4 }}
+suse15cis_rule_5_6_1_5: {{ suse15cis_rule_5_6_1_5 }}
+suse15cis_rule_5_6_2: {{ suse15cis_rule_5_6_2 }}
+suse15cis_rule_5_6_3: {{ suse15cis_rule_5_6_3 }}
+suse15cis_rule_5_6_4: {{ suse15cis_rule_5_6_4 }}
+suse15cis_rule_5_6_5: {{ suse15cis_rule_5_6_5 }}
+suse15cis_rule_5_6_6: {{ suse15cis_rule_5_6_6 }}
+
+# Section 6
+# 6 System Maintenance
+# 6.1 System File Permissions
+suse15cis_rule_6_1_1: {{ suse15cis_rule_6_1_1 }}
+suse15cis_rule_6_1_2: {{ suse15cis_rule_6_1_2 }}
+suse15cis_rule_6_1_3: {{ suse15cis_rule_6_1_3 }}
+suse15cis_rule_6_1_4: {{ suse15cis_rule_6_1_4 }}
+suse15cis_rule_6_1_5: {{ suse15cis_rule_6_1_5 }}
+suse15cis_rule_6_1_6: {{ suse15cis_rule_6_1_6 }}
+suse15cis_rule_6_1_7: {{ suse15cis_rule_6_1_7 }}
+suse15cis_rule_6_1_8: {{ suse15cis_rule_6_1_8 }}
+suse15cis_rule_6_1_9: {{ suse15cis_rule_6_1_9 }}
+suse15cis_rule_6_1_10: {{ suse15cis_rule_6_1_10 }}
+suse15cis_rule_6_1_11: {{ suse15cis_rule_6_1_11 }}
+suse15cis_rule_6_1_12: {{ suse15cis_rule_6_1_12 }}
+suse15cis_rule_6_1_13: {{ suse15cis_rule_6_1_13 }}
+suse15cis_rule_6_1_14: {{ suse15cis_rule_6_1_14 }}
+suse15cis_rule_6_1_15: {{ suse15cis_rule_6_1_15 }}
+
+# 6.2 User and Group Settings
+suse15cis_rule_6_2_1: {{ suse15cis_rule_6_2_1 }}
+suse15cis_rule_6_2_2: {{ suse15cis_rule_6_2_2 }}
+suse15cis_rule_6_2_3: {{ suse15cis_rule_6_2_3 }}
+suse15cis_rule_6_2_4: {{ suse15cis_rule_6_2_4 }}
+suse15cis_rule_6_2_5: {{ suse15cis_rule_6_2_5 }}
+suse15cis_rule_6_2_6: {{ suse15cis_rule_6_2_6 }}
+suse15cis_rule_6_2_7: {{ suse15cis_rule_6_2_7 }}
+suse15cis_rule_6_2_8: {{ suse15cis_rule_6_2_8 }}
+suse15cis_rule_6_2_9: {{ suse15cis_rule_6_2_9 }}
+suse15cis_rule_6_2_10: {{ suse15cis_rule_6_2_10 }}
+suse15cis_rule_6_2_11: {{ suse15cis_rule_6_2_11 }}
+suse15cis_rule_6_2_12: {{ suse15cis_rule_6_2_12 }}
+suse15cis_rule_6_2_13: {{ suse15cis_rule_6_2_13 }}
+suse15cis_rule_6_2_14: {{ suse15cis_rule_6_2_14 }}
+suse15cis_rule_6_2_15: {{ suse15cis_rule_6_2_15 }}
+suse15cis_rule_6_2_16: {{ suse15cis_rule_6_2_16 }}
+
+############
+
+# Section 1
+
+# AIDE
+suse15cis_config_aide: {{ suse15cis_config_aide }}
+
+# Whether or not to run tasks related to auditing/patching the desktop environment
+suse15cis_gui: {{ suse15cis_gui }}
+
+# Warning Banner Content (issue, issue.net, motd)
+suse15cis_warning_banner: {{ suse15cis_warning_banner }}
+# End Banner
+
+# aide setup via - cron, timer
+rhel9_aide_scan: cron
+
+# 1.8 Gnome Desktop
+suse15cis_dconf_db_name: {{ suse15cis_dconf_db_name }}
+suse15cis_screensaver_idle_delay: {{ suse15cis_screensaver_idle_delay }}  # Set max value for idle-delay in seconds (between 1 and 900)
+suse15cis_screensaver_lock_delay: {{ suse15cis_screensaver_lock_delay }}  # Set max value for lock-delay in seconds (between 0 and 5)
+
+# Section 2
+## 2.2 Special Purposes
+# Set to 'true' if X Windows is needed in your environment
+suse15cis_xwindows_required: false
+### Service configuration booleans set true to keep service
+suse15cis_avahi_server: {{ suse15cis_avahi_server }}
+suse15cis_cups_server: {{ suse15cis_cups_server }}
+suse15cis_dhcp_server: {{ suse15cis_dhcp_server }}
+suse15cis_dns_server: {{ suse15cis_dns_server }}
+suse15cis_dnsmasq_server: {{ suse15cis_dnsmasq_server }}
+suse15cis_vsftpd_server: {{ suse15cis_vsftpd_server }}
+suse15cis_tftp_server: {{ suse15cis_tftp_server }}
+suse15cis_httpd_server: {{ suse15cis_httpd_server }}
+suse15cis_nginx_server: {{ suse15cis_nginx_server }}
+suse15cis_dovecot_server: {{ suse15cis_dovecot_server }}
+suse15cis_imap_server: {{ suse15cis_imap_server }}
+suse15cis_samba_server: {{ suse15cis_samba_server }}
+suse15cis_squid_server: {{ suse15cis_squid_server }}
+suse15cis_snmp_server: {{ suse15cis_snmp_server }}
+suse15cis_telnet_server: {{ suse15cis_telnet_server }}
+suse15cis_is_mail_server: {{ suse15cis_is_mail_server }}
+
+# Note the options
+# Packages are used for client services and Server- only remove if you dont use the client service
+#
+suse15cis_use_nfs_server: {{ suse15cis_use_nfs_server }}
+suse15cis_use_nfs_service: {{ suse15cis_use_nfs_service }}
+suse15cis_use_rpc_server: {{ suse15cis_use_rpc_server }}
+suse15cis_use_rpc_service: {{ suse15cis_use_rpc_service }}
+suse15cis_use_rsync_server: {{ suse15cis_use_rsync_server }}
+suse15cis_use_rsync_service: {{ suse15cis_use_rsync_service }}
+
+#### 2.3 Service clients
+suse15cis_telnet_required: {{ suse15cis_telnet_required }}
+suse15cis_openldap_clients_required: {{ suse15cis_openldap_clients_required }}
+suse15cis_tftp_client: {{ suse15cis_tftp_client }}
+suse15cis_ftp_client: {{ suse15cis_ftp_client }}
+
+# Section 3
+
+## IPv6 required
+suse15cis_ipv6_required: {{ suse15cis_ipv6_required }}
+
+## 3.2 System network parameters (host only OR host and router)
+suse15cis_is_router: {{ suse15cis_is_router }}
+
+## Section 3.4
+### Firewall
+suse15cis_firewall: {{ suse15cis_firewall }}
+##### firewalld
+suse15cis_default_zone: {{ suse15cis_default_zone }}
+
+#### nftables
+
+suse15cis_nft_tables_autonewtable: {{ suse15cis_nft_tables_autonewtable }}
+suse15cis_nft_tables_tablename: {{ suse15cis_nft_tables_tablename }}
+suse15cis_nft_tables_autochaincreate: {{ suse15cis_nft_tables_autochaincreate }}
+
+# Section 4
+
+## Set if host is a logserver
+suse15cis_remote_log_server: {{ suse15cis_remote_log_server }}
+
+# Remote logserver settings
+suse15cis_remote_log_host: {{ suse15cis_remote_log_host }}
+suse15cis_remote_log_port: {{ suse15cis_remote_log_port }}
+suse15cis_remote_log_protocol: {{ suse15cis_remote_log_protocol }}
+suse15cis_remote_log_retrycount: {{ suse15cis_remote_log_retrycount }}
+suse15cis_remote_log_queuesize: {{ suse15cis_remote_log_queuesize }}
+
+## syslog
+suse15cis_syslog: {{ suse15cis_syslog }}
+
+# Section 5
+# This will allow use of drop in files when CIS adopts them.
+rhel9_cis_sshd_config_file: {{ suse15cis_sshd_config_file }}
+
+## 5.2.4 Note the following to understand precedence and layout
+suse15cis_sshd_limited: false
+suse15cis_sshd_access:
+  - AllowUser
+  - AllowGroup
+  - DenyUser
+  - DenyGroup
+
+## 5.3.2 & 5.4.2 Enable automation to select custom profile options, using the settings above
+suse15cis_authselect_custom_profile_select: {{ suse15cis_authselect_custom_profile_select }}
+
+## 5.3.2 Authselect select false if using AD or RHEL ID mgmt
+suse15cis_authselect:
+  custom_profile_name: {{ suse15cis_authselect['custom_profile_name'] }}
+  default_file_to_copy: {{ suse15cis_authselect['default_file_to_copy'] }}
+
+## 5.4.1 Enable automation to create custom profile settings, using the setings above
+suse15cis_authselect_custom_profile_create: {{ suse15cis_authselect_custom_profile_create }}
+
+# 5.5.1
+## PAM
+suse15cis_pam_password:
+  minlen: {{ suse15cis_pam_password['minlen'] }}
+  minclass: {{ suse15cis_pam_password['minclass'] }}
+suse15cis_pam_passwd_retry: "3"
+
+## 5.5.3 choose one of below
+suse15cis_pwhistory_so: "14"
+suse15cis_passwd_remember: "5"
+
+## 5.6.x login.defs password settings
+suse15cis_pass:
+  max_days: {{ suse15cis_pass['max_days'] }}
+  min_days: {{ suse15cis_pass['min_days'] }}
+  warn_age: {{ suse15cis_pass['warn_age'] }}
+
+## 5.3.7 set sugroup if differs from wheel
+suse15cis_sugroup: {{ suse15cis_sugroup }}
