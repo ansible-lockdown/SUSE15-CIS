@@ -31,7 +31,6 @@
       ansible.builtin.fail:
         msg: Installed GPG Keys do not meet expected values or expected keys are not installed
 
-
 - name: "1.2.1.2 | PATCH | Ensure gpgcheck is globally activated"
   when:
     - suse15cis_rule_1_2_1_2

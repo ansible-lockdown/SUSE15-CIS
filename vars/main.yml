@@ -8,9 +8,9 @@ suse15cis_allowed_crypto_policies:
   - 'FIPS'
 
 suse15cis_allowed_crypto_policies_modules:
-    - 'OSPP'
-    - 'AD-SUPPORT'
-    - 'AD-SUPPORT-LEGACY'
+  - 'OSPP'
+  - 'AD-SUPPORT'
+  - 'AD-SUPPORT-LEGACY'
 
 # Used to control warning summary
 warn_control_list: ""
