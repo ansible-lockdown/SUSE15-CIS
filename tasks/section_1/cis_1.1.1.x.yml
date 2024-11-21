@@ -218,7 +218,7 @@
         state: absent
 
 - name: "1.1.1.9 | PATCH | Ensure usb-storage kernel module is not available"
-  when: ubtu22cis_rule_1_1_1_9
+  when: suse15cis_rule_1_1_1_9
   tags:
     - level1-server
     - level2-workstation
@@ -260,8 +260,8 @@
     warn_control_id: '1.1.1.10'
   block:
     - name: "1.1.1.10 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
-      ansible.builtin.template:
-        src: fs_with_cves.sh.j2
+      ansible.builtin.copy:
+        src: fs_with_cves.sh
         dest: /var/fs_with_cves.sh
         owner: root
         group: root
@@ -280,7 +280,7 @@
           "Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task
           {{ discovered_fs_modules_loaded.stdout_lines}}"
 
-    - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
+    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml

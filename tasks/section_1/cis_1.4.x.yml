@@ -30,7 +30,7 @@
   ansible.builtin.file:
     path: /boot/grub2/grub.cfg
     owner: root
-    group: root'
+    group: root
     mode: 'og-rwx'
     state: touch
     modification_time: preserve

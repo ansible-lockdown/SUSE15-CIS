@@ -11,12 +11,12 @@
     - rule_1.7.1
     - NIST800-53R5_SC-8
   block:
-    - name: "1.6.1 | PATCH | Ensure message of the day is configured properly | motd"
+    - name: "1.7.1 | PATCH | Ensure message of the day is configured properly | motd"
       ansible.builtin.file:
         path: /etc/motd
         state: absent
 
-    - name: "1.6.1 | PATCH | Ensure message of the day is configured properly | disable dynamic_motd"
+    - name: "1.7.1 | PATCH | Ensure message of the day is configured properly | disable dynamic_motd"
       when: suse15cis_disable_dynamic_motd
       ansible.builtin.lineinfile:
         path: /etc/pam.d/sshd
@@ -81,6 +81,8 @@
     owner: root
     group: root
     mode: 'u-x,go-wx'
+  failed_when: discovered_etc_motd_exists.state not in [ 'change', 'absent' ]
+  register: discovered_etc_motd_exists
 
 - name: "1.7.5 | PATCH | Ensure permissions on /etc/issue are configured"
   when:

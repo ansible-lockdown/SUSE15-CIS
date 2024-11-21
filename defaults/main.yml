@@ -50,6 +50,12 @@ container_vars_file: is_container.yml
 # This allows the ability to skip tasks that may cause an issue
 suse15cis_uses_root: false
 
+## OS check - to turn off at your own risk
+os_check: true
+
+## Allow sysctl to be updated
+suse15cis_sysctl_update: true
+
 ###
 ### Settings for associated Audit role using Goss
 ###
@@ -179,6 +185,8 @@ suse15cis_rule_1_1_2_7_4: true
 # 1.2.1 Configure Package repositories
 suse15cis_rule_1_2_1_1: true
 suse15cis_rule_1_2_1_2: true
+suse15cis_rule_1_2_1_3: true
+suse15cis_rule_1_2_1_4: true
 # 1.2.2 Configure Package updates
 suse15cis_rule_1_2_2_1: true
 
@@ -915,6 +923,8 @@ suse15cis_sshd:
   # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
   # For more info, see https://linux.die.net/man/5/sshd_config
   deny_groups: ""
+
+suse15cis_sshd_config_file: /etc/ssh/sshd_config
 
 ## Control 5.2.1
 # This variable represents the name of the sudo package to install
