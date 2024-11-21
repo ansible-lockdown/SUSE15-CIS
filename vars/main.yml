@@ -3,6 +3,7 @@
 
 system_is_container: false
 min_ansible_version: 2.12.1
+change_requires_reboot: false
 suse15cis_allowed_crypto_policies:
   - 'DEFAULT'
   - 'FUTURE'
