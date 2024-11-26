@@ -116,7 +116,7 @@
     - automated
     - patch
     - crypto
-    - rule_1.6.5
+    - rule_1.6.6
     - NIST800-53R5_SC-8
   block:
     - name: "1.6.6 | PATCH | Ensure system wide crypto policy disables cbc for ssh | Add submodule exclusion"

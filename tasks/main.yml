@@ -5,9 +5,9 @@
   when: os_check
   tags: always
   ansible.builtin.assert:
-    that: (ansible_facts.distribution == 'SUSE' and ansible_facts.distribution_major_version is version_compare('5.4', '>=')
-    fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
-    success_msg: "This role is running against a supported OS {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }}"
+    that: (ansible_facts.os_family == 'Suse' and ansible_facts.distribution_version is version_compare('15.6', '>='))
+    fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts.os_family }} {{ ansible_facts.distribution_version }} is not supported."
+    success_msg: "This role is running against a supported OS {{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }}"
 
 - name: Check ansible version
   tags: always

@@ -84,12 +84,6 @@
   ansible.builtin.set_fact:
     mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
 
-- name: "PRELIM | Ensure python3-libselinux is installed"
-  when: '"python3-libselinux" not in ansible_facts.packages'
-  ansible.builtin.package:
-    name: python3-libselinux
-    state: present
-
 - name: "PRELIM | Set facts based on boot type"
   block:
     - name: "PRELIM | Check whether machine is UEFI-based"
@@ -128,60 +122,59 @@
     pattern: '*'
   register: prelim_dconf_locald_files
 
-- name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
-  when:
-    - '"auditd" not in ansible_facts.packages'
-    - suse15cis_rule_4_1_1_1
-  tags:
-    - level2-server
-    - level2-workstation
-    - patch
-    - rule_4.1.1.1
-    - auditd
-  ansible.builtin.package:
-    name: audit
-    state: present
+# - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
+#   when:
+#     - '"auditd" not in ansible_facts.packages'
+#     - suse15cis_rule_4_1_1_1
+#   tags:
+#     - level2-server
+#     - level2-workstation
+#     - patch
+#     - rule_4.1.1.1
+#     - auditd
+#   ansible.builtin.package:
+#     name: audit
+#     state: present
 
-- name: "PRELIM | 4.1.4.5 | Audit conf and rules files | list files"
-  when:
-    - suse15cis_rule_4_1_4_5 or
-      suse15cis_rule_4_1_4_6 or
-      suse15cis_rule_4_1_4_7
-  tags:
-    - level2-server
-    - level2-workstation
-    - patch
-    - auditd
-    - rule_4.1.4.5
-    - rule_4.1.4.6
-    - rule_4.1.4.7
-  ansible.builtin.find:
-    path: /etc/audit
-    file_type: file
-    recurse: true
-    patterns: '*.conf,*.rules'
-  register: prelim_auditd_conf_files
+# - name: "PRELIM | 4.1.4.5 | Audit conf and rules files | list files"
+#   when:
+#     - suse15cis_rule_4_1_4_5 or
+#       suse15cis_rule_4_1_4_6 or
+#       suse15cis_rule_4_1_4_7
+#   tags:
+#     - level2-server
+#     - level2-workstation
+#     - patch
+#     - auditd
+#     - rule_4.1.4.5
+#     - rule_4.1.4.6
+#     - rule_4.1.4.7
+#   ansible.builtin.find:
+#     path: /etc/audit
+#     file_type: file
+#     recurse: true
+#     patterns: '*.conf,*.rules'
+#   register: prelim_auditd_conf_files
 
-- name: "PRELIM | Section 5.1 | Configure cron"
-  when:
-    - suse15cis_rule_5_1_1
-    - '"cronie" not in ansible_facts.packages'
-  tags:
-    - level1-server
-    - level1-workstation
-    - rule_5.1.1
-    - cron
-  ansible.builtin.package:
-    name: cronie
-    state: present
+# - name: "PRELIM | Section 5.1 | Configure cron"
+#   when:
+#     - suse15cis_rule_5_1_1
+#     - '"cronie" not in ansible_facts.packages'
+#   tags:
+#     - level1-server
+#     - level1-workstation
+#     - rule_5.1.1
+#     - cron
+#   ansible.builtin.package:
+#     name: cronie
+#     state: present
 
 # Added to ensure ssh drop in file exists if not default /etc/ssh/sshd_config
 - name: "PRELIM | Section 5.2 | SSH"
   when:
     - suse15cis_sshd_config_file != '/etc/ssh/sshd_config'
     - "'openssh-server' in ansible_facts.packages"
-  tags:
-    - always
+  tags: always
   ansible.builtin.file:
     path: "{{ suse15cis_sshd_config_file }}"
     owner: root
@@ -189,18 +182,18 @@
     mode: '0600'
     state: touch
 
-- name: "PRELIM | 5.3.4 | Find all sudoers files."
-  when:
-    - suse15cis_rule_5_3_4 or
-      suse15cis_rule_5_3_5
-  tags:
-    - rule_5.3.4
-    - rule_5.3.5
-  ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
-  changed_when: false
-  failed_when: false
-  check_mode: false
-  register: prelim_sudoers_files
+# - name: "PRELIM | 5.3.4 | Find all sudoers files."
+#   when:
+#     - suse15cis_rule_5_3_4 or
+#       suse15cis_rule_5_3_5
+#   tags:
+#     - rule_5.3.4
+#     - rule_5.3.5
+#   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
+#   changed_when: false
+#   failed_when: false
+#   check_mode: false
+#   register: prelim_sudoers_files
 
 - name: "PRELIM | Discover Interactive UID MIN and MIN from logins.def"
   block:
