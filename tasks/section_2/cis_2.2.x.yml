@@ -1,49 +1,49 @@
 ---
 
 - name: "2.2.1 | PATCH | Ensure xorg-x11-server-common is not installed"
-  ansible.builtin.package:
-      name: xorg-x11-server-common
-      state: absent
   when:
-      - suse15cis_rule_2_2_1
-      - "'xorg-x11-server-common' in ansible_facts.packages"
-      - not suse15cis_gui
+    - suse15cis_rule_2_2_1
+    - "'xorg-x11-server-common' in ansible_facts.packages"
+    - not suse15cis_gui
   tags:
-      - level1-server
-      - patch
-      - x11
-      - rule_2.2.1
+    - level1-server
+    - patch
+    - x11
+    - rule_2.2.1
+  ansible.builtin.package:
+    name: xorg-x11-server-common
+    state: absent
 
 - name: "2.2.2 | PATCH | Ensure Avahi Server is not installed"
-  ansible.builtin.package:
-      name:
-          - avahi-autoipd
-          - avahi
-      state: absent
   when:
-      - suse15cis_rule_2_2_2
-      - not suse15cis_avahi_server
-      - "'avahi' in ansible_facts.packages or 'avahi-autopd' in ansible_facts.packages"
+    - suse15cis_rule_2_2_2
+    - not suse15cis_avahi_server
+    - "'avahi' in ansible_facts.packages or 'avahi-autopd' in ansible_facts.packages"
   tags:
-      - level1-server
-      - level2-workstation
-      - patch
+    - level1-server
+    - level2-workstation
+    - patch
+    - avahi
+    - rule_2.2.2
+  ansible.builtin.package:
+    name:
+      - avahi-autoipd
       - avahi
-      - rule_2.2.2
+    state: absent
 
 - name: "2.2.3 | PATCH | Ensure CUPS is not installed"
-  ansible.builtin.package:
-      name: cups
-      state: absent
   when:
-      - not suse15cis_cups_server
-      - "'cups' in ansible_facts.packages"
-      - suse15cis_rule_2_2_3
+    - not suse15cis_cups_server
+    - "'cups' in ansible_facts.packages"
+    - suse15cis_rule_2_2_3
   tags:
-      - level1-server
-      - patch
-      - cups
-      - rule_2.2.3
+    - level1-server
+    - patch
+    - cups
+    - rule_2.2.3
+  ansible.builtin.package:
+    name: cups
+    state: absent
 
 - name: "2.2.4 | PATCH | Ensure DHCP Server is not installed"
   ansible.builtin.package:
