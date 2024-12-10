@@ -263,6 +263,7 @@ suse15cis_rule_2_1_19: true
 suse15cis_rule_2_1_20: true
 suse15cis_rule_2_1_21: true
 suse15cis_rule_2_1_22: true
+suse15cis_rule_2_1_23: true
 
 # 2.2 Configure client services
 suse15cis_rule_2_2_1: true
@@ -270,7 +271,6 @@ suse15cis_rule_2_2_2: true
 suse15cis_rule_2_2_3: true
 suse15cis_rule_2_2_4: true
 suse15cis_rule_2_2_5: true
-suse15cis_rule_2_2_6: true
 
 # Ensure time synchronization is in use
 suse15cis_rule_2_3_1_1: true
@@ -606,8 +606,7 @@ suse15cis_is_mail_server: false
 
 # Client Services
 suse15cis_nis_client_required: false  # Same package as NIS server
-suse15cis_rsh_client: false
-suse15cis_talk_client: false
+suse15cis_tftp_client: false
 suse15cis_telnet_required: false
 suse15cis_ldap_clients_required: false
 suse15cis_ftp_client: false
@@ -647,13 +646,16 @@ suse15cis_purge_apt: false
 ## Section 1 Control Variables
 ##
 
-## tmp mount type
-# This variable determines, to which mount type
-# the tmp mount type will be set, if it cannot be
-# correctly discovered. will force the tmp_mnt type
-# if not correctly discovered.
-# Possible values are `tmp_systemd` or `fstab`-
-expected_tmp_mnt: fstab
+## Ability to enabe debug on mounts to assist in troubleshooting
+# Mount point changes are set based upon facts created in Prelim
+# these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
+suse15cis_debug_mount_data: false
+
+## Control 1.1.2
+# If set to `true`, rule will be implemented using the `tmp.mount` systemd-service,
+# otherwise fstab configuration will be used.
+# These /tmp settings will include nosuid,nodev,noexec to conform to CIS standards.
+suse15cis_tmp_svc: false
 
 ## Controls 1.3.1.x - apparmor
 # AppArmor security policies define what system resources applications can access and their privileges.
@@ -862,67 +864,67 @@ suse15cis_sshd_default_kex_algorithms:
   - diffie-hellman-group18-sha512
   - diffie-hellman-group14-sha256
 
-suse15cis_sshd:
-  # This variable is used to control the verbosity of the logging produced by the SSH server.
-  # The options for setting it are as follows:
-  # - `QUIET`: Minimal logging;
-  # - `FATAL`: logs only fatal errors;
-  # - `ERROR`: logs error messages;
-  # - `INFO`: logs informational messages in addition to errors;
-  # - `VERBOSE`: logs a higher level of detail, including login attempts and key exchanges;
-  # - `DEBUG`: generates very detailed debugging information including sensitive information.
-  log_level: "{{ suse15cis_sshd_default_log_level }}"
-  # This variable specifies the maximum number of authentication attempts that are
-  # allowed for a single SSH session.
-  max_auth_tries: "{{suse15cis_sshd_default_max_auth_tries}}"
-  # This variable specifies the encryption algorithms that can be used for securing
-  # data transmission.
-  ciphers: "{{ suse15cis_sshd_default_ciphers }}"
-  # This variable specifies a list of message authentication code algorithms (MACs) that are allowed for verifying
-  # the integrity of data exchanged.
-  macs: "{{ suse15cis_sshd_default_macs }}"
-  # This variable is used to state the key exchange algorithms used to establish secure encryption
-  # keys during the initial connection setup.
-  kex_algorithms: "{{ suse15cis_sshd_default_kex_algorithms }}"
-  # This variable sets the time interval in seconds between sending "keep-alive"
-  # messages from the server to the client. These types of messages are intended to
-  # keep the connection alive and prevent it being terminated due to inactivity.
-  client_alive_interval: "{{ suse15cis_sshd_default_client_alive_interval }}"
-  # This variable sets the maximum number of unresponsive "keep-alive" messages
-  # that can be sent from the server to the client before the connection is considered
-  # inactive and thus, closed.
-  client_alive_count_max: "{{ suse15cis_sshd_default_client_alive_count_max }}"
-  # This variable specifies the amount of seconds allowed for successful authentication to
-  # the SSH server.
-  login_grace_time: "{{ suse15cis_sshd_default_login_grace_time }}"
-  # This variables is used to set the maximum number of open sessions per connection.
-  max_sessions: "{{ suse15cis_sshd_default_max_sessions }}"
-  # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
-  # access for users whose user name matches one of the patterns. This is done
-  # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
-  # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
-  # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-  # For more info, see https://linux.die.net/man/5/sshd_config
-  allow_users: ""
-  # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
-  # for users whose primary group or supplementary group list matches one of the patterns. This is done
-  # by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
-  # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-  # For more info, https://linux.die.net/man/5/sshd_config
-  allow_groups: ""
-  # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
-  # for users whose user name matches one of the patterns. This is done
-  # by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
-  # If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
-  # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-  # For more info, see https://linux.die.net/man/5/sshd_config
-  deny_users: ""
-  # This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to prevent SSH access
-  # for users whose primary group or supplementary group list matches one of the patterns. This is done
-  # by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
-  # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-  # For more info, see https://linux.die.net/man/5/sshd_config
-  deny_groups: ""
+## SSH
+# This variable is used to control the verbosity of the logging produced by the SSH server.
+# The options for setting it are as follows:
+# - `QUIET`: Minimal logging;
+# - `FATAL`: logs only fatal errors;
+# - `ERROR`: logs error messages;
+# - `INFO`: logs informational messages in addition to errors;
+# - `VERBOSE`: logs a higher level of detail, including login attempts and key exchanges;
+# - `DEBUG`: generates very detailed debugging information including sensitive information.
+suse15cis_sshd_log_level: "{{ suse15cis_sshd_default_log_level }}"
+# This variable specifies the maximum number of authentication attempts that are
+# allowed for a single SSH session.
+suse15cis_sshd_max_auth_tries: "{{ suse15cis_sshd_default_max_auth_tries }}"
+# This variable specifies the encryption algorithms that can be used for securing
+# data transmission.
+suse15cis_sshd_ciphers: "{{ suse15cis_sshd_default_ciphers }}"
+# This variable specifies a list of message authentication code algorithms (MACs) that are allowed for verifying
+# the integrity of data exchanged.
+suse15cis_sshd_macs: "{{ suse15cis_sshd_default_macs }}"
+# This variable is used to state the key exchange algorithms used to establish secure encryption
+# keys during the initial connection setup.
+suse15cis_sshd_kex_algorithms: "{{ suse15cis_sshd_default_kex_algorithms }}"
+# This variable sets the time interval in seconds between sending "keep-alive"
+# messages from the server to the client. These types of messages are intended to
+# keep the connection alive and prevent it being terminated due to inactivity.
+suse15cis_sshd_client_alive_interval: "{{ suse15cis_sshd_default_client_alive_interval }}"
+# This variable sets the maximum number of unresponsive "keep-alive" messages
+# that can be sent from the server to the client before the connection is considered
+# inactive and thus, closed.
+suse15cis_sshd_client_alive_count_max: "{{ suse15cis_sshd_default_client_alive_count_max }}"
+# This variable specifies the amount of seconds allowed for successful authentication to
+# the SSH server.
+suse15cis_sshd_login_grace_time: "{{ suse15cis_sshd_default_login_grace_time }}"
+# This variables is used to set the maximum number of open sessions per connection.
+suse15cis_sshd_max_sessions: "{{ suse15cis_sshd_default_max_sessions }}"
+# This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
+# access for users whose user name matches one of the patterns. This is done
+# by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
+# If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
+# The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
+# For more info, see https://linux.die.net/man/5/sshd_config
+suse15cis_sshd_allow_users: ""
+# (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
+# for users whose primary group or supplementary group list matches one of the patterns. This is done
+# by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
+# The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
+# For more info, https://linux.die.net/man/5/sshd_config
+suse15cis_sshd_allow_groups: ""
+# This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
+# for users whose user name matches one of the patterns. This is done
+# by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
+# If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
+# The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
+# For more info, see https://linux.die.net/man/5/sshd_config
+suse15cis_sshd_deny_users: ""
+# This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to prevent SSH access
+# for users whose primary group or supplementary group list matches one of the patterns. This is done
+# by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
+# The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
+# For more info, see https://linux.die.net/man/5/sshd_config
+suse15cis_sshd_deny_groups: ""
 
 suse15cis_sshd_config_file: /etc/ssh/sshd_config
 
