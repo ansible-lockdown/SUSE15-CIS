@@ -263,10 +263,15 @@
     msg: "Reboot required for auditd to apply new rules as immutable set"
   notify: Set_reboot_required
 
-- name: Restart auditd
-  when: audit_rules_updated is defined
-  ansible.builtin.command: service auditd restart  # noqa command-instead-of-module
-  changed_when: true
+- name: Stop auditd process
+  ansible.builtin.shell: systemctl kill auditd
+  listen: Restart auditd
+
+- name: Start auditd process
+  ansible.builtin.systemd_service:
+    name: auditd
+    state: started
+  listen: Restart auditd
 
 - name: Restart sshd
   ansible.builtin.systemd:
