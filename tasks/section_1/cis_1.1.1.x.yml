@@ -217,39 +217,8 @@
         name: udf
         state: absent
 
-- name: "1.1.1.9 | PATCH | Ensure usb-storage kernel module is not available"
+- name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available"
   when: suse15cis_rule_1_1_1_9
-  tags:
-    - level1-server
-    - level2-workstation
-    - patch
-    - rule_1.1.1.9
-    - usb
-  block:
-    - name: "1.1.1.9 | PATCH | Ensure usb-storage kernel module is not available | Edit modprobe config"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/CIS.conf
-        regexp: "^(#)?install usb-storage(\\s|$)"
-        line: "install usb-storage /bin/true"
-        create: true
-        mode: 'u-x,go-rwx'
-
-    - name: "1.1.1.9 | PATCH | Ensure usb-storage kernel module is not available | blacklist"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/blacklist.conf
-        regexp: "^(#)?blacklist usb-storage(\\s|$)"
-        line: "blacklist usb-storage"
-        create: true
-        mode: 'u-x,go-rwx'
-
-    - name: "1.1.1.9 | PATCH | Ensure usb-storage kernel module is not available | Disable usb"
-      when: not system_is_container
-      community.general.modprobe:
-        name: usb-storage
-        state: absent
-
-- name: "1.1.1.10 | PATCH | Ensure unused filesystems kernel modules are not available"
-  when: suse15cis_rule_1_1_1_10
   tags:
     - level1-server
     - level1-workstation
@@ -257,9 +226,9 @@
     - rule_1.1.1.10
     - filesystems
   vars:
-    warn_control_id: '1.1.1.10'
+    warn_control_id: '1.1.1.9'
   block:
-    - name: "1.1.1.10 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
+    - name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
       ansible.builtin.copy:
         src: fs_with_cves.sh
         dest: /var/fs_with_cves.sh
@@ -267,20 +236,18 @@
         group: root
         mode: 'u+x,go-rwx'
 
-    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Run discovery script"
+    - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Run discovery script"
       ansible.builtin.command: /var/fs_with_cves.sh
       changed_when: false
       failed_when: discovered_fs_modules_loaded.rc not in [ 0, 99 ]
       register: discovered_fs_modules_loaded
 
-    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"
+    - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.debug:
-        msg: |
-          "Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task
-          {{ discovered_fs_modules_loaded.stdout_lines }}"
+        msg: "{{ ['Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task'] + discovered_fs_modules_loaded.stdout_lines }}"
 
-    - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
+    - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
