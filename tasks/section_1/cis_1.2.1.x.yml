@@ -1,8 +1,7 @@
 ---
 
 - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured"
-  when:
-    - suse15cis_rule_1_2_1_1
+  when: suse15cis_rule_1_2_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -12,19 +11,18 @@
     - NIST800-53R5_SI-2
   block:
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | list installed pubkey keys"
-      ansible.builtin.shell: |
-        "rpm -qa | grep {{ os_gpg_key_pubkey_name }}"
+      ansible.builtin.shell: "rpm -qa | grep {{ os_gpg_key_pubkey_name }}"
       changed_when: false
       failed_when: false
       register: os_installed_pub_keys
 
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | Query found keys"
+      when: os_installed_pub_keys.rc == 0
       ansible.builtin.shell: |
         'rpm -q --queryformat "%{PACKAGER} %{VERSION}\\n" {{ os_gpg_key_pubkey_name }} | grep "{{ os_gpg_key_pubkey_content }}"'
       changed_when: false
       failed_when: false
       register: os_gpg_key_check
-      when: os_installed_pub_keys.rc == 0
 
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | expected keys fail"
       when:
@@ -34,8 +32,7 @@
         msg: Installed GPG Keys do not meet expected values or expected keys are not installed
 
 - name: "1.2.1.2 | PATCH | Ensure gpgcheck is globally activated"
-  when:
-    - suse15cis_rule_1_2_1_2
+  when: suse15cis_rule_1_2_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -59,8 +56,7 @@
         label: "{{ item.path }}"
 
 - name: "1.2.1.3 | AUDIT | Ensure repo_gpgcheck is globally activated"
-  when:
-    - suse15cis_rule_1_2_1_3
+  when: suse15cis_rule_1_2_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -91,8 +87,7 @@
         label: "{{ item.path }}"
 
 - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured"
-  when:
-    - suse15cis_rule_1_2_1_4
+  when: suse15cis_rule_1_2_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -100,9 +95,11 @@
     - audit
     - rule_1.2.1.4
     - NIST800-53R5_SI-2
+  vars:
+    warn_control_id: '1.2.1.4'
   block:
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Get repo list"
-      ansible.builtin.shell: dnf repolist
+      ansible.builtin.command: dnf repolist
       changed_when: false
       failed_when: false
       register: dnf_configured
@@ -117,5 +114,3 @@
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
-  vars:
-    warn_control_id: '1.2.1.4'

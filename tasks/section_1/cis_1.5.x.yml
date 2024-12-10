@@ -52,7 +52,7 @@
     create: true
     owner: root
     group: root
-    mode: '0644'
+    mode: 'go-wx'
 
 - name: "1.5.4 | PATCH | Ensure prelink is not installed"
   when: suse15cis_rule_1_5_4
@@ -72,4 +72,4 @@
     create: true
     owner: root
     group: root
-    mode: '0644'
+    mode: 'go-wx'

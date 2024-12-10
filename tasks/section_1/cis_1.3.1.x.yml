@@ -1,8 +1,7 @@
 ---
 
 - name: "1.3.1.1 | PATCH | Ensure AppArmor is installed"
-  when:
-    - suse15cis_rule_1_3_1_1
+  when: suse15cis_rule_1_3_1_1
   tags:
     - level1-server
     - level1-workstation

@@ -1,8 +1,7 @@
 ---
 
 - name: "1.7.1 | PATCH | Ensure message of the day is configured properly"
-  when:
-    - suse15cis_rule_1_7_1
+  when: suse15cis_rule_1_7_1
   tags:
     - level1-server
     - level1-workstation
@@ -29,8 +28,7 @@
         - { regexp: '# Pam_motd.so disabled for CIS benchmark', line: '# Pam_motd.so disabled for CIS benchmark' }
 
 - name: "1.7.2 | PATCH | Ensure local login warning banner is configured properly"
-  when:
-    - suse15cis_rule_1_7_2
+  when: suse15cis_rule_1_7_2
   tags:
     - level1-server
     - level1-workstation
@@ -47,8 +45,7 @@
     mode: 'u-x,go-wx'
 
 - name: "1.7.3 | PATCH | Ensure remote login warning banner is configured properly"
-  when:
-    - suse15cis_rule_1_7_3
+  when: suse15cis_rule_1_7_3
   tags:
     - level1-server
     - level1-workstation
@@ -66,8 +63,7 @@
     mode: 'u-x,go-wx'
 
 - name: "1.7.4 | PATCH | Ensure permissions on /etc/motd are configured"
-  when:
-    - suse15cis_rule_1_7_4
+  when: suse15cis_rule_1_7_4
   tags:
     - level1-server
     - level1-workstation
@@ -85,8 +81,7 @@
   register: discovered_etc_motd_exists
 
 - name: "1.7.5 | PATCH | Ensure permissions on /etc/issue are configured"
-  when:
-    - suse15cis_rule_1_7_5
+  when: suse15cis_rule_1_7_5
   tags:
     - level1-server
     - level1-workstation
@@ -100,8 +95,7 @@
     mode: 'u-x,go-wx'
 
 - name: "1.7.6 | PATCH | Ensure permissions on /etc/issue.net are configured"
-  when:
-    - suse15cis_rule_1_7_6
+  when: suse15cis_rule_1_7_6
   tags:
     - level1-server
     - level1-workstation
