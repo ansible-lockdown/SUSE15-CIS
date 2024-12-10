@@ -85,6 +85,6 @@
     - rule_4.2.2
     - NIST800-55_CA-9
   ansible.builtin.systemd:
-    name: "{{ suse15cis_firewall }}"
+    name: firewalld
     enabled: true
     state: started

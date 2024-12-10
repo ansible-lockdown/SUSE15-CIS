@@ -13,6 +13,7 @@
     - NIST800-53R5_AU-12
   block:
     - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | Pkg installed"
+      when: suse15cis_time_sync_tool == 'chrony'
       ansible.builtin.package:
         name: "{{ suse15cis_time_sync_tool }}"
         state: present
@@ -29,8 +30,7 @@
     - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | Stop and disable service"
       when: item != suse15cis_time_sync_tool
       ansible.builtin.service:
-        name: systemd-timesyncd
-        state: stopped
+        name: "{{ item }}"
         enabled: false
         masked: true
         daemon_reload: true

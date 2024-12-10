@@ -802,13 +802,13 @@ suse15cis_sysctl_network_conf: /etc/sysctl.conf
 ## Section 4 Control Variables
 ##
 
-## Controls 4.1.x, 4.2.x, and 4.3.x - Firewall configuration
+## Controls 4.1.x, 4.2.x- Firewall configuration
 # This variable represents the toggle for which firewall package is used.
-# The options that have an effect on the system are `ufw` and `iptables`.
-# The option `nftables` is also possible, but will only result in a message,
-# that `nftables` has been chosen; all settings have to be carried out manually.
-# Any other value, e.g. `none` will skip all firewall-related controls.
-suse15cis_firewall_package: "ufw"
+# This only allows firewalld setting to anything else will skip these controls in section 4
+suse15cis_firewall_package: "firewalld"
+
+# Set this to be the default zone for firewalld
+suse15cis_default_zone: public
 
 # This variable is used in a preliminary task that forces the UFW firewall to use /etc/sysctl.conf
 # settings. If set to "true" the task will get done in the prelim section of the role.

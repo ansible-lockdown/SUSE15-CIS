@@ -175,55 +175,29 @@
     pattern: '*'
   register: prelim_dconf_locald_files
 
-# - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
-#   when:
-#     - '"auditd" not in ansible_facts.packages'
-#     - suse15cis_rule_4_1_1_1
-#   tags:
-#     - level2-server
-#     - level2-workstation
-#     - patch
-#     - rule_4.1.1.1
-#     - auditd
-#   ansible.builtin.package:
-#     name: audit
-#     state: present
+- name: PRELIM | AUDIT | Wireless adapter pre-requisites
+  when:
+    - suse15cis_rule_3_1_2
+    - not system_is_container
+  tags: always
+  block:
+    - name: PRELIM | AUDIT | Discover is wirelss adapter on system
+      ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
+      changed_when: false
+      failed_when: prelim_wireless_adapters_exist.rc not in [ 0, 1 ]
+      register: prelim_wireless_adapters_exist
 
-# - name: "PRELIM | 4.1.4.5 | Audit conf and rules files | list files"
-#   when:
-#     - suse15cis_rule_4_1_4_5 or
-#       suse15cis_rule_4_1_4_6 or
-#       suse15cis_rule_4_1_4_7
-#   tags:
-#     - level2-server
-#     - level2-workstation
-#     - patch
-#     - auditd
-#     - rule_4.1.4.5
-#     - rule_4.1.4.6
-#     - rule_4.1.4.7
-#   ansible.builtin.find:
-#     path: /etc/audit
-#     file_type: file
-#     recurse: true
-#     patterns: '*.conf,*.rules'
-#   register: prelim_auditd_conf_files
+    - name: "PRELIM | AUDIT | If wireless adapter present capture module"
+      when: prelim_wireless_adapters_exist.rc == 0
+      ansible.builtin.shell: |
+        for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);
+          do basename "$(readlink -f "$driverdir"/device/driver/module)";
+        done | sort -u
+      changed_when: false
+      failed_when: prelim_wireless_modules.rc not in [ 0, 1 ]
+      register: prelim_wireless_modules
 
-# - name: "PRELIM | Section 5.1 | Configure cron"
-#   when:
-#     - suse15cis_rule_5_1_1
-#     - '"cronie" not in ansible_facts.packages'
-#   tags:
-#     - level1-server
-#     - level1-workstation
-#     - rule_5.1.1
-#     - cron
-#   ansible.builtin.package:
-#     name: cronie
-#     state: present
-
-# Added to ensure ssh drop in file exists if not default /etc/ssh/sshd_config
-- name: "PRELIM | Section 5.2 | SSH"
+- name: "PRELIM | Set sshd config file"
   when:
     - suse15cis_sshd_config_file != '/etc/ssh/sshd_config'
     - "'openssh-server' in ansible_facts.packages"
@@ -270,11 +244,6 @@
         min_int_uid: "{{ prelim_uid_min_id.stdout }}"
         max_int_uid: "{{ prelim_uid_max_id.stdout }}"
         min_int_gid: "{{ prelim_gid_min_id.stdout }}"
-
-- name: "PRELIM | Output of uid findings"
-  when: not discover_int_uid
-  ansible.builtin.debug:
-    msg: "{{ min_int_uid }} {{ max_int_uid }}"
 
 - name: "PRELIM | Gather the package facts after prelim"
   tags: always
