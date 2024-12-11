@@ -206,7 +206,7 @@
     path: "{{ suse15cis_sshd_config_file }}"
     owner: root
     group: root
-    mode: '0600'
+    mode: 'u-x,go-rwx'
     state: touch
 
 # - name: "PRELIM | 5.3.4 | Find all sudoers files."
