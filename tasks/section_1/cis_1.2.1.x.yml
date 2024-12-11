@@ -99,17 +99,17 @@
     warn_control_id: '1.2.1.4'
   block:
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Get repo list"
-      ansible.builtin.command: dnf repolist
+      ansible.builtin.command: zypper lr
       changed_when: false
       failed_when: false
-      register: dnf_configured
+      register: discovered_repolist
       check_mode: false
 
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Display repo list"
       ansible.builtin.debug:
         msg:
           - "Warning!! Below are the configured repos. Please review and make sure all align with site policy"
-          - "{{ dnf_configured.stdout_lines }}"
+          - "{{ discovered_repolist.stdout_lines }}"
 
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Warn Count"
       ansible.builtin.import_tasks:
