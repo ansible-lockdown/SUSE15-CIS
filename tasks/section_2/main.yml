@@ -1,17 +1,31 @@
 ---
 
-- name: "SECTION | 2.1 | Time Synchronization"
+- name: "SECTION | 2.1 | Special Purpose Services"
   ansible.builtin.import_tasks:
-      file: cis_2.1.x.yml
+    file: cis_2.1.x.yml
 
-- name: "SECTION | 2.2 | Special Purpose Services"
+- name: "SECTION | 2.2 | Service Clients"
   ansible.builtin.import_tasks:
-      file: cis_2.2.x.yml
+    file: cis_2.2.x.yml
 
-- name: "SECTION | 2.3 | Service Clients"
+- name: "SECTION | 2.3.1.x | Time Services"
   ansible.builtin.import_tasks:
-      file: cis_2.3.x.yml
+    file: cis_2.3.1.x.yml
 
-- name: "SECTION | 2.4 | Nonessential services removed"
+- name: "SECTION | 2.3.2.x | Time Service - Timesyncd "
+  when: suse15cis_time_sync_tool == "systemd-timesyncd"
   ansible.builtin.import_tasks:
-      file: cis_2.4.yml
+    file: cis_2.3.2.x.yml
+
+- name: "SECTION | 2.3.3.x | Time Service - Chrony "
+  when: suse15cis_time_sync_tool == "chrony"
+  ansible.builtin.import_tasks:
+    file: cis_2.3.3.x.yml
+
+- name: "SECTION | 2.4.1.x | JobScheduler - cron"
+  ansible.builtin.import_tasks:
+    file: cis_2.4.1.x.yml
+
+- name: "SECTION | 2.4.2.x | JobScheduler - at"
+  ansible.builtin.import_tasks:
+    file: cis_2.4.2.x.yml

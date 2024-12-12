@@ -1,84 +1,113 @@
 ---
 
-# The CIS Control wants IPv6 disabled if not in use.
-# We are using the suse15cis_ipv6_required to specify if you have IPv6 in use
 - name: "3.1.1 | PATCH | Ensure IPv6 status is identified"
-  block:
-      - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | refresh"
-        ansible.builtin.set_fact:
-            suse15cis_sysctl_update: true
-            suse15cis_flush_ipv6_route: true
-
-      - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | disable"
-        ansible.builtin.debug:
-            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-disable_ipv6.conf"
   when:
-      - not suse15cis_ipv6_required
-      - suse15cis_rule_3_1_1
+    - suse15cis_rule_3_1_1
+    - not suse15cis_ipv6_required
   tags:
-      - level1-server
-      - level1-workstation
-      - manual
-      - patch
-      - ipv6
-      - networking
-      - rule_3.1.1
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_3.1.1
+    - ipv6
+    - NIST800-53R5_CM-7
+  block:
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Replace ipv6.disable if it exists"
+      when: suse15cis_ipv6_disable == 'grub'
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: '^(GRUB_CMDLINE_LINUX=.*)\bipv6\.disable=\d\b(.*$)'
+        replace: '\1ipv6.disable=1\2'
+      register: discovered_ipv6disable_replaced
+      notify: Grub update
+
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Check grub cmdline linux"
+      ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_grub_cmdline_settings
+
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Insert ipv6.disable if it doesn't exist"
+      when:
+        - suse15cis_ipv6_disable == 'grub'
+        - discovered_ipv6disable_replaced is not changed
+        - "'ipv6.disable' not in discovered_grub_cmdline_settings.stdout"
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^(GRUB_CMDLINE_LINUX=".*)"$'
+        line: '\1 ipv6.disable=1"'
+        backrefs: true
+      notify: Grub update
+
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Remove net.ipv6.conf.all.disable_ipv6"
+      when: suse15cis_ipv6_disable == 'sysctl'
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "/{{ item }}"
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+      notify: Flush ipv6 route table
+      loop:
+        - etc/sysctl.d/60-disable_ipv6.conf
 
 - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled"
-  block:
-      - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | Check if nmcli command is available | if wlan exists"
-        ansible.builtin.shell: rpm -q NetworkManager
-        changed_when: false
-        failed_when: false
-        check_mode: false
-        register: rhel_09_nmcli_available
-
-      - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | Check if wifi is enabled"
-        ansible.builtin.shell: nmcli radio wifi
-        register: rhel_09_wifi_enabled
-        changed_when: rhel_09_wifi_enabled.stdout != "disabled"
-        failed_when: false
-        when: rhel_09_nmcli_available.rc == 0
-
-      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Disable wifi if enabled"
-        ansible.builtin.shell: nmcli radio all off
-        changed_when: false
-        failed_when: false
-        when: rhel_09_wifi_enabled is changed  # noqa no-handler
   when:
-      - suse15cis_rule_3_1_2
-      - "'wlan' in ansible_facts.interfaces"
+    - suse15cis_rule_3_1_2
+    - prelim_wireless_adapters_exist
   tags:
-      - level1-server
-      - patch
-      - wireless
-      - rule_3.1.2
-
-- name: "3.1.3 | PATCH | Ensure TIPC is disabled"
+    - level1-server
+    - patch
+    - rule_3.1.2
+    - wireless
+    - NIST800-53R5_CM-7
+  vars:
+    warn_control_id: '3.1.2'
   block:
-      - name: "3.1.3 | PATCH | Ensure TIPC is disabled"
-        ansible.builtin.template:
-            src: "etc/modprobe.d/modprobe.conf.j2"
-            dest: "/etc/modprobe.d/{{ item }}.conf"
-            mode: '0600'
-            owner: root
-            group: root
-        loop:
-            - tipc
-            # note the item used in the template
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Create modprobe.d file"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/{{ item }}.conf
+        regexp: '^(#)?install true(\\s|$)'
+        line: install {{ item }} true
+        create: true
+        mode: 'go-wx'
+      loop: "{{ prelim_wireless_modules.stdout_lines }}"
 
-      - name: "3.1.3 | PATCH | Ensure TIPC is disabled | blacklist"
-        ansible.builtin.lineinfile:
-            path: /etc/modprobe.d/blacklist.conf
-            regexp: "^(#)?blacklist tipc(\\s|$)"
-            line: "blacklist tipc"
-            create: true
-            mode: '0600'
-  when:
-      - suse15cis_rule_3_1_3
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | blacklist"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/blacklist.conf
+        regexp: "^(#)?blacklist {{ item }}(\\s|$)"
+        line: "blacklist {{ item }}"
+        create: true
+        mode: 'go-rwx'
+      loop: "{{ prelim_wireless_modules.stdout_lines }}"
+
+- name: "3.1.3 | PATCH | Ensure bluetooth services are not in use"
+  when: suse15cis_rule_3_1_3
   tags:
-      - level2-server
-      - level2-workstation
-      - patch
-      - tipc
-      - rule_3.1.3
+    - level1-server
+    - level2-workstation
+    - patch
+    - bluetooth
+    - rule_3.1.3
+    - NIST800-53R5_CM-7
+  block:
+    - name: "3.1.3 | PATCH | Ensure bluetooth services are not in use | pkg"
+      when:
+        - not suse15cis_bluetooth_service
+        - not suse15cis_bluetooth_mask
+      ansible.builtin.package:
+        name: bluez
+        state: absent
+
+    - name: "3.1.3 | PATCH | Ensure bluetooth services are not in use | mask"
+      when:
+        - not suse15cis_bluetooth_service
+        - suse15cis_bluetooth_mask
+      notify: Systemd_daemon_reload
+      ansible.builtin.systemd:
+        name: bluetooth.service
+        enabled: false
+        state: stopped
+        masked: true

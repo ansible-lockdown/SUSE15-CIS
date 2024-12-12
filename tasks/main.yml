@@ -24,22 +24,24 @@
   tags:
     - user_passwd
     - rule_5.3.4
+  vars:
+    sudo_password_rule: suse15cis_rule_5_3_4  # pragma: allowlist secret
   block:
-    - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"
+    - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"  # noqa name[template]
       ansible.builtin.shell: "(grep {{ ansible_env.SUDO_USER }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'"
       changed_when: false
       failed_when: false
       check_mode: false
       register: suse15cis_ansible_user_password_set
 
-    - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"
+    - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"  # noqa name[template]
       when: suse15cis_ansible_user_password_set.stdout == "not found"
       ansible.builtin.debug:
         msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
 
     - name: "Check local account"
       block:
-        - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"
+        - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"  # noqa name[template]
           ansible.builtin.assert:
             that:
               - suse15cis_ansible_user_password_set.stdout | length != 0
@@ -47,15 +49,13 @@
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
             success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
 
-        - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"
+        - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]
           when: suse15cis_ansible_user_password_set.stdout != "not found"
           ansible.builtin.assert:
             that:
               - not suse15cis_ansible_user_password_set.stdout.startswith("!")
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
             success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
-  vars:
-    sudo_password_rule: suse15cis_rule_5_3_4  # pragma: allowlist secret
 
 - name: "Check crypto-policy module input"
   when:

@@ -21,3 +21,110 @@ warn_count: 0
 os_gpg_key_pubkey_name: gpg-pubkey-39db7c82-5f68629b
 os_gpg_key_pubkey_content: "SuSE Package Signing Key <build@suse.de> 39db7c82"
 gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
+
+avahi_pkgs:
+  - avahi
+avahi_services:
+  - avahi-daemon.socket
+  - avahi-daemon.service
+
+dhcp_pkgs:
+  - dhcp-server
+dhcp_services:
+  - dhcpd.service
+  - dhcpd6.service
+
+dns_pkgs:
+  - bind
+dns_services:
+  - named.service
+
+dnsmasq_pkgs:
+  - dnsmasq
+dnsmasq_services:
+  - dnsmasq.service
+
+samba_pkgs:
+  - samba
+samba_services:
+  - smb.service
+
+ldap_pkgs:
+  - openldap2-client
+ldap_services:
+  - slapd.service
+
+ftp_pkgs:
+  - vsftpd
+ftp_services:
+  - vsftpd.service
+
+messaging_pkgs:
+  - dovecot
+  - cyrus-impad
+messaging_services:
+  - dovecot.service
+  - dovecot.socket
+  - cyrus-imapd.service
+
+nfs_pkgs:
+  - nfs-kernel-server
+nfs_services:
+  - nfs-server.service
+
+nis_pkgs:
+  - ypserv
+nis_services:
+  - yserv.services
+
+print_pkgs:
+  - cups
+print_services:
+  - cups.service
+  - cups.socket
+
+rpcbind_pkgs:
+  - rpcbind
+rpcbind_services:
+  - rpcbind.service
+  - rpcbind.socket
+
+rsync_pkgs:
+  - rsync-daemon
+rsync_services:
+  - rsyncd.socket
+  - rsyncd.service
+
+snmp_pkgs:
+  - net-snmp
+snmp_services:
+  - snmpd.service
+
+telnet_pkgs:
+  - telnet-server
+telnet_services:
+  - telnet.socket
+
+tftp_pkgs:
+  - tftp-server
+tftp_services:
+  - tftp.socket
+  - tftp.service
+
+web_proxy_pkgs:
+  - squid
+web_proxy_services:
+  - squid.service
+
+web_server_pkgs:
+  - httpd
+  - nginx
+web_service_services:
+  - httpd.socket
+  - httpd.service
+  - nginx.service
+
+xinetd_pkgs:
+  - xinetd
+xinetd_services:
+  - xinetd.service

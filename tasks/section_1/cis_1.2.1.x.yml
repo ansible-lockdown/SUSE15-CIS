@@ -1,8 +1,7 @@
 ---
 
 - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured"
-  when:
-    - suse15cis_rule_1_2_1_1
+  when: suse15cis_rule_1_2_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -15,25 +14,25 @@
       ansible.builtin.shell: "rpm -qa | grep {{ os_gpg_key_pubkey_name }}"
       changed_when: false
       failed_when: false
-      register: os_installed_pub_keys
+      register: discovered_os_installed_pub_keys
 
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | Query found keys"
-      ansible.builtin.shell: 'rpm -q --queryformat "%{PACKAGER} %{VERSION}\\n" {{ os_gpg_key_pubkey_name }} | grep "{{ os_gpg_key_pubkey_content }}"'
+      when: discovered_os_installed_pub_keys.rc == 0
+      ansible.builtin.shell: |
+        'rpm -q --queryformat "%{PACKAGER} %{VERSION}\\n" {{ os_gpg_key_pubkey_name }} | grep "{{ os_gpg_key_pubkey_content }}"'
       changed_when: false
       failed_when: false
-      register: os_gpg_key_check
-      when: os_installed_pub_keys.rc == 0
+      register: discovered_os_gpg_key_check
 
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | expected keys fail"
       when:
-        - os_installed_pub_keys.rc == 1 or
-          os_gpg_key_check.rc == 1
+        - discovered_os_installed_pub_keys.rc == 1 or
+          discovered_os_gpg_key_check.rc == 1
       ansible.builtin.fail:
         msg: Installed GPG Keys do not meet expected values or expected keys are not installed
 
 - name: "1.2.1.2 | PATCH | Ensure gpgcheck is globally activated"
-  when:
-    - suse15cis_rule_1_2_1_2
+  when: suse15cis_rule_1_2_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -45,20 +44,19 @@
       ansible.builtin.find:
         paths: /etc/zypp/repos.d
         patterns: "*.repo"
-      register: yum_repos
+      register: discovered_repofiles
 
     - name: "1.2.1.2 | PATCH | Ensure gpgcheck is globally activated | Update yum.repos"
       ansible.builtin.replace:
         name: "{{ item.path }}"
         regexp: ^gpgcheck\s*=\s*0
         replace: "gpgcheck=1"
-      loop: "{{ yum_repos.files }}"
+      loop: "{{ discovered_repofiles.files }}"
       loop_control:
         label: "{{ item.path }}"
 
 - name: "1.2.1.3 | AUDIT | Ensure repo_gpgcheck is globally activated"
-  when:
-    - suse15cis_rule_1_2_1_3
+  when: suse15cis_rule_1_2_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -77,20 +75,19 @@
       ansible.builtin.find:
         paths: /etc/zypp/repos.d
         patterns: "*.repo"
-      register: repo_files
+      register: discovered_repofiles
 
     - name: "1.2.1.3 | PATCH | Ensure repo_gpgcheck is globally activated | amend repo files"
       ansible.builtin.replace:
         path: "{{ item.path }}"
         regexp: ^repo_gpgcheck\s*=\s*0
         replace: repo_gpgcheck=1
-      loop: "{{ repo_files.files }}"
+      loop: "{{ discovered_repofiles.files }}"
       loop_control:
         label: "{{ item.path }}"
 
 - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured"
-  when:
-    - suse15cis_rule_1_2_1_4
+  when: suse15cis_rule_1_2_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -98,22 +95,22 @@
     - audit
     - rule_1.2.1.4
     - NIST800-53R5_SI-2
+  vars:
+    warn_control_id: '1.2.1.4'
   block:
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Get repo list"
-      ansible.builtin.shell: dnf repolist
+      ansible.builtin.command: zypper lr
       changed_when: false
       failed_when: false
-      register: dnf_configured
+      register: discovered_repolist
       check_mode: false
 
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Display repo list"
       ansible.builtin.debug:
         msg:
           - "Warning!! Below are the configured repos. Please review and make sure all align with site policy"
-          - "{{ dnf_configured.stdout_lines }}"
+          - "{{ discovered_repolist.stdout_lines }}"
 
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
-  vars:
-    warn_control_id: '1.2.1.4'
