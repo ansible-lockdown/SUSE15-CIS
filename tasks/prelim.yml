@@ -104,7 +104,7 @@
     - name: "PRELIM | AUDIT | Debug of mount variables to assist in troubleshooting"
       when: suse15cis_debug_mount_data
       ansible.builtin.debug:
-        msg: "{{ ['Output of mounts variables used for debug!!']  + prelim_mount_point_fs_and_options }}"
+        msg: "{{ ['Output of mounts variables used for debug!!'] + prelim_mount_point_fs_and_options }}"
 
 - name: "PRELIM | Set facts based on boot type"
   block:
@@ -208,6 +208,13 @@
     group: root
     mode: 'u-x,go-rwx'
     state: touch
+
+- name: " PRELIM | Create pwquality directory"
+  when: not suse15cis_use_pam_config
+  ansible.builtin.file:
+    path: /etc/security/pwquality.conf.d/
+    state: directory
+    mode: 'u+x,go-w'
 
 # - name: "PRELIM | 5.3.4 | Find all sudoers files."
 #   when:

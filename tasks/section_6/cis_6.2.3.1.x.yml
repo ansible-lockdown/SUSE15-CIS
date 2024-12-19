@@ -1,0 +1,62 @@
+---
+
+- name: "6.2.3.1.1 | PATCH | Ensure rsyslog is configured to send logs to a remote log host"
+  when:
+    - suse15cis_rule_6_2_3_1_1
+    - suse15cis_remote_log_server
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rsyslog
+    - rule_6.2.3.1.1
+    - NIST800-53R5_AU-6
+  ansible.builtin.blockinfile:
+    path: /etc/rsyslog.conf
+    state: present
+    block: |
+      # target can be IP or FQDN
+      *.* action(type="omfwd" target="{{ suse15cis_remote_log_host }}" port="{{ suse15cis_remote_log_port }}" protocol="{{ suse15cis_remote_log_protocol }}" action.resumeRetryCount="{{ suse15cis_remote_log_retrycount }}" queue.type="LinkedList" queue.size="{{ suse15cis_remote_log_queuesize }}")
+    insertafter: EOF
+  failed_when:
+    - discovered_rsyslog_remote_host is failed
+    - discovered_rsyslog_remote_host.rc != 257
+  register: discovered_rsyslog_remote_host
+  notify: Restart rsyslog
+
+- name: "6.2.3.1.2 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote client"
+  when: suse15cis_rule_6_2_3_1_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rsyslog
+    - rule_6.2.3.1.2
+    - NIST800-53R5_AU-2
+    - NIST800-53R5_AU-7
+    - NIST800-53R5_AU-12
+    - NIST800-53R5_CM-6
+  block:
+    - name: "6.2.3.1.2 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote client. | When not log host"
+      when: not suse15cis_system_is_log_server
+      ansible.builtin.replace:
+        path: /etc/rsyslog.conf
+        regexp: "{{ item }}"
+        replace: "#\\1"
+      notify: Restart rsyslog
+      loop:
+        - "^(\\$ModLoad imtcp)"
+        - "^(\\$InputTCPServerRun)"
+        - '^(module\(load="imtcp"\))'
+        - '^(input\(type="imtcp")'
+
+    - name: "6.2.3.1.2 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote clients. | When log host"
+      when: suse15cis_system_is_log_server
+      ansible.builtin.replace:
+        path: /etc/rsyslog.conf
+        regexp: "^#(.*{{ item }}.*)"
+        replace: "\\1"
+      notify: Restart rsyslog
+      loop:
+        - "ModLoad imtcp"
+        - "InputTCPServerRun"

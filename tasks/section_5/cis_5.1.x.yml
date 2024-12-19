@@ -128,11 +128,19 @@
         - Update Crypto Policy
         - Set Crypto Policy
 
+    - name: "5.1.5 | PATCH | Ensure sshd KexAlgorithms is configured | Remove weak kex from ssh config"
+      ansible.builtin.lineinfile:
+        path: "{{ suse15cis_sshd_config_file }}"
+        regexp: "^KexAlgorithms"
+        line: "KexAlgorithms -{{ suse15cis_sshd_weak_kex | join(',') }}"
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
     - name: "5.1.5 | PATCH | Ensure sshd KexAlgorithms is configured | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         suse15cis_crypto_policy_module: "{{ suse15cis_crypto_policy_module + ':NO-SHA1' }}"
 
-- name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured"
+- name: "5.1.6 | PATCH | Ensure sshd MACs are configured"
   when:
     - suse15cis_rule_5_1_6
     - "'NO-SSHWEAKMACS' not in suse15cis_crypto_policy_module"
@@ -145,7 +153,7 @@
     - rule_5.1.6
     - NIST800-53R5_SC-6
   block:
-    - name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured | Add submodule exclusion"
+    - name: "5.1.6 | PATCH | Ensure sshd MACs are configured | Add submodule exclusion"
       ansible.builtin.template:
         src: etc/crypto-policies/policies/modules/NO-SSHWEAKMACS.pmod.j2
         dest: /etc/crypto-policies/policies/modules/NO-SSHWEAKMACS.pmod
@@ -156,7 +164,15 @@
         - Update Crypto Policy
         - Set Crypto Policy
 
-    - name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured | submodule to crypto policy modules"
+    - name: "5.1.6 | PATCH | Ensure sshd MACs are configured | Remove weak macs from ssh config"
+      ansible.builtin.lineinfile:
+        path: "{{ suse15cis_sshd_config_file }}"
+        regexp: "^MACs"
+        line: "MACs -{{ suse15cis_sshd_weak_macs | join(',') }}"
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.6 | PATCH | Ensure sshd MACs are configured | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         suse15cis_crypto_policy_module: "{{ suse15cis_crypto_policy_module + ':' + 'NO-SSHWEAKMACS' }}"
 
@@ -224,6 +240,8 @@
     path: "{{ suse15cis_sshd_config_file }}"
     regexp: '^Banner'
     line: 'Banner /etc/issue.net'
+    validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured"
   when: suse15cis_rule_5_1_9
@@ -238,22 +256,15 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  block:
-    - name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured | Add line in sshd_config for ClientAliveInterval"
-      ansible.builtin.lineinfile:
-        path: "{{ suse15cis_sshd_config_file }}"
-        regexp: '^ClientAliveInterval'
-        line: "ClientAliveInterval {{ suse15cis_sshd_clientaliveinterval }}"
-        validate: sshd -t -f %s
-      notify: Restart sshd
-
-    - name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured | Ensure SSH ClientAliveCountMax set to <= 3"
-      ansible.builtin.lineinfile:
-        path: "{{ suse15cis_sshd_config_file }}"
-        regexp: '^ClientAliveCountMax'
-        line: "ClientAliveCountMax {{ suse15cis_sshd_clientalivecountmax }}"
-        validate: sshd -t -f %s
-      notify: Restart sshd
+  ansible.builtin.lineinfile:
+    path: "{{ suse15cis_sshd_config_file }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.regexp }} {{ item.line }}"
+    validate: sshd -t -f %s
+  loop:
+    - { regexp: 'ClientAliveInterval', line: suse15cis_sshd_clientaliveinterval }
+    - { regexp: 'ClientAliveCountMax', line: suse15cis_sshd_clientalivecountmax }
+  notify: Restart sshd
 
 - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled"
   when: suse15cis_rule_5_1_10
@@ -264,22 +275,12 @@
     - ssh
     - rule_5.1.10
     - NIST800-53R5_CM-7
-  block:
-    - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | config file"
-      ansible.builtin.lineinfile:
-        path: "{{ suse15cis_sshd_config_file }}"
-        regexp: ^(#|)\s*DisableForwarding
-        line: 'DisableForwarding yes'
-        validate: sshd -t -f %s
-      notify: Restart sshd
-
-    - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | override"
-      ansible.builtin.lineinfile:
-        path: /etc/ssh/sshd_config.d/50-redhat.conf
-        regexp: ^(?i)(#|)\s*X11Forwarding
-        line: 'X11Forwarding {{ suse15cis_sshd_x11forwarding }}'
-        validate: sshd -t -f %s
-      notify: Restart sshd
+  ansible.builtin.lineinfile:
+    path: "{{ suse15cis_sshd_config_file }}"
+    regexp: ^(#|)\s*DisableForwarding
+    line: 'DisableForwarding yes'
+    validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled"
   when: suse15cis_rule_5_1_11
@@ -298,7 +299,7 @@
     - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | redhat file"
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config.d/50-redhat.conf
-        regexp: ^(?i)(#|)\s*GSSAPIAuthentication
+        regexp: (?i)^(#|)\s*GSSAPIAuthentication
         line: GSSAPIAuthentication no
         validate: sshd -t -f %s
       notify: Restart sshd
@@ -306,7 +307,7 @@
     - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | ssh config"
       ansible.builtin.lineinfile:
         path: "{{ suse15cis_sshd_config_file }}"
-        regexp: ^(?i)(#|)\s*GSSAPIAuthentication
+        regexp: (?i)^(#|)\s*GSSAPIAuthentication
         line: GSSAPIAuthentication no
         validate: sshd -t -f %s
       notify: Restart sshd
@@ -326,7 +327,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*HostbasedAuthentication
+    regexp: (?i)^(#|)\s*HostbasedAuthentication
     line: 'HostbasedAuthentication no'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -346,7 +347,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*IgnoreRhosts
+    regexp: (?i)^(#|)\s*IgnoreRhosts
     line: 'IgnoreRhosts yes'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -362,8 +363,8 @@
     - NIST800-53R5_CM-6
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*LoginGraceTime
-    line: "LoginGraceTime {{ suse15cis_sshd_logingracetime }}"
+    regexp: (?i)^(#|)\s*LoginGraceTime
+    line: "LoginGraceTime {{ suse15cis_sshd_login_grace_time }}"
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -380,7 +381,7 @@
     - NIST800-53R5_SI-5
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*LogLevel
+    regexp: (?i)^(#|)\s*LogLevel
     line: 'LogLevel {{ suse15cis_ssh_loglevel }}'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -397,7 +398,7 @@
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
     regexp: '^(#)?MaxAuthTries \d'
-    line: 'MaxAuthTries {{ suse15cis_ssh_maxauthtries }}'
+    line: 'MaxAuthTries {{ suse15cis_sshd_max_auth_tries }}'
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -416,8 +417,8 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*MaxStartups
-    line: 'MaxStartups {{ suse15cis_ssh_maxstartups }}'
+    regexp: (?i)^(#|)\s*MaxStartups
+    line: 'MaxStartups {{ suse15cis_ssh_max_startups }}'
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -436,8 +437,8 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*MaxSessions
-    line: 'MaxSessions {{ suse15cis_ssh_maxsessions }}'
+    regexp: (?i)^(#|)\s*MaxSessions
+    line: 'MaxSessions {{ suse15cis_ssh_max_sessions }}'
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -456,7 +457,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*PermitEmptyPasswords
+    regexp: (?i)^(#|)\s*PermitEmptyPasswords
     line: 'PermitEmptyPasswords no'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -474,7 +475,7 @@
     - name: "5.1.20 | PATCH | Ensure sshd PermitRootLogin is disabled | config file"
       ansible.builtin.lineinfile:
         path: "{{ suse15cis_sshd_config_file }}"
-        regexp: ^(?i)(#|)\s*PermitRootLogin
+        regexp: (?i)^(#|)\s*PermitRootLogin
         line: 'PermitRootLogin no'
         validate: sshd -t -f %s
       notify: Restart sshd
@@ -500,7 +501,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*PermitUserEnvironment
+    regexp: (?i)^(#|)\s*PermitUserEnvironment
     line: 'PermitUserEnvironment no'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -520,7 +521,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ suse15cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*UsePAM
+    regexp: (?i)^(#|)\s*UsePAM
     line: 'UsePAM yes'
     validate: sshd -t -f %s
   notify: Restart sshd

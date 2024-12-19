@@ -265,7 +265,8 @@
   notify: Set_reboot_required
 
 - name: Stop auditd process
-  ansible.builtin.shell: systemctl kill auditd
+  ansible.builtin.command: systemctl kill auditd  # noqa command-instead-of-module
+  changed_when: true
   listen: Restart auditd
 
 - name: Start auditd process

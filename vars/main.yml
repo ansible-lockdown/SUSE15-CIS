@@ -22,6 +22,7 @@ os_gpg_key_pubkey_name: gpg-pubkey-39db7c82-5f68629b
 os_gpg_key_pubkey_content: "SuSE Package Signing Key <build@suse.de> 39db7c82"
 gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
 
+# Services and packages
 avahi_pkgs:
   - avahi
 avahi_services:
@@ -128,3 +129,17 @@ xinetd_pkgs:
   - xinetd
 xinetd_services:
   - xinetd.service
+
+aide_packages:
+  - aide
+
+# Aide initiate command for new DB creation
+aide_initiate_command: /usr/sbin/aide --init
+
+# List of auditd binary files
+auditd_binaries:
+  - /usr/sbin/auditctl
+  - /usr/sbin/aureport
+  - /usr/sbin/ausearch
+  - /usr/sbin/auditd
+  - /usr/sbin/augenrules

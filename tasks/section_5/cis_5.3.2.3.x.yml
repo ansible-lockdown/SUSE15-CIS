@@ -1,0 +1,75 @@
+---
+
+- name: "5.3.2.3.1 | PATCH | Ensure password history remember is configured"
+  when:
+    - suse15cis_rule_5_3_2_3_1
+    - suse15cis_disruption_high
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_5.3.2.3.1
+    - pam
+    - NIST800-53R5_IA-5
+  block:
+    - name: "5.3.2.3.1 | AUDIT | Ensure password history remember is configured | Check existing files"
+      ansible.builtin.command: pam-config --query --pwhistory --pwhistory-remember
+      changed_when: false
+      failed_when: discovered_pwhistory_remember.rc not in [ 0, 1 ]
+      register: discovered_pwhistory_remember
+
+    - name: "5.3.2.3.1 | PATCH | Ensure password number of changed characters is configured | Ensure remember is set"
+      when:
+        - discovered_pwhistory_remember.stdout is defined
+        - "'remember='suse15cis_pamd_pwhistory_remember not in discovered_pwhistory_remember.stdout"
+      ansible.builtin.command: pam-config -a --pwhistory --pwhistory-remember={{ suse15cis_pamd_pwhistory_remember }}
+      changed_when: true
+
+- name: "5.3.2.3.2 | PATCH | Ensure password history is enforced for the root user"
+  when:
+    - suse15cis_rule_5_3_2_3_2
+    - suse15cis_disruption_high
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_5.3.2.3.2
+    - pam
+    - NIST800-53R5_IA-5
+  block:
+    - name: "5.3.2.3.2 | AUDIT | Ensure password history is enforced for the root user | Check existing files"
+      ansible.builtin.command: pam-config --query --pwhistory --pwhistory-remember
+      changed_when: false
+      failed_when: discovered_pwhistory_remember.rc not in [ 0, 1 ]
+      register: discovered_pwhistory_enforce_root
+
+    - name: "5.3.2.3.2 | PATCH | Ensure password history is enforced for the root user | Ensure remember is set"
+      when:
+        - discovered_pwhistory_enforce_root.stdout is defined
+        - "'enforce_for_root' not in discovered_pwhistory_enforce_root.stdout"
+      ansible.builtin.command: pam-config -a --pwhistory --pwhistory-enforce_for_root
+      changed_when: true
+
+- name: "5.3.2.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok"
+  when:
+    - suse15cis_rule_5_3_2_3_3
+    - suse15cis_disruption_high
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_5.3.2.3.3
+    - pam
+    - NIST800-53R5_IA-5
+  block:
+    - name: "5.3.2.3.3 | AUDIT | Ensure pam_pwhistory includes use_authtok | Check existing files"
+      ansible.builtin.shell: grep -P -- '^\h*password\h+([^#\n\r]+)\h+pam_pwhistory\.so\h+([^#\n\r]+\h+)?use_authtok\b' /etc/pam.d/*  # noqa command-instead-of-shell
+      changed_when: false
+      failed_when: discovered_pwhistory_use_authtok.rc not in [ 0, 1 ]
+      register: discovered_pwhistory_use_authtok
+
+    - name: "5.3.2.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok | Ensure remember is set"
+      when: discovered_pwhistory_use_authtok.stdout is not defined
+      ansible.builtin.command: pam-config -a --pwhistory --pwhistory-use_authtok
+      changed_when: true
+      notify: Pam_auth_update_pwhistory

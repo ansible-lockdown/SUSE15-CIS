@@ -445,83 +445,82 @@ suse15cis_rule_5_4_3_1: true
 suse15cis_rule_5_4_3_2: true
 suse15cis_rule_5_4_3_3: true
 
-## Section 6
-
-# 6.2.1.x Configure systemd-journald service
-suse15cis_rule_6_1_1_1: true
-suse15cis_rule_6_1_1_2: true
-suse15cis_rule_6_1_1_3: true
-suse15cis_rule_6_1_1_4: true
-# 6.1.2.1 Configure journald
-suse15cis_rule_6_1_2_1_1: true
-suse15cis_rule_6_1_2_1_2: true
-suse15cis_rule_6_1_2_1_3: true
-suse15cis_rule_6_1_2_1_4: true
-suse15cis_rule_6_1_2_2: true
-suse15cis_rule_6_1_2_3: true
-suse15cis_rule_6_1_2_4: true
-# 6.1.3 Configure rsyslog
-suse15cis_rule_6_1_3_1: true
-suse15cis_rule_6_1_3_2: true
-suse15cis_rule_6_1_3_3: true
-suse15cis_rule_6_1_3_4: true
-suse15cis_rule_6_1_3_5: true
-suse15cis_rule_6_1_3_6: true
-suse15cis_rule_6_1_3_7: true
-# 6.1.3.8 logrotate
-suse15cis_rule_6_1_3_8: true
-# 6.1.4.1 configure logfiles
-suse15cis_rule_6_1_4_1: true
-# 6.2.1 Configure auditd services
+# Section 6 Logging and Auditing
+## 6.1 Configure Integrity Checking
+suse15cis_rule_6_1_1: true
+suse15cis_rule_6_1_2: true
+suse15cis_rule_6_1_3: true
+## 6.2.1 Configure systemd-journald service
 suse15cis_rule_6_2_1_1: true
 suse15cis_rule_6_2_1_2: true
 suse15cis_rule_6_2_1_3: true
 suse15cis_rule_6_2_1_4: true
-# 6.2.2 Configure auditd data retention
-suse15cis_rule_6_2_2_1: true
+## 6.2.2.x Configure journald
+suse15cis_rule_6_2_2_1_1: true
+suse15cis_rule_6_2_2_1_2: true
+suse15cis_rule_6_2_2_1_3: true
+suse15cis_rule_6_2_2_1_4: true
 suse15cis_rule_6_2_2_2: true
 suse15cis_rule_6_2_2_3: true
 suse15cis_rule_6_2_2_4: true
-# 6.2.3 Configure auditd rules
-suse15cis_rule_6_2_3_1: true
+## 6.2.3.1.x Configure rsyslog remote
+suse15cis_rule_6_2_3_1_1: true
+suse15cis_rule_6_2_3_1_2: true
+## 6.2.3.x Configure rsyslog
 suse15cis_rule_6_2_3_2: true
 suse15cis_rule_6_2_3_3: true
 suse15cis_rule_6_2_3_4: true
 suse15cis_rule_6_2_3_5: true
 suse15cis_rule_6_2_3_6: true
 suse15cis_rule_6_2_3_7: true
-suse15cis_rule_6_2_3_8: true
-suse15cis_rule_6_2_3_9: true
-suse15cis_rule_6_2_3_10: true
-suse15cis_rule_6_2_3_11: true
-suse15cis_rule_6_2_3_12: true
-suse15cis_rule_6_2_3_13: true
-suse15cis_rule_6_2_3_14: true
-suse15cis_rule_6_2_3_15: true
-suse15cis_rule_6_2_3_16: true
-suse15cis_rule_6_2_3_17: true
-suse15cis_rule_6_2_3_18: true
-suse15cis_rule_6_2_3_19: true
-suse15cis_rule_6_2_3_20: true
-suse15cis_rule_6_2_3_21: true
-# 6.2.4 Configure audit file access
+## 6.2.4 Configure Logfiles
 suse15cis_rule_6_2_4_1: true
-suse15cis_rule_6_2_4_2: true
-suse15cis_rule_6_2_4_3: true
-suse15cis_rule_6_2_4_4: true
-suse15cis_rule_6_2_4_5: true
-suse15cis_rule_6_2_4_6: true
-suse15cis_rule_6_2_4_7: true
-suse15cis_rule_6_2_4_8: true
-suse15cis_rule_6_2_4_9: true
-suse15cis_rule_6_2_4_10: true
-# 6.3 Configure Filesystem Integrity Checking
-suse15cis_rule_6_3_1: true
-suse15cis_rule_6_3_2: true
-suse15cis_rule_6_3_3: true
+# 6.2.1 Configure auditd services
+suse15cis_rule_6_3_1_1: true
+suse15cis_rule_6_3_1_2: true
+suse15cis_rule_6_3_1_3: true
+suse15cis_rule_6_3_1_4: true
+# 6.2.2 Configure auditd data retention
+suse15cis_rule_6_3_2_1: true
+suse15cis_rule_6_3_2_2: true
+suse15cis_rule_6_3_2_3: true
+suse15cis_rule_6_3_2_4: true
+# 6.2.3 Configure auditd rules
+suse15cis_rule_6_3_3_1: true
+suse15cis_rule_6_3_3_2: true
+suse15cis_rule_6_3_3_3: true
+suse15cis_rule_6_3_3_4: true
+suse15cis_rule_6_3_3_5: true
+suse15cis_rule_6_3_3_6: true
+suse15cis_rule_6_3_3_7: true
+suse15cis_rule_6_3_3_8: true
+suse15cis_rule_6_3_3_9: true
+suse15cis_rule_6_3_3_10: true
+suse15cis_rule_6_3_3_11: true
+suse15cis_rule_6_3_3_12: true
+suse15cis_rule_6_3_3_13: true
+suse15cis_rule_6_3_3_14: true
+suse15cis_rule_6_3_3_15: true
+suse15cis_rule_6_3_3_16: true
+suse15cis_rule_6_3_3_17: true
+suse15cis_rule_6_3_3_18: true
+suse15cis_rule_6_3_3_19: true
+suse15cis_rule_6_3_3_20: true
+suse15cis_rule_6_3_3_21: true
+# 6.2.4 Configure audit file access
+suse15cis_rule_6_3_4_1: true
+suse15cis_rule_6_3_4_2: true
+suse15cis_rule_6_3_4_3: true
+suse15cis_rule_6_3_4_4: true
+suse15cis_rule_6_3_4_5: true
+suse15cis_rule_6_3_4_6: true
+suse15cis_rule_6_3_4_7: true
+suse15cis_rule_6_3_4_8: true
+suse15cis_rule_6_3_4_9: true
+suse15cis_rule_6_3_4_10: true
 
-## Section 7
-# 7.1 System File Permissions
+# Section 7 System Maintenance
+## 7.1 System File Permissions
 suse15cis_rule_7_1_1: true
 suse15cis_rule_7_1_2: true
 suse15cis_rule_7_1_3: true
@@ -535,7 +534,7 @@ suse15cis_rule_7_1_10: true
 suse15cis_rule_7_1_11: true
 suse15cis_rule_7_1_12: true
 suse15cis_rule_7_1_13: true
-# 7.2 Local User and Group Settings
+## 7.2 Local User and Group Settings
 suse15cis_rule_7_2_1: true
 suse15cis_rule_7_2_2: true
 suse15cis_rule_7_2_3: true
@@ -545,7 +544,6 @@ suse15cis_rule_7_2_6: true
 suse15cis_rule_7_2_7: true
 suse15cis_rule_7_2_8: true
 suse15cis_rule_7_2_9: true
-suse15cis_rule_7_2_10: true
 
 ##
 ## Service configuration variables.
@@ -822,6 +820,8 @@ suse15cis_ufw_allow_out_ports:
   - 53
   - 80
   - 443
+# Is setting rsyslog to remote to will need to allow 514
+# - 514
 
 ## Controls 4.2.x - nftables
 # Nftables is not supported in this role. Some tasks have parts of them commented out, this is one example
@@ -837,13 +837,14 @@ suse15cis_ufw_allow_out_ports:
 ## Controls 5.1.x -- various sshd settings
 suse15cis_sshd_default_log_level: "INFO"
 suse15cis_sshd_default_max_auth_tries: 4
-suse15cis_sshd_default_max_sessions: 8
+suse15cis_sshd_default_max_sessions: 10  # Must be set to 10 or less
+suse15cis_sshd_default_max_startups: '10:30:60'
 suse15cis_sshd_default_login_grace_time: 60
-suse15cis_sshd_default_client_alive_interval: 300
+suse15cis_sshd_default_client_alive_interval: 15
 suse15cis_sshd_default_client_alive_count_max: 3
 # Removed chacha20-poly1305 due to cve2023-48795
 # all Ciphers, KEX and Macs set to FIPS 140
-# This will nee dto be adjusted according to your site requirements
+# This will need to be adjusted according to your site requirements
 suse15cis_sshd_default_ciphers:
   - aes256-gcm@openssh.com
   - aes128-gcm@openssh.com
@@ -863,6 +864,26 @@ suse15cis_sshd_default_kex_algorithms:
   - diffie-hellman-group16-sha512
   - diffie-hellman-group18-sha512
   - diffie-hellman-group14-sha256
+suse15cis_sshd_weak_ciphers:
+  - 3des-cbc
+  - aes128-cbc
+  - aes192-cbc
+  - aes256-cbc
+  - chacha20-poly1305@openssh.com
+suse15cis_sshd_weak_kex:
+  - diffie-hellman-group1-sha1
+  - diffie-hellman-group14-sha1
+  - diffie-hellman-group-exchange-sha1
+suse15cis_sshd_weak_macs:
+  - hmac-md5,hmac-md5-96
+  - hmac-ripemd160
+  - hmac-sha1-96
+  - umac-64@openssh.com
+  - hmac-md5-etm@openssh.com
+  - hmac-md5-96-etm@openssh.com
+  - hmac-ripemd160-etm@openssh.com
+  - hmac-sha1-96-etm@openssh.com
+  - umac-64-etm@openssh.com
 
 ## SSH
 # This variable is used to control the verbosity of the logging produced by the SSH server.
@@ -897,8 +918,10 @@ suse15cis_sshd_client_alive_count_max: "{{ suse15cis_sshd_default_client_alive_c
 # This variable specifies the amount of seconds allowed for successful authentication to
 # the SSH server.
 suse15cis_sshd_login_grace_time: "{{ suse15cis_sshd_default_login_grace_time }}"
-# This variables is used to set the maximum number of open sessions per connection.
+# This variables is used to set the maximum number of open sessions per connection. Must be 10 or less
 suse15cis_sshd_max_sessions: "{{ suse15cis_sshd_default_max_sessions }}"
+# The MaxStartups parameter specifies the maximum number of concurrent unauthenticated connections to the SSH daemon.
+suse15cis_sshd_max_startups: "{{ suse15cis_sshd_default_max_startups }}"
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
 # access for users whose user name matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
@@ -956,20 +979,15 @@ suse15cis_sudo_timestamp_timeout: 15
 suse15cis_sugroup: nosugroup
 
 ## 5.3.2.x
+# Ability to use pam-config tool to set pam settings
+# NOTE: This changes as pwhistory.conf no longer valid Manual changes may need to be complete
+suse15cis_use_pam_config: true
 # Path to find templates and where to put file for pam-auth
 suse15cis_pam_confd_dir: 'usr/share/pam-configs/'
 ### Note: controls also managed with disruption high due to the nature of pam changes
 # Create file will create/replace with the name
 
-# Controls 5.3.2.1 - pam_unix
-# Name of file
-suse15cis_pam_pwunix_file: 'pam_unix'
-# Should NOT be enabled if allowing custom config that enabled pam_faillock
-suse15cis_pam_create_pamunix_file: false
-# Allow pam-auth-update --enable suse15cis_pam_pwunix_file to run
-suse15cis_pam_auth_unix: true
-
-# 5.3.2.2 - pam_faillock
+# 5.3.2.1.x - pam_faillock
 # Name of files
 suse15cis_pam_faillock_file: 'faillock'
 suse15cis_pam_faillock_notify_file: 'faillock_notify'
@@ -980,101 +998,81 @@ suse15cis_pam_auth_faillock: true
 # Allow new file to be created or overwrite existing with same name
 suse15cis_pam_create_faillock_files: true
 
-# 5.3.2.3 - pam_pwquality
-# Name of files
-suse15cis_pam_pwquality_file: 'pwquality'
-# Allow new file to be created or overwrite existing with same name
-suse15cis_pam_create_pwquality_files: true
-# Allow pam-auth-update --enable suse15cis_pam_pwquality_file
-suse15cis_pam_auth_pwquality: true
+# 5.3.2.1.1 - faillock_deny
+suse15cis_faillock_deny: 5
 
-# 5.3.2.4 - pam_pwhistory
-# Name of file
-suse15cis_pam_pwhistory_file: 'pwhistory'
-# Allow new file to be created or overwrite existing with same name
-# filepath also affects controls 5.3.3.3.1, 5.3.3.3.2, 5.3.3.3.3
-suse15cis_pam_create_pwhistory_files: true
-# Allow pam-auth-update --enable suse15cis_pam_pwhistory_file
-suse15cis_pam_auth_pwhistory: true
-
-# 5.3.3.1.1 - faillock_deny
-suse15cis_faillock_deny: 3
-
-# 5.3.3.1.2 - faillock unlock time
+# 5.3.2.1.2 - faillock unlock time
 suse15cis_faillock_unlock_time: 900
 
-# 5.3.3.1.3 - lock root
+# 5.3.2.1.3 - lock root
 # This allow optional - even_deny_root or root_unlock_time
 suse15cis_pamroot_lock_option: even_deny_root
 suse15cis_pamroot_lock_string: even_deny_root
 
-# 5.3.3.2.1 - password difok
+# 5.3.2.2.x - pam_pwquality
+# 5.3.2.2.1 - password difok
 suse15cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pragma: allowlist secret
 suse15cis_passwd_difok_value: 2
 
-# 5.3.3.2.2 - password minlength
+# 5.3.2.2.2 - password minlength
 suse15cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # pragma: allowlist secret
 suse15cis_passwd_minlen_value: 14
 
-# 5.3.3.2.3 - password complex
+# 5.3.2.2.3 - password complex
 suse15cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
-suse15cis_passwd_minclass: 3
+suse15cis_passwd_minclass: 4  # Defaults to minclass
 suse15cis_passwd_dcredit: -1
 suse15cis_passwd_ucredit: -2
 suse15cis_passwd_ocredit: 0
 suse15cis_passwd_lcredit: -2
 
-# 5.3.3.2.4 - password maxrepeat
+# 5.3.2.2.4 - password maxrepeat
 suse15cis_passwd_maxrepeat_file: etc/security/pwquality.conf.d/50-pwrepeat.conf  # pragma: allowlist secret
 suse15cis_passwd_maxrepeat_value: 3
 
-# 5.3.3.2.5 - password maxsequence
+# 5.3.2.2.5 - password maxsequence
 suse15cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence.conf  # pragma: allowlist secret
 suse15cis_passwd_maxsequence_value: 3
 
-# 5.3.3.2.6 - password dictcheck
+# 5.3.2.2.6 - password dictcheck
 suse15cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
 suse15cis_passwd_dictcheck_value: 1
 
-# 5.3.3.2.7 - password quality enforce
-suse15cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
-suse15cis_passwd_quality_enforce_value: 1
-
-# 5.3.3.2.8 - password quality enforce for root included with 5.3.3.2.7
+# 5.3.2.2.7 - password quality enforce for root included with 5.3.2.2.7
 suse15cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
 suse15cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
 
-## 5.3.3.3 Configure pam_pwhistory module
-# Uses value for suse15cis_pam_pwhistory_file in 5.3.2.4
-# Control 5.3.3.3.1
+## 5.3.2.3 Configure pam_pwhistory module
+# Control 5.3.2.3.1
 # This variable represents the number of password change cycles, after which
 # a user can re-use a password. # CIS requires a value of 24 or more.
 suse15cis_pamd_pwhistory_remember: 24
 
+# Controls 5.3.2.4 - pam_unix
+
 ## Controls 5.4.1.x - Password settings
-suse15cis_pass:
-  ## Control 5.4.1.1
-  # This variable governs after how many days a  password expires.
-  # CIS requires a value of 365 or less.
-  max_days: 365
-  ## Control 5.4.1.2
-  # This variable specifies the minimum number of days allowed between changing passwords.
-  # CIS requires a value of at least 1.
-  min_days: 1
-  ## Control 5.5.1.3
-  # This variable governs, how many days before a password expires, the user will be warned.
-  # CIS requires a value of at least 7.
-  warn_age: 7
-  ## Control 5.4.1.5
-  # This variable specifies the number of days of inactivity before an account will be locked.
-  # CIS requires a value of 45 days or less.
-  inactive: 45
+## Control 5.4.1.1
+# This variable governs after how many days a  password expires.
+# CIS requires a value of 365 or less.
+suse15cis_pass_max_days: 365
+## Control 5.4.1.2
+# This variable specifies the minimum number of days allowed between changing passwords.
+# CIS requires a value of at least 1.
+suse15cis_pass_min_days: 1
+## Control 5.5.1.3
+# This variable governs, how many days before a password expires, the user will be warned.
+# CIS requires a value of at least 7.
+suse15cis_pass_warn_age: 7
+## Control 5.4.1.5
+# This variable specifies the number of days of inactivity before an account will be locked.
+# CIS requires a value of 45 days or less.
+suse15cis_pass_inactive: 45
 
 # 5.4.2.6 root umask
 suse15cis_root_umask: '0027'  # 0027 or more restrictive
 ## Control 5.4.4
-# suse15cis_passwd_hash_algo is the hashing algorithm used
-suse15cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
+# suse15cis_passwd_hash_algo is the hashing algorithm used - SHA512 default as yescrypt not available at release
+suse15cis_passwd_hash_algo: sha512 # pragma: allowlist secret
 # Set pam as well as login defs if PAM is required
 suse15cis_passwd_setpam_hash_algo: false
 
