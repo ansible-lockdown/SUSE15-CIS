@@ -234,7 +234,7 @@
         state: directory
         owner: "{{ item.id }}"
         group: "{{ item.gid }}"
-      loop: "{{ prelim_captured_passwd_data | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', prelim_max_int_uid | int) | list }}"
+      loop: "{{ prelim_captured_passwd_data | selectattr('uid', '>=', prelim_uid_min_id | int) | selectattr('uid', '<=', prelim_uid_max_id | int) | list }}"
       loop_control:
         label: "{{ item.id }}"
 

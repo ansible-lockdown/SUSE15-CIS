@@ -50,12 +50,12 @@
 
         - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB | Wait for file before continuing"
           ansible.builtin.wait_for:
-            path: /var/lib/aide/aide.db.new.gz
+            path: /var/lib/aide/aide.db.new
 
-        - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB | copy AIDE DB"
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB | Copy AIDE DB"
           ansible.builtin.copy:
-            src: /var/lib/aide/aide.db.new.gz
-            dest: /var/lib/aide/aide.db.gz
+            src: /var/lib/aide/aide.db.new
+            dest: /var/lib/aide/aide.db
             remote_src: true
             mode: 'u-x,g-wx,o-rwx'
 

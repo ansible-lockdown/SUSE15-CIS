@@ -71,7 +71,7 @@
       register: discovered_firewalld_default_zone
 
     - name: "4.2.4 | PATCH | Ensure default zone is set | firewalld | get current zone"
-      when: discovered_firewalld_default_zone != suse15cis_default_zone
+      when: discovered_firewalld_default_zone.stdout != suse15cis_default_zone
       ansible.builtin.command: firewall-cmd --set-default-zone="{{ suse15cis_default_zone }}"
       changed_when: true
 

@@ -1,7 +1,7 @@
 ---
 
 - name: "5.3.2.2.1 | PATCH | Ensure password dictionary check is enabled"
-  when: suse15cis_rule_5_3_2_2_6
+  when: suse15cis_rule_5_3_2_2_1
   tags:
     - level1-server
     - level1-workstation
@@ -21,7 +21,7 @@
 
     - name: "5.3.2.2.1 | AUDIT | Ensure password dictionary check is enabled | Check cracklib set in pam"
       when: suse15cis_use_pam_config
-      ansible.builtin.command: pam-config -q -cracklib
+      ansible.builtin.command: pam-config -q --cracklib
       changed_when: false
       register: discovered_pam_dictcheck
 
@@ -66,7 +66,7 @@
 
     - name: "5.3.2.2.2 | AUDIT | Ensure password number of changed characters is configured | check difok set in pam"
       when: suse15cis_use_pam_config
-      ansible.builtin.command: pam-config -q -cracklib --cracklib-difok
+      ansible.builtin.command: pam-config -q --cracklib --cracklib-difok
       changed_when: false
       register: discovered_pam_difok
 
@@ -74,8 +74,8 @@
       when:
         - suse15cis_use_pam_config
         - discovered_pam_difok.stdout is defined
-        - "'difok='suse15cis_passwd_difok_value not in discovered_pam_difok.stdout"
-      ansible.builtin.command: pam-config -a --cracklib-difok={{ suse15cis_passwd_difok_value }}
+        - "('difok=' + suse15cis_passwd_difok_value) not in discovered_pam_difok.stdout"
+      ansible.builtin.command: pam-config -a --cracklib --cracklib-difok={{ suse15cis_passwd_difok_value }}
       changed_when: true
 
 - name: "5.3.2.2.3 | PATCH | Ensure minimum password length is configured"
@@ -109,7 +109,7 @@
 
     - name: "5.3.2.2.3 | AUDIT | Ensure password number of changed characters is configured | check minlength set in pam"
       when: suse15cis_use_pam_config
-      ansible.builtin.command: pam-config -q -cracklib --cracklib-minlen
+      ansible.builtin.command: pam-config -q --cracklib --cracklib-minlen
       changed_when: false
       register: discovered_pam_minlen
 
@@ -117,8 +117,8 @@
       when:
         - suse15cis_use_pam_config
         - discovered_pam_minlen.stdout is defined
-        - "'minlen='suse15cis_passwd_minlen_value not in discovered_pam_minlen.stdout"
-      ansible.builtin.command: pam-config -a --cracklib-minlen={{ suse15cis_passwd_minlen_value }}
+        - "('minlen=' + suse15cis_passwd_minlen_value) not in discovered_pam_minlen.stdout"
+      ansible.builtin.command: pam-config -a --cracklib --cracklib-minlen={{ suse15cis_passwd_minlen_value }}
       changed_when: true
 
 - name: "5.3.2.2.4 | PATCH | Ensure password complexity is configured"
@@ -152,7 +152,7 @@
 
     - name: "5.3.2.2.4 | AUDIT | Ensure password complexity is configured | check passwd complexity set in pam"
       when: suse15cis_use_pam_config
-      ansible.builtin.command: pam-config -q -cracklib
+      ansible.builtin.command: pam-config -q --cracklib --cracklib-minclass --cracklib-ucredit
       changed_when: false
       register: discovered_pam_complex
 
@@ -160,8 +160,8 @@
       when:
         - suse15cis_use_pam_config
         - discovered_pam_complex.stdout is defined
-        - ("'minclass='suse15cis_passwd_minclass_value not in discovered_pam_complex.stdout" or "'ucredit='suse15cis_passwd_ucredit_value not in discovered_pam_complex.stdout")
-      ansible.builtin.command: pam-config -a --cracklib-minclass={{ suse15cis_passwd_minclass_value }}
+        - "(('minclass=' + suse15cis_passwd_minclass_value) or ('ucredit=' + suse15cis_passwd_ucredit_value)) not in discovered_pam_complex.stdout"
+      ansible.builtin.command: pam-config -a --cracklib --cracklib-minclass={{ suse15cis_passwd_minclass_value }}
       changed_when: true
 
 - name: "5.3.2.2.5 | PATCH | Ensure password same consecutive characters is configured"
@@ -185,6 +185,7 @@
         - '/etc/security/pwquality.conf.d/*.conf'
 
     - name: "5.3.2.2.5 | PATCH | Ensure password same consecutive characters is configured | Ensure maxrepeat file exists"
+      when: not suse15cis_use_pam_config
       ansible.builtin.template:
         src: "{{ suse15cis_passwd_maxrepeat_file }}.j2"
         dest: "/{{ suse15cis_passwd_maxrepeat_file }}"
@@ -192,9 +193,9 @@
         group: root
         mode: 'go-rwx'
 
-    - name: "5.3.2.2.5 | PATCH | Ensure password same consecutive characters is configured | check passwd max repeat set in pam"
+    - name: "5.3.2.2.5 | AUDIT | Ensure password same consecutive characters is configured | check passwd max repeat set in pam"
       when: suse15cis_use_pam_config
-      ansible.builtin.command: pam-config -q -cracklib --cracklib-maxrepeat
+      ansible.builtin.command: pam-config -q --cracklib --cracklib-maxrepeat
       changed_when: false
       register: discovered_pam_maxrepeat
 
@@ -202,8 +203,8 @@
       when:
         - suse15cis_use_pam_config
         - discovered_pam_maxrepeat.stdout is defined
-        - "'maxrepeat='suse15cis_passwd_maxrepeat_value not in discovered_pam_maxrepeat.stdout"
-      ansible.builtin.command: pam-config -a --cracklib-minclass={{ suse15cis_passwd_maxrepeat_value }}
+        - "('maxrepeat=' + suse15cis_passwd_maxrepeat_value) not in discovered_pam_maxrepeat.stdout"
+      ansible.builtin.command: pam-config -a --cracklib --cracklib-maxrepeat={{ suse15cis_passwd_maxrepeat_value }}
       changed_when: true
 
 - name: "5.3.2.2.6 | PATCH | Ensure password maximum sequential characters is configured"
@@ -227,6 +228,7 @@
         - '/etc/security/pwquality.conf.d/*.conf'
 
     - name: "5.3.2.2.6 | PATCH | Ensure password maximum sequential characters is configured | Ensure maxsequence file exists"
+      when: not suse15cis_use_pam_config
       ansible.builtin.template:
         src: "{{ suse15cis_passwd_maxsequence_file }}.j2"
         dest: "/{{ suse15cis_passwd_maxsequence_file }}"
@@ -234,9 +236,9 @@
         group: root
         mode: 'go-rwx'
 
-    - name: "5.3.2.2.6 | PATCH | Ensure password maximum sequential characters is configured | check passwd max sequence set in pam"
+    - name: "5.3.2.2.6 | AUDIT | Ensure password maximum sequential characters is configured | check passwd max sequence set in pam"
       when: suse15cis_use_pam_config
-      ansible.builtin.command: pam-config -q -cracklib --cracklib-maxsequence
+      ansible.builtin.command: pam-config -q --cracklib --cracklib-maxsequence
       changed_when: false
       register: discovered_pam_maxsequence
 
@@ -244,8 +246,8 @@
       when:
         - suse15cis_use_pam_config
         - discovered_pam_maxsequence.stdout is defined
-        - "'maxsequence='suse15cis_passwd_maxsequence_value not in discovered_pam_maxsequence.stdout"
-      ansible.builtin.command: pam-config -a --cracklib-maxsequence={{ suse15cis_passwd_maxsequence_value }}
+        - "('maxsequence=' + suse15cis_passwd_maxsequence_value) not in discovered_pam_maxsequence.stdout"
+      ansible.builtin.command: pam-config -a --cracklib --cracklib-maxsequence={{ suse15cis_passwd_maxsequence_value }}
       changed_when: true
 
 - name: "5.3.2.2.7 | PATCH | Ensure password quality is enforced for the root user"
@@ -259,16 +261,17 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.2.2.7 | PATCH | Ensure password quality is enforced for the root user"
+      when: not suse15cis_use_pam_config
       ansible.builtin.template:
-        src: "{{ suse15cis_passwd_quality_enforce_root_file }}.j2"
-        dest: "/{{ suse15cis_passwd_quality_enforce_root_file }}"
+        src: "{{ suse15cis_passwd_quality_enforce_for_root_file }}.j2"
+        dest: "/{{ suse15cis_passwd_quality_enforce_for_root_file }}"
         owner: root
         group: root
         mode: 'go-rwx'
 
-    - name: "5.3.2.2.7 | PATCH | Ensure password quality is enforced for the root user | check enforce_for_root set in pam"
+    - name: "5.3.2.2.7 | AUDIT | Ensure password quality is enforced for the root user | check enforce_for_root set in pam"
       when: suse15cis_use_pam_config
-      ansible.builtin.command: pam-config -q -cracklib --cracklib-enforce_for_root
+      ansible.builtin.command: pam-config -q --cracklib --cracklib-enforce_for_root
       changed_when: false
       register: discovered_pam_enforce_for_root
 
@@ -276,6 +279,6 @@
       when:
         - suse15cis_use_pam_config
         - discovered_pam_enforce_for_root.stdout is defined
-        - "'enforce_for_root=suse15cis_passwd_quality_enforce_for_root_value not in discovered_pam_enforce_for_root.stdout"
-      ansible.builtin.command: pam-config -a --cracklib-maxsequence={{ suse15cis_passwd_quality_enforce_for_root_value }}
+        - "'enforce_for_root' not in discovered_pam_enforce_for_root.stdout"
+      ansible.builtin.command: pam-config -a --cracklib --cracklib-enforce_for_root
       changed_when: true

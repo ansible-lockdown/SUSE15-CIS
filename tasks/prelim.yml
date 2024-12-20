@@ -25,28 +25,28 @@
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
   changed_when: false
-  register: discovered_interactive_usernames
+  register: prelim_interactive_usernames
 
 - name: "PRELIM | AUDIT | Interactive User accounts home directories"
   tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
   changed_when: false
-  register: discovered_interactive_users_home
+  register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
   tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
   changed_when: false
-  register: discovered_interactive_uids
+  register: prelim_interactive_uids
 
-- name: "PRELIM | capture /etc/password variables"
+- name: "PRELIM | AUDIT | capture /etc/password variables"
   tags: always
   ansible.builtin.include_tasks:
     file: parse_etc_password.yml
 
-- name: "PRELIM | List users accounts"
+- name: "PRELIM | AUDIT | List users accounts"
   tags:
     - level1-server
     - level1-workstation
@@ -56,7 +56,7 @@
   check_mode: false
   register: users
 
-- name: "PRELIM | Gather accounts with empty password fields"
+- name: "PRELIM | AUDIT | Gather accounts with empty password fields"
   tags:
     - level1-server
     - level1-workstation
@@ -66,7 +66,7 @@
   check_mode: false
   register: empty_password_accounts
 
-- name: "PRELIM | Gather UID 0 accounts other than root"
+- name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"
   tags:
     - rule_6.2.9
     - level1-server
@@ -106,20 +106,20 @@
       ansible.builtin.debug:
         msg: "{{ ['Output of mounts variables used for debug!!'] + prelim_mount_point_fs_and_options }}"
 
-- name: "PRELIM | Set facts based on boot type"
+- name: "PRELIM | AUDIT | Set facts based on boot type"
   block:
-    - name: "PRELIM | Check whether machine is UEFI-based"
+    - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
       ansible.builtin.stat:
         path: /sys/firmware/efi
       register: prelim_efi_boot
 
-    - name: "PRELIM | Set legacy boot and grub path | Bios"
+    - name: "PRELIM | AUDIT | Set legacy boot and grub path | Bios"
       when: not prelim_efi_boot.stat.exists
       ansible.builtin.set_fact:
         suse15cis_legacy_boot: true
         grub2_path: /etc/grub2.cfg
 
-    - name: "PRELIM | Set grub fact | UEFI"
+    - name: "PRELIM | AUDIT | Set grub fact | UEFI"
       when: prelim_efi_boot.stat.exists
       ansible.builtin.set_fact:
         grub2_path: /etc/grub2-efi.cfg
@@ -155,20 +155,20 @@
       ansible.builtin.set_fact:
         current_crypto_module: "{{ prelim_system_wide_crypto_policy.stdout.split(':')[1] }}"
 
-- name: PRELIM | Discover Gnome Desktop Environment
+- name: PRELIM | AUDIT | Discover Gnome Desktop Environment
   tags: always
   ansible.builtin.stat:
     path: /usr/share/gnome/gnome-version.xml
   register: prelim_gnome_present
 
-- name: PRELIM | Discover dconf systemdb
+- name: PRELIM | AUDIT | Discover dconf systemdb
   when: suse15cis_gui
   ansible.builtin.shell: grep system-db /etc/dconf/profile/user | cut -d ':' -f2
   changed_when: false
   failed_when: prelim_dconf_db.rc not in [ 0, 1 ]
   register: prelim_dconf_db
 
-- name: PRELIM | Discover dconf db files
+- name: PRELIM | AUDIT | Discover dconf db files
   when: suse15cis_gui
   ansible.builtin.find:
     path: /etc/dconf/db/local.d
@@ -197,7 +197,7 @@
       failed_when: prelim_wireless_modules.rc not in [ 0, 1 ]
       register: prelim_wireless_modules
 
-- name: "PRELIM | Set sshd config file"
+- name: "PRELIM | PATCH | Set sshd config file"
   when:
     - suse15cis_sshd_config_file != '/etc/ssh/sshd_config'
     - "'openssh-server' in ansible_facts.packages"
@@ -209,7 +209,7 @@
     mode: 'u-x,go-rwx'
     state: touch
 
-- name: " PRELIM | Create pwquality directory"
+- name: "PRELIM | PATCH | Create pwquality directory"
   when: not suse15cis_use_pam_config
   ansible.builtin.file:
     path: /etc/security/pwquality.conf.d/
@@ -229,30 +229,62 @@
 #   check_mode: false
 #   register: prelim_sudoers_files
 
-- name: "PRELIM | Discover Interactive UID MIN and MIN from logins.def"
+- name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
   block:
-    - name: "PRELIM | Capture UID_MIN information from logins.def"
+    - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
       ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
       changed_when: false
       register: prelim_uid_min_id
 
-    - name: "PRELIM | Capture UID_MAX information from logins.def"
+    - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
       ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
       changed_when: false
       register: prelim_uid_max_id
 
-    - name: "PRELIM | Capture GID_MIN information from logins.def"
+    - name: "PRELIM | AUDIT | Capture GID_MIN information from logins.def"
       ansible.builtin.shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
       changed_when: false
       register: prelim_gid_min_id
 
-    - name: "PRELIM | Set_facts for interactive uid/gid"
+    - name: "PRELIM | AUDIT | Set_facts for interactive uid/gid"
       ansible.builtin.set_fact:
         min_int_uid: "{{ prelim_uid_min_id.stdout }}"
         max_int_uid: "{{ prelim_uid_max_id.stdout }}"
         min_int_gid: "{{ prelim_gid_min_id.stdout }}"
 
-- name: "PRELIM | Gather the package facts after prelim"
+- name: "PRELIM | AUDIT | Discover audit logfile"
+  when:
+    - suse15cis_rule_6_3_4_1 or
+      suse15cis_rule_6_3_4_2 or
+      suse15cis_rule_6_3_4_3 or
+      suse15cis_rule_6_3_4_4
+  tags: always
+  ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
+  changed_when: false
+  register: prelim_auditd_logfile
+
+- name: "PRELIM | AUDIT | Audit conf and rules files | list files"
+  when:
+    - suse15cis_rule_6_3_4_5 or
+      suse15cis_rule_6_3_4_6 or
+      suse15cis_rule_6_3_4_7
+  tags: always
+  ansible.builtin.find:
+    path: /etc/audit
+    file_type: file
+    recurse: true
+    patterns: "*.conf,*.rules"
+  register: prelim_auditd_conf_files
+
+- name: "PRELIM | AUDIT | Check if auditd is immutable before changes"
+  when: "'auditd' in ansible_facts.packages"
+  tags: always
+  ansible.builtin.shell: auditctl -l | grep -c '-e 2'
+  changed_when: false
+  failed_when: prelim_auditd_immutable_check.rc not in [ 0, 1 ]
+  register: prelim_auditd_immutable_check
+
+- name: "PRELIM | AUDIT | Gather the package facts after prelim"
   tags: always
   ansible.builtin.package_facts:
     manager: auto

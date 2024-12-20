@@ -205,8 +205,6 @@ suse15cis_rule_1_4_2: true
 suse15cis_rule_1_5_1: true
 suse15cis_rule_1_5_2: true
 suse15cis_rule_1_5_3: true
-suse15cis_rule_1_5_4: true
-suse15cis_rule_1_5_5: true
 
 # 1.6 Configure System Wide cryptopolicy
 suse15cis_rule_1_6_1: true
@@ -274,9 +272,11 @@ suse15cis_rule_2_2_5: true
 
 # Ensure time synchronization is in use
 suse15cis_rule_2_3_1_1: true
+
 # Configure systemd-timesyncd
 suse15cis_rule_2_3_2_1: true
 suse15cis_rule_2_3_2_2: true
+
 # Configure Chrony
 suse15cis_rule_2_3_3_1: true
 suse15cis_rule_2_3_3_2: true
@@ -292,19 +292,23 @@ suse15cis_rule_2_4_1_5: true
 suse15cis_rule_2_4_1_6: true
 suse15cis_rule_2_4_1_7: true
 suse15cis_rule_2_4_1_8: true
+
 # Configure At
 suse15cis_rule_2_4_2_1: true
 
 ## Section 3 Network Configuration
+
 # 3.1 Configure Network Devices
 suse15cis_rule_3_1_1: true
 suse15cis_rule_3_1_2: true
 suse15cis_rule_3_1_3: true
+
 # 3.2 Configure Network Kernel Modules (Host Only)
 suse15cis_rule_3_2_1: true
 suse15cis_rule_3_2_2: true
 suse15cis_rule_3_2_3: true
 suse15cis_rule_3_2_4: true
+
 # 3.3 Configure Network Kernel Parameters (Host and Router)
 suse15cis_rule_3_3_1: true
 suse15cis_rule_3_3_2: true
@@ -329,35 +333,6 @@ suse15cis_rule_4_2_2: true
 suse15cis_rule_4_2_3: true
 suse15cis_rule_4_2_4: true
 suse15cis_rule_4_2_5: true
-suse15cis_rule_4_2_6: true
-suse15cis_rule_4_2_7: true
-# 4.3 Configure nftables
-suse15cis_rule_4_3_1: true
-suse15cis_rule_4_3_2: true
-suse15cis_rule_4_3_3: true
-suse15cis_rule_4_3_4: true
-suse15cis_rule_4_3_5: true
-suse15cis_rule_4_3_6: true
-suse15cis_rule_4_3_7: true
-suse15cis_rule_4_3_8: true
-suse15cis_rule_4_3_9: true
-suse15cis_rule_4_3_10: true
-
-# 4.4.1 Configure iptables software
-suse15cis_rule_4_4_1_1: true
-suse15cis_rule_4_4_1_2: true
-suse15cis_rule_4_4_1_3: true
-
-# 4.4.2 Configure IPv4 iptables
-suse15cis_rule_4_4_2_1: true
-suse15cis_rule_4_4_2_2: true
-suse15cis_rule_4_4_2_3: true
-suse15cis_rule_4_4_2_4: true
-# 4.4.3 Configure IPv6 iptables
-suse15cis_rule_4_4_3_1: true
-suse15cis_rule_4_4_3_2: true
-suse15cis_rule_4_4_3_3: true
-suse15cis_rule_4_4_3_4: true
 
 ## Section 5 Access Control
 # 5.1 Configure SSH Server
@@ -383,6 +358,7 @@ suse15cis_rule_5_1_19: true
 suse15cis_rule_5_1_20: true
 suse15cis_rule_5_1_21: true
 suse15cis_rule_5_1_22: true
+
 # 5.2 Configure privilege escalation
 suse15cis_rule_5_2_1: true
 suse15cis_rule_5_2_2: true
@@ -391,38 +367,36 @@ suse15cis_rule_5_2_4: true
 suse15cis_rule_5_2_5: true
 suse15cis_rule_5_2_6: true
 suse15cis_rule_5_2_7: true
+
 # 5.3.1 Configure PAM software packages
 suse15cis_rule_5_3_1_1: true
-suse15cis_rule_5_3_1_2: true
-suse15cis_rule_5_3_1_3: true
-# 5.3.2 Configure pam-auth-update profiles
-suse15cis_rule_5_3_2_1: true
-suse15cis_rule_5_3_2_2: true
-suse15cis_rule_5_3_2_3: true
-suse15cis_rule_5_3_2_4: true
-# 5.3.3.1 Configure pam_faillock module
-suse15cis_rule_5_3_3_1_1: true
-suse15cis_rule_5_3_3_1_2: true
-suse15cis_rule_5_3_3_1_3: true
-# 5.3.3.2 Configure pam_quality module
-suse15cis_rule_5_3_3_2_1: true
-suse15cis_rule_5_3_3_2_2: true
-suse15cis_rule_5_3_3_2_3: true
-suse15cis_rule_5_3_3_2_4: true
-suse15cis_rule_5_3_3_2_5: true
-suse15cis_rule_5_3_3_2_6: true
-suse15cis_rule_5_3_3_2_7: true
-suse15cis_rule_5_3_3_2_8: true
-# 5.3.3.3 Configure pam_history module
+
+# 5.3.2.1 Configure pam_faillock module
+suse15cis_rule_5_3_2_1_1: true
+suse15cis_rule_5_3_2_1_2: true
+suse15cis_rule_5_3_2_1_3: true
+
+# 5.3.2.2 Configure pam_quality module
+suse15cis_rule_5_3_2_2_1: true
+suse15cis_rule_5_3_2_2_2: true
+suse15cis_rule_5_3_2_2_3: true
+suse15cis_rule_5_3_2_2_4: true
+suse15cis_rule_5_3_2_2_5: true
+suse15cis_rule_5_3_2_2_6: true
+suse15cis_rule_5_3_2_2_7: true
+
+# 5.3.2.3 Configure pam_history module
 # This are added as part of 5.3.2.4 using jinja2 template
-suse15cis_rule_5_3_3_3_1: true
-suse15cis_rule_5_3_3_3_2: true
-suse15cis_rule_5_3_3_3_3: true
-# 5.3.3.4 Configure pam_unix module
-suse15cis_rule_5_3_3_4_1: true
-suse15cis_rule_5_3_3_4_2: true
-suse15cis_rule_5_3_3_4_3: true
-suse15cis_rule_5_3_3_4_4: true
+suse15cis_rule_5_3_2_3_1: true
+suse15cis_rule_5_3_2_3_2: true
+suse15cis_rule_5_3_2_3_3: true
+
+# 5.3.2.4 Configure pam_unix module
+suse15cis_rule_5_3_2_4_1: true
+suse15cis_rule_5_3_2_4_2: true
+suse15cis_rule_5_3_2_4_3: true
+suse15cis_rule_5_3_2_4_4: true
+
 # 5.4 User Accounts and Environment
 # 5.4.1 Configure shadow password suite parameters
 suse15cis_rule_5_4_1_1: true
@@ -431,6 +405,7 @@ suse15cis_rule_5_4_1_3: true
 suse15cis_rule_5_4_1_4: true
 suse15cis_rule_5_4_1_5: true
 suse15cis_rule_5_4_1_6: true
+
 # 5.4.2 Configure root and system accounts and environment
 suse15cis_rule_5_4_2_1: true
 suse15cis_rule_5_4_2_2: true
@@ -440,6 +415,7 @@ suse15cis_rule_5_4_2_5: true
 suse15cis_rule_5_4_2_6: true
 suse15cis_rule_5_4_2_7: true
 suse15cis_rule_5_4_2_8: true
+
 # 5.4.2 Configure user default environment
 suse15cis_rule_5_4_3_1: true
 suse15cis_rule_5_4_3_2: true
@@ -450,11 +426,13 @@ suse15cis_rule_5_4_3_3: true
 suse15cis_rule_6_1_1: true
 suse15cis_rule_6_1_2: true
 suse15cis_rule_6_1_3: true
+
 ## 6.2.1 Configure systemd-journald service
 suse15cis_rule_6_2_1_1: true
 suse15cis_rule_6_2_1_2: true
 suse15cis_rule_6_2_1_3: true
 suse15cis_rule_6_2_1_4: true
+
 ## 6.2.2.x Configure journald
 suse15cis_rule_6_2_2_1_1: true
 suse15cis_rule_6_2_2_1_2: true
@@ -463,9 +441,11 @@ suse15cis_rule_6_2_2_1_4: true
 suse15cis_rule_6_2_2_2: true
 suse15cis_rule_6_2_2_3: true
 suse15cis_rule_6_2_2_4: true
+
 ## 6.2.3.1.x Configure rsyslog remote
 suse15cis_rule_6_2_3_1_1: true
 suse15cis_rule_6_2_3_1_2: true
+
 ## 6.2.3.x Configure rsyslog
 suse15cis_rule_6_2_3_2: true
 suse15cis_rule_6_2_3_3: true
@@ -473,18 +453,22 @@ suse15cis_rule_6_2_3_4: true
 suse15cis_rule_6_2_3_5: true
 suse15cis_rule_6_2_3_6: true
 suse15cis_rule_6_2_3_7: true
+
 ## 6.2.4 Configure Logfiles
 suse15cis_rule_6_2_4_1: true
+
 # 6.2.1 Configure auditd services
 suse15cis_rule_6_3_1_1: true
 suse15cis_rule_6_3_1_2: true
 suse15cis_rule_6_3_1_3: true
 suse15cis_rule_6_3_1_4: true
+
 # 6.2.2 Configure auditd data retention
 suse15cis_rule_6_3_2_1: true
 suse15cis_rule_6_3_2_2: true
 suse15cis_rule_6_3_2_3: true
 suse15cis_rule_6_3_2_4: true
+
 # 6.2.3 Configure auditd rules
 suse15cis_rule_6_3_3_1: true
 suse15cis_rule_6_3_3_2: true
@@ -507,6 +491,7 @@ suse15cis_rule_6_3_3_18: true
 suse15cis_rule_6_3_3_19: true
 suse15cis_rule_6_3_3_20: true
 suse15cis_rule_6_3_3_21: true
+
 # 6.2.4 Configure audit file access
 suse15cis_rule_6_3_4_1: true
 suse15cis_rule_6_3_4_2: true
@@ -534,6 +519,7 @@ suse15cis_rule_7_1_10: true
 suse15cis_rule_7_1_11: true
 suse15cis_rule_7_1_12: true
 suse15cis_rule_7_1_13: true
+
 ## 7.2 Local User and Group Settings
 suse15cis_rule_7_2_1: true
 suse15cis_rule_7_2_2: true
@@ -958,7 +944,7 @@ suse15cis_sudo_package: "sudo"
 
 ## Control 5.2.3
 # This variable defines the path and file name of the sudo log file.
-suse15cis_sudo_logfile: "/var/log/sudo.log"
+suse15cis_sudolog_location: "/var/log/sudo.log"
 
 ## control 5.2.4 sudoers NOPASSWD
 # This will leave NOPASSWD intact for these users
@@ -999,10 +985,10 @@ suse15cis_pam_auth_faillock: true
 suse15cis_pam_create_faillock_files: true
 
 # 5.3.2.1.1 - faillock_deny
-suse15cis_faillock_deny: 5
+suse15cis_pam_faillock_deny: 5
 
 # 5.3.2.1.2 - faillock unlock time
-suse15cis_faillock_unlock_time: 900
+suse15cis_pam_faillock_unlock_time: 900
 
 # 5.3.2.1.3 - lock root
 # This allow optional - even_deny_root or root_unlock_time
@@ -1012,64 +998,83 @@ suse15cis_pamroot_lock_string: even_deny_root
 # 5.3.2.2.x - pam_pwquality
 # 5.3.2.2.1 - password difok
 suse15cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pragma: allowlist secret
-suse15cis_passwd_difok_value: 2
+suse15cis_passwd_difok_value: '2'
 
 # 5.3.2.2.2 - password minlength
 suse15cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # pragma: allowlist secret
-suse15cis_passwd_minlen_value: 14
+suse15cis_passwd_minlen_value: '14'
 
 # 5.3.2.2.3 - password complex
 suse15cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
-suse15cis_passwd_minclass: 4  # Defaults to minclass
-suse15cis_passwd_dcredit: -1
-suse15cis_passwd_ucredit: -2
-suse15cis_passwd_ocredit: 0
-suse15cis_passwd_lcredit: -2
+suse15cis_passwd_minclass_value: '4'  # Defaults to minclass
+suse15cis_passwd_dcredit_value: '-1'
+suse15cis_passwd_ucredit_value: '-2'
+suse15cis_passwd_ocredit_value: '0'
+suse15cis_passwd_lcredit_value: '-2'
 
 # 5.3.2.2.4 - password maxrepeat
 suse15cis_passwd_maxrepeat_file: etc/security/pwquality.conf.d/50-pwrepeat.conf  # pragma: allowlist secret
-suse15cis_passwd_maxrepeat_value: 3
+suse15cis_passwd_maxrepeat_value: '3'
 
 # 5.3.2.2.5 - password maxsequence
 suse15cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence.conf  # pragma: allowlist secret
-suse15cis_passwd_maxsequence_value: 3
+suse15cis_passwd_maxsequence_value: '3'
 
 # 5.3.2.2.6 - password dictcheck
 suse15cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
-suse15cis_passwd_dictcheck_value: 1
+suse15cis_passwd_dictcheck_value: '1'
 
 # 5.3.2.2.7 - password quality enforce for root included with 5.3.2.2.7
-suse15cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
-suse15cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
+suse15cis_passwd_quality_enforce_for_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
+suse15cis_passwd_quality_enforce_for_root_value: enforce_for_root  # pragma: allowlist secret
 
 ## 5.3.2.3 Configure pam_pwhistory module
 # Control 5.3.2.3.1
 # This variable represents the number of password change cycles, after which
 # a user can re-use a password. # CIS requires a value of 24 or more.
-suse15cis_pamd_pwhistory_remember: 24
+suse15cis_pamd_pwhistory_remember: '24'
 
 # Controls 5.3.2.4 - pam_unix
 
 ## Controls 5.4.1.x - Password settings
 ## Control 5.4.1.1
+## Allow the forcing of setting user_max_days for logins.
+# This can break current connecting user access
+suse15cis_force_user_maxdays: false
 # This variable governs after how many days a  password expires.
 # CIS requires a value of 365 or less.
 suse15cis_pass_max_days: 365
 ## Control 5.4.1.2
+## 5.4.1.x Allow the force setting of minimum days between changing the password
+# This can break current connecting user access
+suse15cis_force_user_mindays: false
 # This variable specifies the minimum number of days allowed between changing passwords.
 # CIS requires a value of at least 1.
 suse15cis_pass_min_days: 1
 ## Control 5.5.1.3
+##  Allow the forcing of of number of days before warning users of password expiry
+# This can break current connecting user access
+suse15cis_force_user_warnage: false
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 suse15cis_pass_warn_age: 7
 ## Control 5.4.1.5
 # This variable specifies the number of days of inactivity before an account will be locked.
 # CIS requires a value of 45 days or less.
-suse15cis_pass_inactive: 45
+suse15cis_pass_inactive_lock_days: 45
+## Control 5.4.1.6
+# Allow ansible to expire password for account with a last changed date in the future. Setting it
+# to 'false' will just display users in violation, while 'true' will expire those users passwords.
+suse15cis_futurepwchgdate_autofix: true
 
 # 5.4.2.6 root umask
 suse15cis_root_umask: '0027'  # 0027 or more restrictive
+
+## Control 5.4.2.7 - Ensure system accounts are secured | Set nologin
+# The system users on this list are allowed to have a shell (e.g. applications
+# that require a shell to function)
+suse15cis_system_users_shell: []
+
 ## Control 5.4.4
 # suse15cis_passwd_hash_algo is the hashing algorithm used - SHA512 default as yescrypt not available at release
 suse15cis_passwd_hash_algo: sha512 # pragma: allowlist secret
@@ -1098,48 +1103,193 @@ suse15cis_shell_session_file: /etc/profile.d/tmout.sh
 ##
 ## Section 6 Control Variables
 ##
+##
+## Section 6 Control Variables
+##
+## Control 6.1.x - allow aide to be configured
+# AIDE is a file integrity checking tool, similar in nature to Tripwire.
+# While it cannot prevent intrusions, it can detect unauthorized changes
+# to configuration files by alerting when the files are changed. Review
+# the AIDE quick start guide and AIDE documentation before proceeding.
+# By setting this variable to `true`, all of the settings related to AIDE will be applied!
+suse15cis_config_aide: true
 
-# Set which syslog service
-# journald or rsyslog
-suse15cis_syslog_service: 'journald'
+# If DB file older than below will automatically rebuild DB
+# e.g. options:1w = 1 week, 1d = 1day 1h = 1 hour
+suse15cis_aide_db_file_age: 1w
 
-## Controls 6.1.1.x journald
+# If aide already setup this forces a new DB to be created
+suse15cis_aide_db_recreate: false
 
-# This variable specifies the address of the remote log host where logs are being sent.
-suse15cis_remote_log_server: 192.168.2.100
-# This variable expresses whether the system is used as a log server or not.
-# If set to `true`, controls that interfere with log server functionality or
-# require that own system logs be sent to some other log server are skipped.
-suse15cis_system_is_log_server: false
+# allows to change db file, not config need to be adjusted too
+suse15cis_aide_db_file: /var/lib/aide/aide.db
 
-## Controls 6.1.1.2.x & 6.1.1.x journald
-# This variable specifies the path to the private key file used by the remote journal
-# server to authenticate itself to the client. This key is used alongside the server's
-# public certificate to establish secure communication.
-suse15cis_journal_upload_serverkeyfile:
-# This variable specifies the path to the public certificate file of the remote journal
-# server. This certificate is used to verify the authenticity of the remote server.
-suse15cis_journal_servercertificatefile:
-# This variable specifies the path to a file containing one or more public certificates
-# of certificate authorities (CAs) that the client trusts. These trusted certificates are used
-# to validate the authenticity of the remote server's certificate.
-suse15cis_journal_trustedcertificatefile:
+## When Initializing aide this can take longer on some systems
+# changing the values enables user to change to thier own requirements
+# Maximum Time in seconds
+suse15cis_aide_init_async: 600
+# Polling Interval in seconds
+suse15cis_aide_init_poll: 15
 
-# 6.1.1.1.3
+## Control 6.1.2
+# Set how aide is scanned either cron or timer
+suse15cis_aide_scan: cron
+# These are the crontab settings for periodical checking of the filesystem's integrity using AIDE.
+# The sub-settings of this variable provide the parameters required to configure
+# the cron job on the target system.
+# Cron is a time-based job scheduling program in Unix OS, which allows tasks to be scheduled
+# and executed automatically at a certain point in time.
+
+# This variable represents the user account under which the cron job for AIDE will run.
+suse15cis_aide_cron_user: root
+# This variable represents the path to the AIDE crontab file.
+suse15cis_aide_cron_file: /etc/cron.d/aide_cron
+# This variable represents the actual command or script that the cron job
+# will execute for running AIDE.
+suse15cis_aide_cron_job: '/usr/bin/aide --config /etc/aide/aide.conf --check'
+# These variables define the schedule for the cron job
+# This variable governs the minute of the time of day when the AIDE cronjob is run.
+# It must be in the range `0-59`.
+suse15cis_aide_cron_minute: 0
+# This variable governs the hour of the time of day when the AIDE cronjob is run.
+# It must be in the range `0-23`.
+suse15cis_aide_cron_hour: 5
+# This variable governs the day of the month when the AIDE cronjob is run.
+# `*` signifies that the job is run on all days; furthermore, specific days
+# can be given in the range `1-31`; several days can be concatenated with a comma.
+# The specified day(s) can must be in the range  `1-31`.
+suse15cis_aide_cron_day: '*'
+# This variable governs months when the AIDE cronjob is run.
+# `*` signifies that the job is run in every month; furthermore, specific months
+# can be given in the range `1-12`; several months can be concatenated with commas.
+# The specified month(s) can must be in the range  `1-12`.
+suse15cis_aide_cron_month: '*'
+# This variable governs the weekdays, when the AIDE cronjob is run.
+# `*` signifies that the job is run on all weekdays; furthermore, specific weekdays
+# can be given in the range `0-7` (both `0` and `7` represent Sunday); several weekdays
+# can be concatenated with commas.
+suse15cis_aide_cron_weekday: '*'
+
+#
+## Preferred method of logging
+## Whether rsyslog or journald preferred method for local logging
+## Control 6.2.3 | Configure rsyslog
+## Control 6.2.1 | Configure journald
+# This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
+# or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
+# practices are written wholly independent of each other.
+suse15cis_syslog: journald
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable configures the max amount of disk space the logs will use(thus, journal files
+# will not grow without bounds)
+# The variables below related to journald, please set these to your site specific values
 # These variable specifies how much disk space the journal may use up at most
 # Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
 # See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
-# ATTENTION: Uncomment the keyword below when values are set!
-suse15cis_journald_systemmaxuse: "#SystemMaxUse="
-suse15cis_journald_systemkeepfree: "#SystemKeepFree="
-suse15cis_journald_runtimemaxuse: "#RuntimeMaxUse="
-suse15cis_journald_runtimekeepfree: "#RuntimeKeepFree="
-# This variable specifies, the maximum time to store entries in a single journal
+suse15cis_journald_systemmaxuse: 10M
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable configures the amount of disk space to keep free for other uses.
+suse15cis_journald_systemkeepfree: 100G
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# This variable configures how much disk space the journal may use up at most.
+# Similar with 'suse15cis_journald_systemmaxuse', but related to runtime space.
+suse15cis_journald_runtimemaxuse: 10M
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# This variable configures the actual amount of disk space to keep free
+# Similar with 'suse15cis_journald_systemkeepfree', but related to runtime space.
+suse15cis_journald_runtimekeepfree: 100G
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable governs the settings for log retention(how long the log files will be kept).
+# Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
 # The given values is interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
+# Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
 # ATTENTION: Uncomment the keyword below when values are set!
-suse15cis_journald_maxfilesec: "#MaxFileSec="
+suse15cis_journald_maxfilesec: 1month
+
+## Control 6.2.2.x & 6.2.3.x - Ensure rsyslog is not configured to receive logs from a remote client
+# This variable expresses whether the system is used as a log server or not. If set to:
+#  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
+#  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
+# from local attacks on remote clients)
+suse15cis_system_is_log_server: false
+
+## Control 6.2.3.5 | PATCH | Ensure logging is configured
+# This variable governs if current Ansible role should manage syslog settings
+# in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
+suse15cis_rsyslog_ansiblemanaged: true
+
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
+# remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
+# over UDP or TCP, will not be performed.
+suse15cis_remote_log_server: false
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value of the 'target' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
+# destination server. For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('suse15cis_remote_log_server: true').
+suse15cis_remote_log_host: logagg.example.com
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value of the 'port' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server. The default value for this destination port is 514.
+# For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('suse15cis_remote_log_server: true').
+suse15cis_remote_log_port: 514
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value("TCP"/"UDP") of the 'protocol' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server. The default value for the 'omfwd' plug-in is UDP.
+# For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('suse15cis_remote_log_server: true').
+suse15cis_remote_log_protocol: tcp
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable governs how often an action is retried(value is passed to 'action.resumeRetryCount' parameter) before
+# it is considered to have failed(that roughly translates to discarded messages). The default value is 0, but
+# when set to "-1"(eternal), this setting would prevent rsyslog from dropping messages when retrying to connect
+# if server is not responding. For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('suse15cis_remote_log_server: true').
+suse15cis_remote_log_retrycount: 100
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
+# For this value to be reflected in the configuration, the variable which enables the automatic configuration
+# of rsyslog forwarding must be enabled('suse15cis_remote_log_server: true').
+suse15cis_remote_log_queuesize: 1000
+
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# 'suse15cis_journal_upload_url' is the ip address to upload the journal entries to
+#  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
+#  number may be specified after a colon (":"), otherwise 19532 will be used by default.
+suse15cis_journal_upload_url: 192.168.50.42
+## The paths below have the default paths/files, but allow user to create custom paths/filenames
+
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# The filename in which the correct configuration shoud be stored in /etc/systemd/journal-upload.conf.d/
+suse15cis_journal_remote_upload_config_file: remote_upload.conf
+# This variable specifies the path to the private key file used by the remote journal
+# server to authenticate itself to the client. This key is used alongside the server's
+# public certificate to establish secure communication.
+suse15cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to the public certificate file of the remote journal
+# server. This certificate is used to verify the authenticity of the remote server.
+suse15cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to a file containing one or more public certificates
+# of certificate authorities (CAs) that the client trusts. These trusted certificates are used
+# to validate the authenticity of the remote server's certificate.
+suse15cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
+# ATTENTION: Uncomment the keyword below when values are set!
+
+# Controls 6.2.2.x journald configuration files
+# Best parctice is to use configuration files rather than a default conf.
+# This allows you to call the files as you have set them or change to match your site policy
+# These can be found in /etc/systemd/journald.conf.d/
+# 6.2.2.2
+suse15cis_journald_forwardsyslog: forwardtosyslog.conf
+
+# 6.2.2.3 and 6.2.2.4
+suse15cis_journald_storage: storage.conf
 
 ## Controls 6.2.3.x - Audit template
 # This variable is set to true by tasks 6.2.3.1 to 6.2.3.20. As a result, the
@@ -1156,12 +1306,12 @@ suse15cis_allow_auditd_uid_user_exclusions: false
 suse15cis_auditd_uid_exclude:
   - 1999
 
-# 6.1.3.8
+# 6.2.3.8
 # suse15cis_logrotate sets the daily, weekly, monthly, yearly value for the log rotation
 # To conform to CIS standards this just needs to comply with your site policy
 suse15cis_logrotate: "daily"
 
-##  Control 6.2.1.4 - Ensure audit_backlog_limit is sufficient
+##  Control 6.3.1.3 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
 # system can buffer in memory, if the audit subsystem is unable to process them in real-time.
 # Buffering in memory is useful in situations, where the audit system is overwhelmed
@@ -1169,14 +1319,14 @@ suse15cis_logrotate: "daily"
 # This variable should be set to a sufficient value. The CIS baseline recommends at least `8192` as value.
 suse15cis_audit_back_log_limit: 8192
 
-## Controls 6.2.2.x - What to do when log files fill up
-## Control 6.2.2.1 - Ensure audit log storage size is configured
+## Controls 6.3.2.x - What to do when log files fill up
+## Control 6.3.2.1 - Ensure audit log storage size is configured
 # This variable specifies the maximum size in MB that an audit log file can reach
 # before it is archived or deleted to make space for the new audit data.
 # This should be set based on your sites policy. CIS does not provide a specific value.
-suse15cis_max_log_file_size: 10
+suse15cis_auditd_max_log_file_size: 10
 
-## Control 6.2.3.2
+## Control 6.3.2.2
 # This variable determines what action the audit system should take when the maximum
 # size of a log file is reached.
 # The options for setting this variable are as follows:
@@ -1188,7 +1338,7 @@ suse15cis_max_log_file_size: 10
 # CIS prescribes the value `keep_logs`.
 suse15cis_auditd_max_log_file_action: keep_logs
 
-## Control 6.2.3.3
+## Control 6.3.2.3
 # This variable determines how the system should act in case of issues with disk
 # The disk_full_action parameter tells the system what action to take when no free space is available on the partition that holds the audit log files.
 # Valid values are ignore, syslog, rotate, exec, suspend, single, and halt.
@@ -1208,65 +1358,17 @@ suse15cis_auditd_max_log_file_action: keep_logs
 suse15cis_auditd_disk_full_action: halt
 suse15cis_auditd_disk_error_action: syslog
 
-# Control 6.2.2.4
+# Control 6.3.2.4
 # Wait to do when space left is low.
 suse15cis_auditd_space_left_action: email
 suse15cis_auditd_admin_space_left_action: halt
 
-## Control 6.2.x - allow aide to be configured
-# AIDE is a file integrity checking tool, similar in nature to Tripwire.
-# While it cannot prevent intrusions, it can detect unauthorized changes
-# to configuration files by alerting when the files are changed. Review
-# the AIDE quick start guide and AIDE documentation before proceeding.
-# By setting this variable to `true`, all of the settings related to AIDE will be applied!
-suse15cis_config_aide: true
-
-## When Initializing aide this can take longer on some systems
-# changing the values enables user to change to thier own requirements
-suse15cis_aide_init:
-  # Maximum Time in seconds
-  async: 45
-  # Polling Interval in seconds
-  poll: 0
-
-## Control 6.3
-# Set how aide is scanned either cron or timer
-suse15cis_aide_scan: cron
-# These are the crontab settings for periodical checking of the filesystem's integrity using AIDE.
-# The sub-settings of this variable provide the parameters required to configure
-# the cron job on the target system.
-# Cron is a time-based job scheduling program in Unix OS, which allows tasks to be scheduled
-# and executed automatically at a certain point in time.
-suse15cis_aide_cron:
-  # This variable represents the user account under which the cron job for AIDE will run.
-  cron_user: root
-  # This variable represents the path to the AIDE crontab file.
-  cron_file: /etc/cron.d/aide_cron
-  # This variable represents the actual command or script that the cron job
-  # will execute for running AIDE.
-  aide_job: '/usr/bin/aide --config /etc/aide/aide.conf --check'
-  # These variables define the schedule for the cron job
-  # This variable governs the minute of the time of day when the AIDE cronjob is run.
-  # It must be in the range `0-59`.
-  aide_minute: 0
-  # This variable governs the hour of the time of day when the AIDE cronjob is run.
-  # It must be in the range `0-23`.
-  aide_hour: 5
-  # This variable governs the day of the month when the AIDE cronjob is run.
-  # `*` signifies that the job is run on all days; furthermore, specific days
-  # can be given in the range `1-31`; several days can be concatenated with a comma.
-  # The specified day(s) can must be in the range  `1-31`.
-  aide_day: '*'
-  # This variable governs months when the AIDE cronjob is run.
-  # `*` signifies that the job is run in every month; furthermore, specific months
-  # can be given in the range `1-12`; several months can be concatenated with commas.
-  # The specified month(s) can must be in the range  `1-12`.
-  aide_month: '*'
-  # This variable governs the weekdays, when the AIDE cronjob is run.
-  # `*` signifies that the job is run on all weekdays; furthermore, specific weekdays
-  # can be given in the range `0-7` (both `0` and `7` represent Sunday); several weekdays
-  # can be concatenated with commas.
-  aide_weekday: '*'
+# This value governs if the below extra-vars for auditd should be used by the role
+suse15cis_auditd_extra_conf_usage: false
+# This can be used to configure other keys in auditd.conf
+# Example:
+suse15cis_auditd_extra_conf:
+  admin_space_left: '10%'
 
 ##
 ## Section 7 Control Variables

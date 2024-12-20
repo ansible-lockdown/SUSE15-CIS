@@ -21,7 +21,7 @@
     - name: "5.3.2.3.1 | PATCH | Ensure password number of changed characters is configured | Ensure remember is set"
       when:
         - discovered_pwhistory_remember.stdout is defined
-        - "'remember='suse15cis_pamd_pwhistory_remember not in discovered_pwhistory_remember.stdout"
+        - "('remember=' + suse15cis_pamd_pwhistory_remember) not in discovered_pwhistory_remember.stdout"
       ansible.builtin.command: pam-config -a --pwhistory --pwhistory-remember={{ suse15cis_pamd_pwhistory_remember }}
       changed_when: true
 

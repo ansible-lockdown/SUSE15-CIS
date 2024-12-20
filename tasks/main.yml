@@ -18,12 +18,10 @@
 
 - name: "Check password set for {{ ansible_env.SUDO_USER }}"
   when:
-    - suse15cis_rule_5_3_4
+    - suse15cis_rule_5_2_4
     - ansible_env.SUDO_USER is defined
     - not system_is_ec2
-  tags:
-    - user_passwd
-    - rule_5.3.4
+  tags: always
   vars:
     sudo_password_rule: suse15cis_rule_5_3_4  # pragma: allowlist secret
   block:
@@ -32,10 +30,10 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: suse15cis_ansible_user_password_set
+      register: prelim_ansible_user_password_set
 
     - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"  # noqa name[template]
-      when: suse15cis_ansible_user_password_set.stdout == "not found"
+      when: prelim_ansible_user_password_set.stdout == "not found"
       ansible.builtin.debug:
         msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
 
@@ -44,16 +42,16 @@
         - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"  # noqa name[template]
           ansible.builtin.assert:
             that:
-              - suse15cis_ansible_user_password_set.stdout | length != 0
-              - suse15cis_ansible_user_password_set.stdout != "!!"
+              - prelim_ansible_user_password_set.stdout | length != 0
+              - prelim_ansible_user_password_set.stdout != "!!"
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
             success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
 
         - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]
-          when: suse15cis_ansible_user_password_set.stdout != "not found"
+          when: prelim_ansible_user_password_set.stdout != "not found"
           ansible.builtin.assert:
             that:
-              - not suse15cis_ansible_user_password_set.stdout.startswith("!")
+              - not prelim_ansible_user_password_set.stdout.startswith("!")
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
             success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
 
@@ -69,28 +67,6 @@
     that: suse15cis_crypto_policy_module in suse15cis_allowed_crypto_policies_modules
     fail_msg: "Crypto policy module is not a permitted version"
     success_msg: "Crypto policy module is a permitted version"
-
-- name: Ensure root password is set
-  when:
-    - suse15cis_rule_5_6_6
-  tags:
-    - level1-server
-    - level1-workstation
-    - patch
-    - accounts
-    - root
-    - rule_5.6.6
-  block:
-    - name: Ensure root password is set
-      ansible.builtin.shell: passwd -S root | egrep -e "(Password set, SHA512 crypt|Password locked)"
-      changed_when: false
-      register: root_passwd_set
-
-    - name: Ensure root password is set
-      ansible.builtin.assert:
-        that: root_passwd_set.rc == 0
-        fail_msg: "You have rule 5.6.6 enabled this requires that you have a root password set"
-        success_msg: "You have a root password set"
 
 - name: Setup rules if container
   when:
@@ -109,10 +85,9 @@
         file: "{{ container_vars_file }}"
 
     - name: Output if discovered is a container
+      when: system_is_container
       ansible.builtin.debug:
         msg: system has been discovered as a container
-      when:
-        - system_is_container
 
 - name: Check crypto-policy input
   ansible.builtin.assert:
@@ -124,8 +99,7 @@
   when:
     - suse15cis_rule_1_6_1
     - suse15cis_crypto_policy_module | length > 0
-  tags:
-    - rule_1.6.1
+  tags: always
   ansible.builtin.assert:
     that: suse15cis_crypto_policy_module in suse15cis_allowed_crypto_policies_modules
     fail_msg: "Crypto policy module is not a permitted version"
@@ -135,22 +109,18 @@
   when:
     - suse15cis_set_boot_pass
     - suse15cis_rule_1_4_1
-  tags:
-    - always
+  tags: always
   ansible.builtin.assert:
     that: suse15cis_bootloader_password_hash.find('grub.pbkdf2.sha512') != -1 and suse15cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
     msg: "This role will not be able to run single user password commands as suse15cis_bootloader_password_hash variable has not been set correctly"
 
 - name: Gather the package facts
-  tags:
-    - always
+  tags: always
   ansible.builtin.package_facts:
     manager: auto
 
 - name: Include preliminary steps
-  tags:
-    - prelim_tasks
-    - always
+  tags: always
   ansible.builtin.import_tasks:
     file: prelim.yml
 
@@ -190,6 +160,12 @@
   ansible.builtin.import_tasks:
     file: section_6/main.yml
 
+- name: Run Section 7 tasks
+  when: suse15cis_section7
+  tags: suse15cis_section7
+  ansible.builtin.import_tasks:
+    file: section_7/main.yml
+
 - name: Run auditd logic
   when: update_audit_template
   tags: always
@@ -197,9 +173,7 @@
     file: auditd.yml
 
 - name: Run post remediation tasks
-  tags:
-    - post_tasks
-    - always
+  tags: always
   ansible.builtin.import_tasks:
     file: post.yml
 

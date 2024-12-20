@@ -134,7 +134,7 @@ aide_packages:
   - aide
 
 # Aide initiate command for new DB creation
-aide_initiate_command: /usr/sbin/aide --init
+aide_initiate_command: /usr/bin/aide --init
 
 # List of auditd binary files
 auditd_binaries:

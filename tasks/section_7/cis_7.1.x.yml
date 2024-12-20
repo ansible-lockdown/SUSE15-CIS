@@ -117,6 +117,8 @@
     owner: root
     group: root
     mode: 'u-x,g-wx,o-rwx'
+  failed_when: discovered_file_exists.state not in '[ file, absent ]'
+  register: discovered_file_exists
 
 - name: "7.1.8 | PATCH | Ensure permissions on /etc/gshadow- are configured"
   when: suse15cis_rule_7_1_8
