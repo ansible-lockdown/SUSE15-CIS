@@ -52,6 +52,7 @@ samba_services:
 
 ldap_pkgs:
   - openldap2-client
+  - openldap2_5
 ldap_services:
   - slapd.service
 
@@ -91,7 +92,7 @@ rpcbind_services:
   - rpcbind.socket
 
 rsync_pkgs:
-  - rsync-daemon
+  - rsync
 rsync_services:
   - rsyncd.socket
   - rsyncd.service
