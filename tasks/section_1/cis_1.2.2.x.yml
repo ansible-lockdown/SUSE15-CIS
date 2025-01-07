@@ -9,6 +9,15 @@
     - rule_1.2.2.1
     - NIST800-53R5_SI-2
     - patch
-  ansible.builtin.package:
-    name: "*"
-    state: latest
+  block:
+    - name: "1.2.2.1 | PATCH | Ensure updates, patches, and additional security software are installed | packages"
+      ansible.builtin.package:
+        name: "*"
+        state: latest
+        type: package
+
+    - name: "1.2.2.1 | PATCH | Ensure updates, patches, and additional security software are installed | patches"
+      ansible.builtin.package:
+        name: "*"
+        state: latest
+        type: patch
