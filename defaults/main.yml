@@ -757,9 +757,6 @@ suse15cis_time_servers:
 ##
 
 ## Control 3.1.1 - Ensure system is checked to determine if IPv6 is enabled
-# This variable governs the mechanism of how the disabling of IPV6 is carried out.
-# Its possible values are `grub` and `sysctl`.
-suse15cis_ipv6_disable: grub
 
 ## Control 3.1.2 - Ensure wireless interfaces are disabled
 # This variable is used for a preliminary task regarding the installation of Network Manager
