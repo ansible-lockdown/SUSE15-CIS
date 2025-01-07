@@ -433,7 +433,6 @@
   block:
     - name: "2.1.15 | PATCH | Ensure snmp services are not in use | Remove package"
       when:
-        - "'snmpd' in ansible_facts.packages"
         - not suse15cis_snmp_server
         - not suse15cis_snmp_mask
       ansible.builtin.package:
