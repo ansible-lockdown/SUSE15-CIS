@@ -27,7 +27,9 @@
     - rule_2.2.2
     - NIST800-53R5_CM-7
   ansible.builtin.package:
-    name: openldap2-clients
+    name:
+      - openldap2-client
+      - openldap2_5
     state: absent
 
 - name: "2.2.3 | PATCH | Ensure nis client is not installed"
