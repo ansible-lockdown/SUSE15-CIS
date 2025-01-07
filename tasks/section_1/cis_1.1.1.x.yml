@@ -155,6 +155,37 @@
         name: jffs2
         state: absent
 
+- name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available"
+  when: suse15cis_rule_1_1_1_6
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - rule_1.1.1.6
+    - squashfs
+  block:
+    - name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available | Edit modprobe config"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install overlay(\\s|$)"
+        line: "install overlay /bin/true"
+        create: true
+        mode: 'u-x,go-rwx'
+
+    - name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available | blacklist"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/blacklist.conf
+        regexp: "^(#)?blacklist overlay(\\s|$)"
+        line: "blacklist overlay"
+        create: true
+        mode: 'u-x,go-rwx'
+
+    - name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available | Disable overlayfs"
+      when: not system_is_container
+      community.general.modprobe:
+        name: overlay
+        state: absent
+
 - name: "1.1.1.7 | PATCH | Ensure mounting of squashfs filesystems is disabled"
   when: suse15cis_rule_1_1_1_7
   tags:
