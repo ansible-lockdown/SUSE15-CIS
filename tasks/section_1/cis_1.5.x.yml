@@ -24,7 +24,7 @@
     - level1-server
     - level1-workstation
     - patch
-    - rule_1.5.3
+    - rule_1.5.2
     - NIST800-53R5_CM-6
     - coredump
   block:
@@ -70,11 +70,13 @@
     - NIST800-53R5_CM-3
     - NIST800-53R5_CM-6
     - prelink
-  ansible.builtin.lineinfile:
-    path: /etc/systemd/coredump.conf
-    regexp: ^Storage
-    line: Storage=none
-    create: true
-    owner: root
-    group: root
-    mode: 'go-wx'
+  block:
+    - name: "1.5.3 | PATCH | Ensure prelink is not installed | Reset binaries"
+      when: "'prelink' in ansible_facts.packages"
+      ansible.builtin.command: prelink -ua
+      changed_when: true
+
+    - name: "1.5.3 | PATCH | Ensure prelink is not installed | Remove package"
+      ansible.builtin.package:
+        name: prelink
+        state: absent
