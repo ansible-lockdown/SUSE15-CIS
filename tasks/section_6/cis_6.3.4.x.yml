@@ -27,15 +27,33 @@
     - level2-workstation
     - patch
     - auditd
-    - rule_6.3.4.1
     - rule_6.3.4.2
     - rule_6.3.4.3
+    - rule_6.3.4.4
     - NIST800-53R5_AU-3
-  ansible.builtin.file:
-    path: "{{ prelim_auditd_logfile.stdout }}"
-    mode: 'o-x,g-wx,o-rwx'
-    owner: root
-    group: root
+  block:
+    - name: |
+        "6.3.4.2 | PATCH | Ensure audit log files mode is configured
+         6.3.4.3 | PATCH | Ensure audit log files owner is configured
+         6.3.4.4 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
+      ansible.builtin.file:
+        path: "{{ prelim_auditd_logfile.stdout }}"
+        mode: 'o-x,g-wx,o-rwx'
+        owner: root
+        group: root
+
+    - name: |
+        "6.3.4.2 | PATCH | Ensure audit log files mode is configured
+         6.3.4.3 | PATCH | Ensure audit log files owner is configured
+         6.3.4.4 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
+      when: "'conf' in item.path"
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: log_group.*$
+        replace: log_group=root
+      loop: "{{ prelim_auditd_conf_files.files }}"
+      loop_control:
+        label: "{{ item.path }}"
 
 - name: "6.3.4.5 | PATCH | Ensure audit configuration files mode is configured"
   when: suse15cis_rule_6_3_4_5
