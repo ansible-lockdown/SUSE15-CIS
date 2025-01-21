@@ -791,29 +791,6 @@ suse15cis_firewall_package: "firewalld"
 # Set this to be the default zone for firewalld
 suse15cis_default_zone: public
 
-# This variable is used in a preliminary task that forces the UFW firewall to use /etc/sysctl.conf
-# settings. If set to "true" the task will get done in the prelim section of the role.
-suse15cis_ufw_use_sysctl: true
-
-## Control 4.1.5 - Ensure ufw outbound connections are configured
-# The value of this variable represents the ports for the firewall to allow oubound traffic from.
-# If you want to allow outbound traffic on all ports, set the variable to  `all`, e.g.,
-# `suse15cis_ufw_allow_out_ports: "all"`.
-suse15cis_ufw_allow_out_ports:
-  - 53
-  - 80
-  - 443
-# Is setting rsyslog to remote to will need to allow 514
-# - 514
-
-## Controls 4.2.x - nftables
-# Nftables is not supported in this role. Some tasks have parts of them commented out, this is one example
-# of such a task.
-# "suse15cis_nftables_table_name" is the name of the table in nftables you want to create.
-# The default nftables table name is "inet filter". This variable name will be the one all
-# nftables configs are applied to.
-# suse15cis_nftables_table_name: "inet filter"
-
 ##
 ## Section 5 Control Variables
 ##
@@ -1371,9 +1348,9 @@ suse15cis_auditd_extra_conf:
 ## Section 7 Control Variables
 ##
 
-## Controls 6.2.11 & 6.2.12
+## Controls 7.2.11 & 7.2.12
 # The minimum and maximum UIDs to be used when enforcing
-# and checking controls 6.2.11 and 6.2.12 can either be
+# and checking controls 7.2.11 and 7.2.12 can either be
 # discovered automatically via logins.def or set manually
 # in this file
 # If min/maxx UIDs are to be discovered automatically,
@@ -1389,19 +1366,11 @@ min_int_uid: 1000
 # been set to `true`.
 max_int_uid: 65533
 
-## Control 6.1.9
+## Control 7.1.11
 # The following variable is a toggle for enabling/disabling the automated
 # removal of world-writable permissions from all files.
 # Possible values are `true` and `false`.
 suse15cis_no_world_write_adjust: true
-
-## Control 6.2.7
-# This variable is a toggle foe enabling/disabling the automated modification of
-# permissions on dot files.
-# Possible values are `true` and `false`.
-suse15cis_dotperm_ansiblemanaged: true
-
-## Section 7
 
 # 7.1.12 Ensure no files or directories without an owner and a group exist
 suse15cis_exclude_unowned_search_path: (! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*")
@@ -1421,3 +1390,9 @@ suse15cis_ownership_adjust: true
 # of the SUID bit from all files on all mounts.
 # Possible values are `true` and `false`.
 suse15cis_suid_sgid_adjust: false
+
+## Control 7.2.7
+# This variable is a toggle foe enabling/disabling the automated modification of
+# permissions on dot files.
+# Possible values are `true` and `false`.
+suse15cis_dotperm_ansiblemanaged: true
