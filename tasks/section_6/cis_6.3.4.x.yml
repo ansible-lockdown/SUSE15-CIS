@@ -50,7 +50,7 @@
       ansible.builtin.replace:
         path: "{{ item.path }}"
         regexp: log_group.*$
-        replace: log_group=root
+        replace: log_group = root
       loop: "{{ prelim_auditd_conf_files.files }}"
       loop_control:
         label: "{{ item.path }}"

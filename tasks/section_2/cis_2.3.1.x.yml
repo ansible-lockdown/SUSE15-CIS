@@ -31,7 +31,6 @@
       when: item != suse15cis_time_sync_tool
       ansible.builtin.service:
         name: "{{ item }}"
-        enabled: false
         masked: true
         daemon_reload: true
       loop:

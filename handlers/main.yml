@@ -265,7 +265,7 @@
 
 - name: Restart sshd
   ansible.builtin.systemd:
-    name: ssh
+    name: sshd
     state: restarted
 
 - name: Set_reboot_required

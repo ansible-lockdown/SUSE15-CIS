@@ -2,8 +2,7 @@
 # Added as part of ansible-lockdown CIS baseline
 # provided by Mindpoint Group - A Tyto Athene Company / Ansible Lockdown
 
-[Time]
-NTP={{ suse15cis_time_pool_name}}
-
-
-FallbackNTP={% for servers in suse15cis_time_servers %}{{ servers.name }} {% endfor %}
+cat <<EOF
+set superusers="{{ suse15cis_grub_user }}"
+password_pbkdf2 {{ suse15cis_grub_user }} {{ suse15cis_bootloader_password_hash }}
+EOF
