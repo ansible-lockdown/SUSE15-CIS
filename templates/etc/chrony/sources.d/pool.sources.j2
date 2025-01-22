@@ -2,6 +2,4 @@
 # Added as part of ansible-lockdown CIS baseline
 # provided by Mindpoint Group - A Tyto Athene Company / Ansible Lockdown
 
-{% for pool in suse15cis_time_pool %}
-pool {{ pool.name }} {{ pool.options }}
-{% endfor %}
+pool {{ suse15cis_time_pool_name }} {{ suse15cis_time_pool_options }}

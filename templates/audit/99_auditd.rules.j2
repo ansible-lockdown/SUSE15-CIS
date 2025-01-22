@@ -59,6 +59,7 @@
 -a always,exit -F arch=b32 -S lchown,fchown,chown,fchownat -F auid>={{ min_int_uid }} -F auid!=-1 -F key=perm_mod
 -a always,exit -F arch=b64 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>={{ min_int_uid }} -F auid!=-1 -F key=perm_mod
 -a always,exit -F arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>={{ min_int_uid }} -F auid!=-1 -F key=perm_mod
+{% endif %}
 {% if suse15cis_rule_6_3_3_10 %}
 -a always,exit -F arch=b32 -S mount -F auid>={{ min_int_uid }} -F auid!=unset -k mounts
 -a always,exit -F arch=b64 -S mount -F auid>={{ min_int_uid }} -F auid!=unset -k mounts
