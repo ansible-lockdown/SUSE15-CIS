@@ -15,14 +15,11 @@
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/dccp.conf
         regexp: '^(#)?install dccp(\\s|$)'
-        line: "{{ item }}"
+        line: install dccp /bin/true
         create: true
         owner: root
         group: root
         mode: 'go-wx'
-      loop:
-        - install dccp /bin/true
-        - blacklist dccp
 
     - name: "3.2.1 | PATCH | Ensure dccp kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -47,14 +44,11 @@
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/tipc.conf
         regexp: '^(#)?install tipc(\\s|$)'
-        line: "{{ item }}"
+        line: install tipc /bin/true
         create: true
         owner: root
         group: root
         mode: 'go-wx'
-      loop:
-        - install tipc /bin/true
-        - blacklist tipc
 
     - name: "3.2.2 | PATCH | Ensure tipc kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -79,14 +73,11 @@
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/rds.conf
         regexp: '^(#)?install rds(\\s|$)'
-        line: "{{ item }}"
+        line: install rds /bin/true
         create: true
         owner: root
         group: root
         mode: 'go-wx'
-      loop:
-        - install rds /bin/true
-        - blacklist rds
 
     - name: "3.2.3 | PATCH | Ensure rds kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -111,14 +102,11 @@
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/sctp.conf
         regexp: '^(#)?install sctp(\\s|$)'
-        line: "{{ item }}"
+        line: install sctp /bin/true
         create: true
         owner: root
         group: root
         mode: 'go-wx'
-      loop:
-        - install sctp /bin/true
-        - blacklist sctp
 
     - name: "3.2.4 | PATCH | Ensure sctp kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
