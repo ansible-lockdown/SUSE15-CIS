@@ -10,6 +10,7 @@
     - grub
     - patch
     - rule_1.4.1
+    - NIST800-53R5_AC-3
   ansible.builtin.template:
     src: etc/grub.d/00_user.j2
     dest: "{{ suse15cis_grub_user_file }}"
@@ -26,6 +27,7 @@
     - grub
     - patch
     - rule_1.4.2
+    - NIST800-53R5_NA
   ansible.builtin.file:
     path: /boot/grub2/grub.cfg
     owner: root
