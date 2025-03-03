@@ -19,7 +19,7 @@ skip_reboot: true
 ## Benchmark name and profiles used by auditing control role
 # The audit variable found at the base
 benchmark: SUSE15-CIS
-benchmark_version: v2.0.0
+benchmark_version: v2.0.1
 
 # Used for audit
 suse15cis_level_1: true

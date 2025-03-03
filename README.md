@@ -2,7 +2,7 @@
 
 ## Configure a Suse 15 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
-### Based on [Suse Enterprise Linux 9 Benchmark v1.0.0 - 11-30-2022](https://www.cisecurity.org/cis-benchmarks/)
+### Based on [Suse Enterprise Linux 15 Benchmark v2.0.1 - 28 Feb 2025](https://www.cisecurity.org/cis-benchmarks/)
 
 ---
 
