@@ -11,6 +11,7 @@
     - gui
     - gdm
     - rule_1.8.1
+    - NIST800-53R5_NA
   ansible.builtin.package:
     name: gdm
     state: absent
@@ -26,6 +27,7 @@
     - gui
     - gdm
     - rule_1.8.2
+    - NIST800-53R5_NA
   block:
     - name: "1.8.2 | PATCH | Ensure GDM login banner is configured | gdm profile"
       ansible.builtin.lineinfile:
@@ -61,6 +63,7 @@
     - patch
     - gui
     - rule_1.8.3
+    - NIST800-53R5_NA
   ansible.builtin.lineinfile:
     path: "{{ item.file }}"
     regexp: "{{ item.regexp }}"
@@ -87,6 +90,7 @@
     - patch
     - gui
     - rule_1.8.4
+    - NIST800-53R5_NA
   block:
     - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle | User profile"
       ansible.builtin.lineinfile:
@@ -128,6 +132,7 @@
     - patch
     - gui
     - rule_1.8.5
+    - NIST800-53R5_NA
   block:
     - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | Make lock directory"
       ansible.builtin.file:
@@ -156,6 +161,7 @@
     - patch
     - gui
     - rule_1.8.6
+    - NIST800-53R5_NA
   ansible.builtin.template:
     src: etc/dconf/db/00-media-automount.j2
     dest: "/etc/dconf/db/{{ suse15cis_dconf_db_name }}.d/00-media-automount"
@@ -174,6 +180,7 @@
     - patch
     - gui
     - rule_1.8.7
+    - NIST800-53R5_NA
   block:
     - name: "1.8.7 | PATCH | Ensure GDM disabling automatic mounting of removable media is not overridden | Make lock directory"
       ansible.builtin.file:
@@ -202,6 +209,7 @@
     - patch
     - gui
     - rule_1.8.8
+    - NIST800-53R5_NA
   block:
     - name: "1.8.8 | PATCH | Ensure GDM autorun-never is enabled | Make directory"
       ansible.builtin.file:
@@ -230,6 +238,7 @@
     - patch
     - gui
     - rule_1.8.9
+    - NIST800-53R5_NA
   block:
     - name: "1.8.9 | PATCH | Ensure GDM autorun-never is not overridden | Make lock directory"
       ansible.builtin.file:
@@ -258,6 +267,7 @@
     - patch
     - gui
     - rule_1.8.10
+    - NIST800-53R5_NA
   ansible.builtin.lineinfile:
     path: /etc/gdm/custom.conf
     regexp: ^(?i)Enable\s*=\s*true

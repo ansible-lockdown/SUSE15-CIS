@@ -9,6 +9,7 @@
     - patch
     - crypto
     - rule_1.6.1
+    - NIST800-53R5_NA
   ansible.builtin.package:
     name: crypto-policies-scripts
     state: present
