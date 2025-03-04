@@ -56,8 +56,10 @@
 -w /etc/issue -p wa -k system-locale
 -w /etc/issue.net -p wa -k system-locale
 -w /etc/hosts -p wa -k system-locale
+-w /etc/hostname -p wa -k system-locale
 -w /etc/sysconfig/network -p wa -k system-locale
 -w /etc/sysconfig/network-scripts -p wa -k system-locale
+-w /etc/NetworkManager -p wa -k system-locale
 {% endif %}
 {% if suse15cis_rule_6_3_3_6 %}
 {% for proc in discovered_priv_procs.stdout_lines -%}
@@ -72,10 +74,10 @@
 {{ arch_syscalls.append(syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F exit=-EACCES -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k access
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F exit=-EPERM -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k access
--a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F exit=-EACCES -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k access
--a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F exit=-EPERM -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k access
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F exit=-EACCES -F auid>={{ min_int_uid }} -F auid!=unset -k access
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F exit=-EPERM -F auid>={{ min_int_uid }} -F auid!=unset -k access
+-a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F exit=-EACCES -F auid>={{ min_int_uid }} -F auid!=unset -k access
+-a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F exit=-EPERM -F auid>={{ min_int_uid }} -F auid!=unset -k access
 {% endif %}
 {% if suse15cis_rule_6_3_3_8 %}
 -w /etc/group -p wa -k identity
@@ -95,7 +97,7 @@
 {{ arch_syscalls.append(syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_mod
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k perm_mod
 {% set syscalls = ["chown","fchown","lchown","fchownat"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -103,7 +105,7 @@
 {{ arch_syscalls.append(syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_mod
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k perm_mod
 {% set syscalls = ["setxattr","lsetxattr","fsetxattr","removexattr","lremovexattr","fremovexattr"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -111,7 +113,7 @@
 {{ arch_syscalls.append(syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_mod
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k perm_mod
 {% set syscalls = ["chmod","fchmod","fchmodat"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -119,7 +121,7 @@
 {{ arch_syscalls.append(syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_mod
+-a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k perm_mod
 {% set syscalls = ["chown","fchown","lchown","fchownat"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -127,7 +129,7 @@
 {{ arch_syscalls.append(syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_mod
+-a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k perm_mod
 {% set syscalls = ["setxattr","lsetxattr","fsetxattr","removexattr","lremovexattr","fremovexattr"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -135,8 +137,7 @@
 {{ arch_syscalls.append(syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_mod
-{% endif %}
+-a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k perm_mod
 {% endif %}
 {% if suse15cis_rule_6_3_3_10 %}
 {% set syscalls = ["mount"] %}
@@ -146,8 +147,8 @@
 {{ arch_syscalls.append(syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k mounts
--a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k mounts
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k mounts
+-a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k mounts
 {% endif %}
 {% if suse15cis_rule_6_3_3_11 %}
 -w /var/run/utmp -p wa -k session
@@ -166,12 +167,12 @@
 {{ arch_syscalls.append( syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k delete
--a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k delete
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k delete
+-a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k delete
 {% endif %}
 {% if suse15cis_rule_6_3_3_14 %}
--w /etc/selinux -p wa -k MAC-policy
--w /usr/share/selinux -p wa -k MAC-policy
+-w /etc/apparmor/ -p wa -k MAC-policy
+-w /etc/apparmor.d/ -p wa -k MAC-policy
 {% endif %}
 {% if suse15cis_rule_6_3_3_15 %}
 -a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>={{ min_int_uid }} -F auid!=unset -k perm_chng
@@ -186,7 +187,7 @@
 -a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>={{ min_int_uid }} -F auid!=unset -k usermod
 {% endif %}
 {% if suse15cis_rule_6_3_3_19 %}
--a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k kernel_modules
+-a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>={{ min_int_uid }} -F auid!=unset -k kernel_modules
 {% set syscalls = ["init_module","finit_module","delete_module","create_module","query_module"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -194,7 +195,7 @@
 {{ arch_syscalls.append( syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k kernel_modules
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ min_int_uid }} -F auid!=unset -k kernel_modules
 {% endif %}
 {% if suse15cis_rule_6_3_3_20 %}
 -e 2

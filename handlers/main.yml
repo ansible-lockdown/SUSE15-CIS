@@ -217,26 +217,6 @@
   community.general.ufw:
     state: reloaded
 
-- name: Pam_auth_update_pwunix
-  ansible.builtin.command: pam-auth-update --enable {{ suse15cis_pam_pwunix_file }}
-  changed_when: true
-
-- name: Pam_auth_update_pwfaillock
-  ansible.builtin.command: pam-auth-update --enable {{ suse15cis_pam_faillock_file }}
-  changed_when: true
-
-- name: Pam_auth_update_pwfaillock_notify
-  ansible.builtin.command: pam-auth-update --enable {{ suse15cis_pam_faillock_notify_file }}
-  changed_when: true
-
-- name: Pam_auth_update_pwquality
-  ansible.builtin.command: pam-auth-update --enable {{ suse15cis_pam_pwquality_file }}
-  changed_when: true
-
-- name: Pam_auth_update_pwhistory
-  ansible.builtin.command: pam-auth-update --enable {{ suse15cis_pam_pwhistory_file }}
-  changed_when: true
-
 - name: Auditd rules reload
   when:
     - not prelim_auditd_immutable_check or

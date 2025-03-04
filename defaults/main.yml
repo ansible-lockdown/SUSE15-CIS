@@ -946,17 +946,6 @@ suse15cis_pam_confd_dir: 'usr/share/pam-configs/'
 ### Note: controls also managed with disruption high due to the nature of pam changes
 # Create file will create/replace with the name
 
-# 5.3.2.1.x - pam_faillock
-# Name of files
-suse15cis_pam_faillock_file: 'faillock'
-suse15cis_pam_faillock_notify_file: 'faillock_notify'
-# Allow pam-auth-update --enable suse15cis_pam_faillock_file
-# and
-# Allow pam-auth-update --enable suse15cis_pam_faillock_notify_file
-suse15cis_pam_auth_faillock: true
-# Allow new file to be created or overwrite existing with same name
-suse15cis_pam_create_faillock_files: true
-
 # 5.3.2.1.1 - faillock_deny
 suse15cis_pam_faillock_deny: 5
 
