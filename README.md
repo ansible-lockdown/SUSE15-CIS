@@ -27,6 +27,7 @@
 ![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/SUSE15-CIS?label=Open%20Issues)
 ![Issues Closed](https://img.shields.io/github/issues-closed-raw/ansible-lockdown/SUSE15-CIS?label=Closed%20Issues&&color=success)
 ![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/SUSE15-CIS?label=Pull%20Requests)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/SUSE15-CIS?label=License)
 
@@ -104,8 +105,6 @@ Refer to [SUSE15-CIS-Audit](https://github.com/ansible-lockdown/SUSE15-CIS-Audit
 SUSE15 Update 4+
 
 - Access to download or add the goss binary and content to the system if using auditing (other options are available on how to get the content to the system.)
-
-CentOS stream - while this will generally work it is not supported and requires the following variable setting
 
 ```sh
 os_check: false
@@ -193,10 +192,8 @@ pre-commit run
 
 ## Credits and Thanks
 
-Based on an original concept by Sam Doran
-
 Massive thanks to the fantastic community and all its members.
 
 This includes a huge thanks and credit to the original authors and maintainers.
 
-Mark Bolwell, George Nalen, Steve Williams, Fred Witty
+Mark Bolwell and Mathis Wahls
