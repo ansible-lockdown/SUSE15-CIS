@@ -22,6 +22,9 @@ warn_count: 0
 os_gpg_key_pubkey_name: gpg-pubkey-39db7c82-5f68629b
 os_gpg_key_pubkey_content: "SuSE Package Signing Key <build@suse.de> 39db7c82"
 
+# Default settings for apparmor to allow override
+control_1_3_1_4_was_run: false
+
 # Services and packages
 avahi_pkgs:
   - avahi
