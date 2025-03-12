@@ -119,6 +119,12 @@
   ansible.builtin.package_facts:
     manager: auto
 
+- name: "Include OS specific variables"
+  when: ansible_facts.distribution == "SLES"
+  tags: always
+  ansible.builtin.include_vars:
+    file: "{{ ansible_facts.distribution }}.yml"
+
 - name: Include preliminary steps
   tags: always
   ansible.builtin.import_tasks:
