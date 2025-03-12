@@ -18,9 +18,9 @@ suse15cis_allowed_crypto_policies_modules:
 warn_control_list: ""
 warn_count: 0
 
+# Note is using SLES these values differ and will load the SLES variables file
 os_gpg_key_pubkey_name: gpg-pubkey-39db7c82-5f68629b
 os_gpg_key_pubkey_content: "SuSE Package Signing Key <build@suse.de> 39db7c82"
-gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
 
 # Services and packages
 avahi_pkgs:
