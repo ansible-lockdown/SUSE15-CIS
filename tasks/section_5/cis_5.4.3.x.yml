@@ -59,10 +59,17 @@
         - { path: "/etc/profile", line: "umask" }
         - { path: "/etc/login.defs", line: "UMASK" }
 
+    - name: "5.4.3.3 | PATCH | Ensure default user umask is configured | search for .sh files"
+      ansible.builtin.find:
+        paths: /etc/profile.d/
+        patterns: "*.sh"
+      register: fetched
+
     - name: "5.4.3.3 | PATCH | Ensure default user umask is configured | remove setting elsewhere"
       ansible.builtin.replace:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         regexp: (?i)(umask\s+\d*)
         replace: '#\\1'  # Set via CIS standards refer to /etc/profile
-      with_fileglob:
-        - /etc/profile.d/*.sh
+      loop: "{{ fetched.files }}"
+      # with_fileglob:
+      #   - /etc/profile.d/*.sh
