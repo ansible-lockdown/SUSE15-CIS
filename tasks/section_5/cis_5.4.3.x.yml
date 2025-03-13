@@ -63,13 +63,11 @@
       ansible.builtin.find:
         paths: /etc/profile.d/
         patterns: "*.sh"
-      register: fetched
+      register: discovered_profile_scripts
 
     - name: "5.4.3.3 | PATCH | Ensure default user umask is configured | remove setting elsewhere"
       ansible.builtin.replace:
         path: "{{ item.path }}"
         regexp: (?i)(umask\s+\d*)
         replace: '#\\1'  # Set via CIS standards refer to /etc/profile
-      loop: "{{ fetched.files }}"
-      # with_fileglob:
-      #   - /etc/profile.d/*.sh
+      loop: "{{ discovered_profile_scripts.files }}"
