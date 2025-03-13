@@ -1,9 +1,9 @@
 # CIS Configurations
 # 5.3.3.2.3 Ensure password complexity is configured
-{% if suse15cis_passwd_complex_option == 'minclass' %}
+{% if suse15cis_passwd_complex_option == 'minclass' %}  # pragma: allowlist secret
 minclass = {{ suse15cis_passwd_minclass_value }}
 {% endif %}
-{% if suse15cis_passwd_complex_option == 'credits' %}
+{% if suse15cis_passwd_complex_option == 'credits' %}  # pragma: allowlist secret
 dcredit = {{suse15cis_passwd_dcredit_value }}
 ucredit = {{ suse15cis_passwd_ucredit_value }}
 ocredit = {{ suse15cis_passwd_ocredit_value }}
