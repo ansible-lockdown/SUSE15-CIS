@@ -1,11 +1,15 @@
 ---
 
 - name: "SECTION | 4.1 | Configure firewall utility"
-  when: not system_is_container
+  when:
+    - not system_is_container
+    - "'ppc' not in ansible_facts.architecture"
   ansible.builtin.import_tasks:
     file: cis_4.1.x.yml
 
 - name: "SECTION | 4.2 | Configure firewalld"
-  when: not system_is_container
+  when:
+    - not system_is_container
+    - "'ppc' not in ansible_facts.architecture"
   ansible.builtin.import_tasks:
     file: cis_4.2.x.yml
