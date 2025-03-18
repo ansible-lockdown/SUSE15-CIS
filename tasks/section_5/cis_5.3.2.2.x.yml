@@ -78,7 +78,7 @@
       ansible.builtin.command: pam-config -a --cracklib --cracklib-difok={{ suse15cis_passwd_difok_value }}
       changed_when: true
 
-- name: "5.3.2.2.3 | PATCH | Ensure minimum password length is configured"
+- name: "5.3.2.2.3 | PATCH | Ensure password length is configured"
   when: suse15cis_rule_5_3_2_2_2
   tags:
     - level1-server
@@ -88,7 +88,7 @@
     - pam
     - NIST800-53R5_IA-5
   block:
-    - name: "5.3.2.2.3 | PATCH | Ensure minimum password length is configured | Remove minlen from conf files except expected file"
+    - name: "5.3.2.2.3 | PATCH | Ensure password length is configured | Remove minlen from conf files except expected file"
       when: item != suse15cis_passwd_minlen_file
       ansible.builtin.replace:
         path: "{{ item }}"
@@ -98,7 +98,7 @@
         - '/etc/security/pwquality.conf'
         - '/etc/security/pwquality.conf.d/*.conf'
 
-    - name: "5.3.2.2.3 | PATCH | Ensure minimum password length is configured | Ensure minlen file exists | not pam-config"
+    - name: "5.3.2.2.3 | PATCH | Ensure password length is configured | Ensure minlen file exists | not pam-config"
       when: not suse15cis_use_pam_config
       ansible.builtin.template:
         src: "{{ suse15cis_passwd_minlen_file }}.j2"
@@ -107,13 +107,13 @@
         group: root
         mode: 'go-rwx'
 
-    - name: "5.3.2.2.3 | AUDIT | Ensure password number of changed characters is configured | check minlength set in pam"
+    - name: "5.3.2.2.3 | AUDIT | Ensure number of changed characters is configured | check minlength set in pam"
       when: suse15cis_use_pam_config
       ansible.builtin.command: pam-config -q --cracklib --cracklib-minlen
       changed_when: false
       register: discovered_pam_minlen
 
-    - name: "5.3.2.2.3 | PATCH | Ensure password number of changed characters is configured | set minlength in pam"
+    - name: "5.3.2.2.3 | PATCH | Ensure number of changed characters is configured | set minlength in pam"
       when:
         - suse15cis_use_pam_config
         - discovered_pam_minlen.stdout is defined

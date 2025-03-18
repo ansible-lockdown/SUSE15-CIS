@@ -1,6 +1,6 @@
 ---
 
-- name: "4.2.1 | PATCH | Ensure a single firewall configuration utility is in use | package installed"
+- name: "4.2.1 | PATCH | Ensure firewalld is installed | package installed"
   when: suse15cis_rule_4_2_1
   tags:
     - level1-server
@@ -75,7 +75,7 @@
       ansible.builtin.command: firewall-cmd --set-default-zone="{{ suse15cis_default_zone }}"
       changed_when: true
 
-- name: "4.2.5 | PATCH | Ensure a single firewall configuration utility is in use | {{ suse15cis_firewall }} started and enabled"  # noqa name[template]
+- name: "4.2.5 | PATCH | Ensure firewalld service is enabled and running | {{ suse15cis_firewall }} started and enabled"  # noqa name[template]
   when: suse15cis_rule_4_2_5
   tags:
     - level1-server

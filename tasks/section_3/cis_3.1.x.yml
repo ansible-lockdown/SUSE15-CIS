@@ -21,7 +21,7 @@
   loop:
     - etc/sysctl.d/60-disable_ipv6.conf
 
-- name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled"
+- name: "3.1.2 | PATCH | Ensure wireless interfaces are not available"
   when:
     - suse15cis_rule_3_1_2
     - prelim_wireless_adapters_exist
@@ -34,7 +34,7 @@
   vars:
     warn_control_id: '3.1.2'
   block:
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Create modprobe.d file"
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available | Create modprobe.d file"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/{{ item }}.conf
         regexp: '^(#)?install true(\\s|$)'
@@ -43,7 +43,7 @@
         mode: 'go-wx'
       loop: "{{ prelim_wireless_modules.stdout_lines }}"
 
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | blacklist"
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
         regexp: "^(#)?blacklist {{ item }}(\\s|$)"

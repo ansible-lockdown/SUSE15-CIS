@@ -612,7 +612,7 @@
     name: xorg-x11-server-common
     state: absent
 
-- name: "2.1.22 | PATCH | Ensure mail transfer agent is configured for local-only mode"
+- name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode"
   when:
     - not suse15cis_is_mail_server
     - suse15cis_rule_2_1_22
@@ -626,7 +626,7 @@
   vars:
     warn_control_id: "2.1.22"
   block:
-    - name: "2.1.22 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if exim4 installed"
+    - name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode | Make changes if exim4 installed"
       when: "'exim4' in ansible_facts.packages"
       ansible.builtin.lineinfile:  # noqa: args[module]
         path: /etc/exim4/update-exim4.conf.conf
@@ -646,7 +646,7 @@
           - { regexp: "^dc_localdelivery", line: "dc_localdelivery='mail_spool'" }
       notify: Restart exim4
 
-    - name: "2.1.22 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if postfix is installed"
+    - name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode | Make changes if postfix is installed"
       when: "'postfix' in ansible_facts.packages"
       notify: Restart postfix
       ansible.builtin.lineinfile:
@@ -654,7 +654,7 @@
         regexp: ^(?#)inet_interfaces
         line: "inet_interfaces = loopback-only"
 
-    - name: "2.1.22 | WARN | Ensure mail transfer agent is configured for local-only mode | Message out other main agents"
+    - name: "2.1.22 | WARN | Ensure mail transfer agents are configured for local-only mode | Message out other main agents"
       when:
         - "'exim4' not in ansible_facts.packages"
         - "'postfix' not in ansible_facts.packages"
@@ -663,7 +663,7 @@
           - "Warning!! You are not using either exim4 or postfix, please ensure mail services set for local only mode"
           - "Please review your vendors documentation to configure local-only mode"
 
-    - name: "2.1.22 | WARN | Ensure mail transfer agent is configured for local-only mode | warn_count"
+    - name: "2.1.22 | WARN | Ensure mail transfer agents are configured for local-only mode | warn_count"
       when:
         - "'exim4' not in ansible_facts.packages"
         - "'postfix' not in ansible_facts.packages"

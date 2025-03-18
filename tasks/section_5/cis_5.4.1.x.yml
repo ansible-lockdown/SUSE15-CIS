@@ -1,5 +1,5 @@
 ---
-- name: "5.4.1.1 | PATCH | Ensure password expiration is 365 days or less"
+- name: "5.4.1.1 | PATCH | Ensure password expiration is configured"
   when: suse15cis_rule_5_4_1_1
   tags:
     - level1-server
@@ -13,19 +13,19 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "5.4.1.1 | PATCH | Ensure password expiration is 365 days or less"
+    - name: "5.4.1.1 | PATCH | Ensure password expiration is configured"
       ansible.builtin.lineinfile:
         path: /etc/login.defs
         regexp: "^PASS_MAX_DAYS"
         line: "PASS_MAX_DAYS {{ suse15cis_pass_max_days }}"
 
-    - name: "5.4.1.1 | AUDIT | Ensure password expiration is 365 days or less | Get existing users PASS_MAX_DAYS"
+    - name: "5.4.1.1 | AUDIT | Ensure password expiration is configured | Get existing users PASS_MAX_DAYS"
       ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($5> {{ suse15cis_pass_max_days }} || $5< {{ suse15cis_pass_max_days }} || $5 == -1)){print $1}' /etc/shadow"
       changed_when: false
       failed_when: false
       register: discovered_max_days
 
-    - name: "5.4.1.1 | PATCH | Ensure password expiration is 365 days or less | Set existing users PASS_MAX_DAYS"
+    - name: "5.4.1.1 | PATCH | Ensure password expiration is configured | Set existing users PASS_MAX_DAYS"
       when:
         - discovered_max_days.stdout_lines | length > 0
         - item in prelim_interactive_usernames.stdout

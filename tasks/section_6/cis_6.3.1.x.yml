@@ -1,5 +1,5 @@
 ---
-- name: "6.3.1.1 | PATCH | Ensure auditd is installed"
+- name: "6.3.1.1 | PATCH | Ensure auditd packages are installed"
   when: suse15cis_rule_6_3_1_1
   tags:
     - level2-server
