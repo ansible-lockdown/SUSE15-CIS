@@ -119,7 +119,7 @@
     mode: 'u+rwx,go-rwx'
     state: directory
 
-- name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users"
+- name: "2.4.1.8 | PATCH | Ensure access to crontab is configured"
   when: suse15cis_rule_2_4_1_8
   tags:
     - level1-server
@@ -130,12 +130,12 @@
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
   block:
-    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Remove cron.deny"
+    - name: "2.4.1.8 | PATCH | Ensure access to crontab is configured | Remove cron.deny"
       ansible.builtin.file:
         path: /etc/cron.deny
         state: absent
 
-    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Create cron.allow if doesn't exist"
+    - name: "2.4.1.8 | PATCH | Ensure access to crontab is configured | Create cron.allow if doesn't exist"
       ansible.builtin.file:
         path: /etc/cron.allow
         owner: root

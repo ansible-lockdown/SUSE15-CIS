@@ -1,6 +1,6 @@
 ---
 
-- name: "2.2.1 | PATCH | Ensure FTP client is not installed"
+- name: "2.2.1 | PATCH | Ensure ftp client is not installed"
   when:
     - not suse15cis_ftp_client
     - suse15cis_rule_2_2_1
@@ -15,7 +15,7 @@
     name: ftp
     state: absent
 
-- name: "2.2.2 | PATCH | Ensure LDAP client is not installed"
+- name: "2.2.2 | PATCH | Ensure ldap client is not installed"
   when:
     - not suse15cis_ldap_clients_required
     - suse15cis_rule_2_2_2
@@ -62,7 +62,7 @@
     name: telnet
     state: absent
 
-- name: "2.2.5 | PATCH | Ensure TFTP client is not installed"
+- name: "2.2.5 | PATCH | Ensure tftp client is not installed"
   when:
     - not suse15cis_tftp_client
     - suse15cis_rule_2_2_5

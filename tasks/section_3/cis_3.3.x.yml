@@ -1,6 +1,6 @@
 ---
 
-- name: "3.3.1 | PATCH | Ensure IP forwarding is disabled"
+- name: "3.3.1 | PATCH | Ensure ip forwarding is disabled"
   when:
     - suse15cis_rule_3_3_1
     - not suse15cis_is_router
@@ -17,7 +17,7 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | IPv4 settings"
+    - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | IPv4 settings"
       ansible.posix.sysctl:
         name: net.ipv4.ip_forward
         value: '0'
@@ -29,7 +29,7 @@
       notify:
         - Flush ipv4 route table
 
-    - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | IPv6 settings"
+    - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | IPv6 settings"
       ansible.posix.sysctl:
         name: net.ipv6.conf.all.forwarding
         value: '0'
@@ -188,7 +188,7 @@
     - net.ipv4.conf.default.secure_redirects
   notify: Flush ipv4 route table
 
-- name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
+- name: "3.3.7 | PATCH | Ensure reverse path filtering is enabled"
   when: suse15cis_rule_3_3_7
   tags:
     - level1-server

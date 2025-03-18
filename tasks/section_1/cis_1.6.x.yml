@@ -1,6 +1,6 @@
 ---
 
-- name: "1.6.1 | AUDIT | Ensure system-wide crypto policy is not legacy"
+- name: "1.6.1 | AUDIT | Ensure crypto-policies-scripts package is installed"
   when: suse15cis_rule_1_6_1
   tags:
     - level1-server
@@ -14,7 +14,7 @@
     name: crypto-policies-scripts
     state: present
 
-- name: "1.6.2 | AUDIT | Ensure system-wide crypto policy is not legacy"
+- name: "1.6.2 | AUDIT | Ensure system wide crypto policy is not set to legacy"
   when: suse15cis_rule_1_6_2
   tags:
     - level1-server
