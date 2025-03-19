@@ -1,10 +1,9 @@
 ---
-
 ##### CI for use by github no need for action to be added
 ##### Inherited
 ci:
-  autofix_prs: false
-  skip: [detect-aws-credentials, ansible-lint ]
+    autofix_prs: false
+    skip: [detect-aws-credentials, ansible-lint ]
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -36,12 +35,12 @@ repos:
   - id: detect-secrets
 
 - repo: https://github.com/gitleaks/gitleaks
-  rev: v8.23.3
+  rev: v8.24.0
   hooks:
   - id: gitleaks
 
 - repo: https://github.com/ansible-community/ansible-lint
-  rev: v25.1.1
+  rev: v25.1.3
   hooks:
   - id: ansible-lint
     name: Ansible-lint
@@ -52,14 +51,14 @@ repos:
     # https://github.com/ansible/ansible-lint/issues/611
     pass_filenames: false
     always_run: true
-    # additional_dependencies:
+    additional_dependencies:
     # https://github.com/pre-commit/pre-commit/issues/1526
     # If you want to use specific version of ansible-core or ansible, feel
     # free to override `additional_dependencies` in your own hook config
     # file.
-    # - ansible-core>=2.12.1
+    - ansible-core>=2.10.1
 
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.35.1  # or higher tag
+  rev: v1.36.2  # or higher tag
   hooks:
   - id: yamllint
