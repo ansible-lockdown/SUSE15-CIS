@@ -11,8 +11,9 @@
   failed_when: false
   register: discovered_audit_fetch_state
   loop:
-    - pre_audit_outfile
-    - post_audit_outfile
+    - "{{ pre_audit_outfile }}"
+    - "{{ post_audit_outfile }}"
+  become: false
 
 # Added this option for continuity but could be changed by adjusting the variable audit_conf_dest
 # Allowing backup to one location
@@ -30,12 +31,16 @@
     - post_audit_outfile
 
 - name: "FETCH_AUDIT_FILES | Fetch files and copy to controller | Warning if issues with fetch_audit_files"
-  when: discovered_audit_fetch_state.rc == 1
+  when:
+    - discovered_audit_fetch_state is defined
+    - discovered_audit_fetch_state.rc == 1
   ansible.builtin.debug:
     msg: "Warning!! Unable to write to localhost {{ audit_output_destination }} for audit file copy"
 
 - name: "FETCH_AUDIT_FILES | Fetch files and copy to controller | Warning if issues with fetch_audit_files"
-  when: discovered_audit_fetch_state.rc == 1
+  when:
+    - discovered_audit_fetch_state is defined
+    - discovered_audit_fetch_state.rc == 1
   vars:
     warn_control_id: "AUDIT_FILES_NOT_FETCHED"
   ansible.builtin.import_tasks:

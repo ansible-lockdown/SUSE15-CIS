@@ -120,7 +120,7 @@ fetch_audit_output: false
 audit_output_collection_method: fetch
 
 # Location to put the audit files
-audit_output_destination: /opt/audit_summaries
+audit_output_destination: /opt/audit_summaries/
 
 ### Goss Settings ##
 ####### END ########
