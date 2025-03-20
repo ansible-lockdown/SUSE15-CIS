@@ -285,6 +285,12 @@
   failed_when: prelim_auditd_immutable_check.rc not in [ 0, 1 ]
   register: prelim_auditd_immutable_check
 
+- name: "PRELIM | PATCH | Install ACL if 7.2.8"
+  when: suse15cis_rule_7_2_8
+  ansible.builtin.package:
+    name: acl
+    state: present
+
 - name: "PRELIM | AUDIT | Gather the package facts after prelim"
   tags: always
   ansible.builtin.package_facts:
