@@ -9,9 +9,10 @@
     - audit
     - rule_4.2.1
     - NIST800-55_CA-9
+    - firewalld
   ansible.builtin.package:
     name: firewalld
-    state: installed
+    state: present
 
 - name: "4.2.2 | AUDIT | Ensure firewalld drops unnecessary services and ports"
   when: suse15cis_rule_4_2_2

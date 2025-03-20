@@ -23,7 +23,7 @@
     - not system_is_ec2
   tags: always
   vars:
-    sudo_password_rule: suse15cis_rule_5_3_4  # pragma: allowlist secret
+    sudo_password_rule: suse15cis_rule_5_2_4  # pragma: allowlist secret
   block:
     - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"  # noqa name[template]
       ansible.builtin.shell: "(grep {{ ansible_env.SUDO_USER }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'"
