@@ -2,8 +2,8 @@
 ##### CI for use by github no need for action to be added
 ##### Inherited
 ci:
-    autofix_prs: false
-    skip: [detect-aws-credentials, ansible-lint ]
+  autofix_prs: false
+  skip: [detect-aws-credentials, ansible-lint ]
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -56,7 +56,7 @@ repos:
     # If you want to use specific version of ansible-core or ansible, feel
     # free to override `additional_dependencies` in your own hook config
     # file.
-    #- ansible-core>=2.10.1
+    - ansible-core>=2.10.1
 
 - repo: https://github.com/adrienverge/yamllint.git
   rev: v1.36.2  # or higher tag
