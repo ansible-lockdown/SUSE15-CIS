@@ -3,7 +3,11 @@
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 
-- name: PRELIM | Include audit specific variables
+- name: "PRELIM | Update package repositories cache"
+  ansible.builtin.package:
+    update_cache: true
+
+- name: "PRELIM | Include audit specific variables"
   when:
     - run_audit or audit_only
     - setup_audit
@@ -12,7 +16,7 @@
     - run_audit
   ansible.builtin.include_vars: audit.yml
 
-- name: PRELIM | Include pre-remediation audit tasks
+- name: "PRELIM | Include pre-remediation audit tasks"
   when:
     - run_audit or audit_only
     - setup_audit
