@@ -223,18 +223,12 @@
     state: directory
     mode: 'u+x,go-w'
 
-# - name: "PRELIM | 5.3.4 | Find all sudoers files."
-#   when:
-#     - suse15cis_rule_5_3_4 or
-#       suse15cis_rule_5_3_5
-#   tags:
-#     - rule_5.3.4
-#     - rule_5.3.5
-#   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
-#   changed_when: false
-#   failed_when: false
-#   check_mode: false
-#   register: prelim_sudoers_files
+- name: "PRELIM | PATCH | find pw_quality files"
+  tags: always
+  ansible.builtin.find:
+    paths: /etc/security/
+    pattern: pwquality*
+  register: prelim_pwquality_files
 
 - name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
   block:
