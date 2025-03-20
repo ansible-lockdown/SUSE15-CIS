@@ -5,6 +5,7 @@
 
 - name: "PRELIM | Update package repositories cache"
   ansible.builtin.package:
+    name: "*"
     update_cache: true
 
 - name: "PRELIM | Include audit specific variables"
