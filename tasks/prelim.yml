@@ -198,7 +198,8 @@
       register: prelim_wireless_modules
 
 - name: "PRELIM | PATCH | If firewalld install python package"
-  when: suse15_firewall_package == 'firewalld'
+  when: suse15cis_firewall_package == 'firewalld'
+  tags: always
   ansible.builtin.package:
     name: python3-firewall
     state: latest
