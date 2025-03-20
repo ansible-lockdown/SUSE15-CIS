@@ -4,9 +4,8 @@
 # List users in order to look files inside each home directory
 
 - name: "PRELIM | Update package repositories cache"
-  ansible.builtin.package:
-    name: "*"
-    update_cache: true
+  ansible.builtin.command: zypper ref
+  changed_when: false
 
 - name: "PRELIM | Include audit specific variables"
   when:
