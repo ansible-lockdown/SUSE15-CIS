@@ -33,14 +33,14 @@
 - name: "FETCH_AUDIT_FILES | Fetch files and copy to controller | Warning if issues with fetch_audit_files"
   when:
     - discovered_audit_fetch_state is defined
-    - discovered_audit_fetch_state.rc == 1
+    - not discovered_audit_fetch_state.changed
   ansible.builtin.debug:
     msg: "Warning!! Unable to write to localhost {{ audit_output_destination }} for audit file copy"
 
 - name: "FETCH_AUDIT_FILES | Fetch files and copy to controller | Warning if issues with fetch_audit_files"
   when:
     - discovered_audit_fetch_state is defined
-    - discovered_audit_fetch_state.rc == 1
+    - not discovered_audit_fetch_state.changed
   vars:
     warn_control_id: "AUDIT_FILES_NOT_FETCHED"
   ansible.builtin.import_tasks:
