@@ -197,6 +197,12 @@
       failed_when: prelim_wireless_modules.rc not in [ 0, 1 ]
       register: prelim_wireless_modules
 
+- name: "PRELIM | PATCH | If firewalld install python package"
+  when: suse15_firewall_package == 'firewalld'
+  ansible.builtin.package:
+    name: python3-firewall
+    state: latest
+
 - name: "PRELIM | PATCH | Set sshd config file"
   when:
     - suse15cis_sshd_config_file != '/etc/ssh/sshd_config'
