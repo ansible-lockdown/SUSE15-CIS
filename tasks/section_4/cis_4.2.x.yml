@@ -9,9 +9,10 @@
     - audit
     - rule_4.2.1
     - NIST800-55_CA-9
+    - firewalld
   ansible.builtin.package:
     name: firewalld
-    state: installed
+    state: present
 
 - name: "4.2.2 | AUDIT | Ensure firewalld drops unnecessary services and ports"
   when: suse15cis_rule_4_2_2
@@ -36,6 +37,21 @@
           - "The items below are the services and ports that are accepted, please correct as needed"
           - "{{ discovered_services_and_ports.stdout_lines }}"
 
+# Changed order as required by 4.2.3
+- name: "4.2.5 | PATCH | Ensure firewalld service is enabled and running | {{ suse15cis_firewall }} started and enabled"  # noqa name[template]
+  when: suse15cis_rule_4_2_5
+  tags:
+    - level1-server
+    - level1-workstation
+    - manual
+    - firewalld
+    - rule_4.2.2
+    - NIST800-55_CA-9
+  ansible.builtin.systemd:
+    name: firewalld
+    enabled: true
+    state: started
+
 - name: "4.2.3 | PATCH | Ensure firewalld loopback traffic is configured | firewalld"
   when: suse15cis_rule_4_2_3
   tags:
@@ -45,6 +61,8 @@
     - firewalld
     - rule_4.2.3
     - NIST800-55_CA-9
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   ansible.posix.firewalld:
     rich_rule: "{{ item }}"
     zone: "{{ suse15cis_default_zone }}"
@@ -74,17 +92,3 @@
       when: discovered_firewalld_default_zone.stdout != suse15cis_default_zone
       ansible.builtin.command: firewall-cmd --set-default-zone="{{ suse15cis_default_zone }}"
       changed_when: true
-
-- name: "4.2.5 | PATCH | Ensure firewalld service is enabled and running | {{ suse15cis_firewall }} started and enabled"  # noqa name[template]
-  when: suse15cis_rule_4_2_5
-  tags:
-    - level1-server
-    - level1-workstation
-    - manual
-    - firewalld
-    - rule_4.2.2
-    - NIST800-55_CA-9
-  ansible.builtin.systemd:
-    name: firewalld
-    enabled: true
-    state: started
