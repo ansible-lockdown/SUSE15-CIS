@@ -56,6 +56,10 @@ os_check: true
 ## Allow sysctl to be updated
 suse15cis_sysctl_update: true
 
+# Create managed not custom local_facts files
+create_benchmark_facts: true
+ansible_facts_path: /etc/ansible/facts.d
+
 ###
 ### Settings for associated Audit role using Goss
 ###
@@ -74,16 +78,12 @@ audit_run_heavy_tests: true
 
 ## Only run Audit do not remediate
 audit_only: false
-### As part of audit_only ###
-# This will enable files to be copied back to control node in audit_only mode
-fetch_audit_files: false
-# Path to copy the files to will create dir structure in audit_only mode
-audit_capture_files_dir: /some/location to copy to on control node
+
 #############################
 
 # How to retrieve audit binary
 # Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already dowmloaded
+# you will need to access to either github or the file already downloaded
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
@@ -113,7 +113,7 @@ audit_log_dir: '/opt'
 fetch_audit_output: false
 
 # Method of getting,uploading the summary files
-## Ensure access and permissions are avaiable for these to occur.
+## Ensure access and permissions are available for these to occur.
 ## options are
 # fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
 # copy - copies file to a location available to the managed node
@@ -555,7 +555,7 @@ suse15cis_rule_7_2_9: true
 # Options are
 # true to leave installed if exists not changes take place
 # false - this removes the package
-# mask - if a dependancy for product so cannot be removed
+# mask - if a dependency for product so cannot be removed
 # Server Services
 suse15cis_autofs_services: false
 suse15cis_autofs_mask: false
@@ -644,7 +644,7 @@ suse15cis_purge_apt: false
 ## Section 1 Control Variables
 ##
 
-## Ability to enabe debug on mounts to assist in troubleshooting
+## Ability to enable debug on mounts to assist in troubleshooting
 # Mount point changes are set based upon facts created in Prelim
 # these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
 suse15cis_debug_mount_data: false
@@ -687,7 +687,7 @@ suse15cis_set_boot_pass: false
 suse15cis_grub_file: /boot/grub/grub.cfg
 
 ## Controls 1.5.x
-# Ability to set file in which the kernel systcl changes are placed
+# Ability to set file in which the kernel sysctl changes are placed
 suse15cis_sysctl_kernel_conf: /etc/sysctl.d/98_cis_kernel.conf
 
 # 1.5.2 Ability to choose ptrace value
@@ -779,11 +779,11 @@ suse15cis_time_servers:
 suse15cis_install_network_manager: true
 
 ## Control 3.1.3 - Ensure bluetooth Services are not in use
-# This control managed how the bluetooth service is managaed
+# This control managed how the bluetooth service is managed
 # Options are
 # true to leave installed if exists not changes take place
 # false - this removes the package
-# mask - if a dependancy for product so cannot be removed
+# mask - if a dependency for product so cannot be removed
 suse15cis_bluetooth_service: false
 suse15cis_bluetooth_mask: false
 
