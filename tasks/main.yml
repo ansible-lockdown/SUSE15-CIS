@@ -185,6 +185,7 @@
 
 - name: Run post_remediation audit
   when: run_audit
+  tags: always
   ansible.builtin.import_tasks:
     file: post_remediation_audit.yml
 
@@ -195,7 +196,6 @@
       (ansible_local['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_summary is undefined)
   tags:
     - always
-    - benchmark
   block:
     - name: Create ansible facts directory if audit facts not present
       ansible.builtin.file:
@@ -223,6 +223,7 @@
 
 - name: Show Audit Summary
   when: run_audit
+  tags: always
   ansible.builtin.debug:
     msg: "{{ audit_results.split('\n') }}"
 
