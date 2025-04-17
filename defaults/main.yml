@@ -1122,7 +1122,7 @@ suse15cis_aide_cron_user: root
 suse15cis_aide_cron_file: /etc/cron.d/aide_cron
 # This variable represents the actual command or script that the cron job
 # will execute for running AIDE.
-suse15cis_aide_cron_job: '/usr/bin/aide --config /etc/aide/aide.conf --check'
+suse15cis_aide_cron_job: '/usr/bin/aide --check'
 # These variables define the schedule for the cron job
 # This variable governs the minute of the time of day when the AIDE cronjob is run.
 # It must be in the range `0-59`.
