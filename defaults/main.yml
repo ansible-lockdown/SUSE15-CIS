@@ -294,7 +294,6 @@ suse15cis_rule_2_3_2_2: true
 # Configure Chrony
 suse15cis_rule_2_3_3_1: true
 suse15cis_rule_2_3_3_2: true
-suse15cis_rule_2_3_3_3: true
 
 # 2.4 Job Schedulers
 # 2.4.1 Configure Cron
@@ -741,19 +740,19 @@ suse15cis_screensaver_lock_delay: 5
 
 ## Control 2.3.1.1
 # This variable choses the tool used for time synchronization
-# The two options are `chrony`and `systemd-timesyncd`.
-suse15cis_time_sync_tool: "systemd-timesyncd"
+# The two options are `chronyd`and `systemd-timesyncd`.
+suse15cis_time_sync_tool: "chronyd"
 
-## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
+## Controls 2.3.x - Configure time pools & servers for chronyd and timesyncd
 # The following variable represents a list of of time server pools used
-# for configuring chrony and timesyncd.
+# for configuring chronyd and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
 suse15cis_time_pool_name: time.nist.gov
 suse15cis_time_pool_options: iburst maxsources 4
 # The following variable represents a list of of time servers used
-# for configuring chrony and timesyncd
+# for configuring chronyd and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `iburst` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
