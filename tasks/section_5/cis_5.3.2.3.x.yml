@@ -68,7 +68,7 @@
       failed_when: discovered_pwhistory_use_authtok.rc not in [ 0, 1 ]
       register: discovered_pwhistory_use_authtok
 
-    - name: "5.3.2.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok | Ensure remember is set"
+    - name: "5.3.2.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok | Ensure authtok is set"
       when: discovered_pwhistory_use_authtok.stdout | length == 0
       ansible.builtin.command: pam-config -a --pwhistory --pwhistory-use_authtok
       changed_when: true
