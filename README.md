@@ -35,9 +35,9 @@
 
 ## Looking for support?
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_SL15_cis)
+[Lockdown Enterprise](https://www.lockdownenterprise.com)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_SL15_cis)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor)
 
 ### Community
 
@@ -95,10 +95,6 @@ Refer to [SUSE15-CIS-Audit](https://github.com/ansible-lockdown/SUSE15-CIS-Audit
 ## Documentation
 
 - [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
-- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_SL15_cis)
-- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_SL15_cis)
-- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_SL15_cis)
-- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_SL15_cis)
 
 ## Requirements
 
@@ -119,7 +115,7 @@ os_check: false
   - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
   - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
 - Functioning Ansible and/or Tower Installed, configured, and running. This includes all of the base Ansible/Tower configurations, needed packages installed, and infrastructure setup.
-- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consiquences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
+- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consequences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
 
 **Technical Dependencies:**
 
@@ -142,14 +138,14 @@ There are many tags available for added control precision. Each control has it's
 Below is an example of the tag section from a control within this role. Using this example if you set your run to skip all controls with the tag services, this task will be skipped. The opposite can also happen where you run only controls tagged with services.
 
 ```sh
-      tags:
-      - level1-server
-      - level1-workstation
-      - scored
-      - avahi
-      - services
-      - patch
-      - rule_2.2.4
+    tags:
+    - level1-server
+    - level1-workstation
+    - scored
+    - avahi
+    - services
+    - patch
+    - rule_2.2.4
 ```
 
 ## Community Contribution
