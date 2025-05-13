@@ -12,12 +12,10 @@
   block:
     - name: "5.3.2.2.1 | PATCH | Ensure password dictionary check is enabled | Remove dictcheck settings from conf files"
       ansible.builtin.replace:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         regexp: 'dictcheck\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
+      loop: "{{ prelim_pwquality_files.files }}"
 
     - name: "5.3.2.2.1 | AUDIT | Ensure password dictionary check is enabled | Check cracklib set in pam"
       when: suse15cis_use_pam_config
@@ -33,8 +31,7 @@
       changed_when: true
 
 - name: "5.3.2.2.2 | PATCH | Ensure password number of changed characters is configured"
-  when:
-    - suse15cis_rule_5_3_2_2_2
+  when: suse15cis_rule_5_3_2_2_2
   tags:
     - level1-server
     - level1-workstation
@@ -48,12 +45,10 @@
         - not suse15cis_use_pam_config
         - item != suse15cis_passwd_difok_file
       ansible.builtin.replace:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         regexp: 'difok\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
+      loop: "{{ prelim_pwquality_files.files }}"
 
     - name: "5.3.2.2.2 | PATCH | Ensure password number of changed characters is configured | Ensure difok file exists | not pam-config"
       when: not suse15cis_use_pam_config
@@ -79,7 +74,7 @@
       changed_when: true
 
 - name: "5.3.2.2.3 | PATCH | Ensure password length is configured"
-  when: suse15cis_rule_5_3_2_2_2
+  when: suse15cis_rule_5_3_2_2_3
   tags:
     - level1-server
     - level1-workstation
@@ -91,12 +86,10 @@
     - name: "5.3.2.2.3 | PATCH | Ensure password length is configured | Remove minlen from conf files except expected file"
       when: item != suse15cis_passwd_minlen_file
       ansible.builtin.replace:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         regexp: 'minlen\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
+      loop: "{{ prelim_pwquality_files.files }}"
 
     - name: "5.3.2.2.3 | PATCH | Ensure password length is configured | Ensure minlen file exists | not pam-config"
       when: not suse15cis_use_pam_config
@@ -134,12 +127,10 @@
     - name: "5.3.2.2.4 | PATCH | Ensure password complexity is configured | Remove pwd complex settings from conf files except expected file"
       when: item != suse15cis_passwd_complex_file
       ansible.builtin.replace:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         regexp: '(minclass|[dulo]credit)\s*=\s*(-\d|\d+)\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
+      loop: "{{ prelim_pwquality_files.files }}"
 
     - name: "5.3.2.2.4 | PATCH | Ensure password complexity is configured | Ensure complexity file exists | not pam-config"
       when: not suse15cis_use_pam_config
@@ -177,12 +168,10 @@
     - name: "5.3.2.2.5 | PATCH | Ensure password same consecutive characters is configured | Remove maxrepeat settings from conf files except expected file"
       when: item != suse15cis_passwd_maxrepeat_file
       ansible.builtin.replace:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         regexp: 'maxrepeat\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
+      loop: "{{ prelim_pwquality_files.files }}"
 
     - name: "5.3.2.2.5 | PATCH | Ensure password same consecutive characters is configured | Ensure maxrepeat file exists"
       when: not suse15cis_use_pam_config
@@ -220,12 +209,10 @@
     - name: "5.3.2.2.6 | PATCH | Ensure password maximum sequential characters is configured | Remove maxsequence settings from conf files except expected file"
       when: item != suse15cis_passwd_maxsequence_file
       ansible.builtin.replace:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         regexp: 'maxsequence\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
+      loop: "{{ prelim_pwquality_files.files }}"
 
     - name: "5.3.2.2.6 | PATCH | Ensure password maximum sequential characters is configured | Ensure maxsequence file exists"
       when: not suse15cis_use_pam_config

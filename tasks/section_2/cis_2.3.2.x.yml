@@ -7,6 +7,7 @@
     - level1-workstation
     - patch
     - rule_2.3.2.1
+    - time
     - timesyncd
     - NIST800-53R5_AU-7
     - NIST800-53R5_AU-8
@@ -36,6 +37,7 @@
     - level1-server
     - level1-workstation
     - rule_2.3.2.2
+    - time
     - timesyncd
     - NIST800-53R5_AU-7
     - NIST800-53R5_AU-8

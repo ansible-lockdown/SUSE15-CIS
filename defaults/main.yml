@@ -56,6 +56,10 @@ os_check: true
 ## Allow sysctl to be updated
 suse15cis_sysctl_update: true
 
+# Create managed not custom local_facts files
+create_benchmark_facts: true
+ansible_facts_path: /etc/ansible/facts.d
+
 ###
 ### Settings for associated Audit role using Goss
 ###
@@ -74,11 +78,7 @@ audit_run_heavy_tests: true
 
 ## Only run Audit do not remediate
 audit_only: false
-### As part of audit_only ###
-# This will enable files to be copied back to control node in audit_only mode
-fetch_audit_files: false
-# Path to copy the files to will create dir structure in audit_only mode
-audit_capture_files_dir: /some/location to copy to on control node
+
 #############################
 
 # How to retrieve audit binary
@@ -107,6 +107,20 @@ audit_conf_dest: "/opt"
 
 # Where the audit logs are stored
 audit_log_dir: '/opt'
+
+## Ability to collect and take audit files moving to a centralised location
+# This enables the collection of the files from the host
+fetch_audit_output: false
+
+# Method of getting,uploading the summary files
+## Ensure access and permissions are available for these to occur.
+## options are
+# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
+# copy - copies file to a location available to the managed node
+audit_output_collection_method: fetch
+
+# Location to put the audit files
+audit_output_destination: /opt/audit_summaries/
 
 ### Goss Settings ##
 ####### END ########
@@ -280,7 +294,6 @@ suse15cis_rule_2_3_2_2: true
 # Configure Chrony
 suse15cis_rule_2_3_3_1: true
 suse15cis_rule_2_3_3_2: true
-suse15cis_rule_2_3_3_3: true
 
 # 2.4 Job Schedulers
 # 2.4.1 Configure Cron
@@ -727,19 +740,19 @@ suse15cis_screensaver_lock_delay: 5
 
 ## Control 2.3.1.1
 # This variable choses the tool used for time synchronization
-# The two options are `chrony`and `systemd-timesyncd`.
-suse15cis_time_sync_tool: "systemd-timesyncd"
+# The two options are `chronyd`and `systemd-timesyncd`.
+suse15cis_time_sync_tool: "chronyd"
 
-## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
+## Controls 2.3.x - Configure time pools & servers for chronyd and timesyncd
 # The following variable represents a list of of time server pools used
-# for configuring chrony and timesyncd.
+# for configuring chronyd and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
 suse15cis_time_pool_name: time.nist.gov
 suse15cis_time_pool_options: iburst maxsources 4
 # The following variable represents a list of of time servers used
-# for configuring chrony and timesyncd
+# for configuring chronyd and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `iburst` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
@@ -1108,7 +1121,7 @@ suse15cis_aide_cron_user: root
 suse15cis_aide_cron_file: /etc/cron.d/aide_cron
 # This variable represents the actual command or script that the cron job
 # will execute for running AIDE.
-suse15cis_aide_cron_job: '/usr/bin/aide --config /etc/aide/aide.conf --check'
+suse15cis_aide_cron_job: '/usr/bin/aide --check'
 # These variables define the schedule for the cron job
 # This variable governs the minute of the time of day when the AIDE cronjob is run.
 # It must be in the range `0-59`.

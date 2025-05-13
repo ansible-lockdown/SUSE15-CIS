@@ -18,7 +18,7 @@
     file: cis_2.3.2.x.yml
 
 - name: "SECTION | 2.3.3.x | Time Service - Chrony "
-  when: suse15cis_time_sync_tool == "chrony"
+  when: suse15cis_time_sync_tool == "chronyd"
   ansible.builtin.import_tasks:
     file: cis_2.3.3.x.yml
 

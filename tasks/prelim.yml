@@ -3,7 +3,11 @@
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 
-- name: PRELIM | Include audit specific variables
+- name: "PRELIM | Update package repositories cache"
+  ansible.builtin.command: zypper ref
+  changed_when: false
+
+- name: "PRELIM | Include audit specific variables"
   when:
     - run_audit or audit_only
     - setup_audit
@@ -12,7 +16,7 @@
     - run_audit
   ansible.builtin.include_vars: audit.yml
 
-- name: PRELIM | Include pre-remediation audit tasks
+- name: "PRELIM | Include pre-remediation audit tasks"
   when:
     - run_audit or audit_only
     - setup_audit
@@ -197,6 +201,13 @@
       failed_when: prelim_wireless_modules.rc not in [ 0, 1 ]
       register: prelim_wireless_modules
 
+- name: "PRELIM | PATCH | If firewalld install python package"
+  when: suse15cis_firewall_package == 'firewalld'
+  tags: always
+  ansible.builtin.package:
+    name: python3-firewall
+    state: latest
+
 - name: "PRELIM | PATCH | Set sshd config file"
   when:
     - suse15cis_sshd_config_file != '/etc/ssh/sshd_config'
@@ -216,18 +227,12 @@
     state: directory
     mode: 'u+x,go-w'
 
-# - name: "PRELIM | 5.3.4 | Find all sudoers files."
-#   when:
-#     - suse15cis_rule_5_3_4 or
-#       suse15cis_rule_5_3_5
-#   tags:
-#     - rule_5.3.4
-#     - rule_5.3.5
-#   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
-#   changed_when: false
-#   failed_when: false
-#   check_mode: false
-#   register: prelim_sudoers_files
+- name: "PRELIM | PATCH | find pw_quality files"
+  tags: always
+  ansible.builtin.find:
+    paths: /etc/security/
+    pattern: pwquality*
+  register: prelim_pwquality_files
 
 - name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
   block:
@@ -283,6 +288,12 @@
   changed_when: false
   failed_when: prelim_auditd_immutable_check.rc not in [ 0, 1 ]
   register: prelim_auditd_immutable_check
+
+- name: "PRELIM | PATCH | Install ACL if 7.2.8"
+  when: suse15cis_rule_7_2_8
+  ansible.builtin.package:
+    name: acl
+    state: present
 
 - name: "PRELIM | AUDIT | Gather the package facts after prelim"
   tags: always
