@@ -13,7 +13,7 @@
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/AnsibleLockdown.svg?style=social&label=Follow%20%40AnsibleLockdown)](https://twitter.com/AnsibleLockdown)
 
 ![Ansible Galaxy Quality](https://img.shields.io/ansible/quality/61781?label=Quality&&logo=ansible)
-![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)
+[![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)](https://www.lockdownenterprise.com/discord)
 
 ![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
 ![Release Tag](https://img.shields.io/github/v/release/ansible-lockdown/SUSE15-CIS)
@@ -24,10 +24,10 @@
 [![Devel Pipeline Status](https://github.com/ansible-lockdown/SUSE15-CIS/actions/workflows/devel_pipeline_validation.yml/badge.svg?)](https://github.com/ansible-lockdown/SUSE15-CIS/actions/workflows/devel_pipeline_validation.yml)
 ![Devel Commits](https://img.shields.io/github/commit-activity/m/ansible-lockdown/SUSE15-CIS/devel?color=dark%20green&label=Devel%20Branch%20Commits)
 
-![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/SUSE15-CIS?label=Open%20Issues)
-![Issues Closed](https://img.shields.io/github/issues-closed-raw/ansible-lockdown/SUSE15-CIS?label=Closed%20Issues&&color=success)
-![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/SUSE15-CIS?label=Pull%20Requests)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/SUSE15-CIS?label=Open%20Issues)](https://github.com/ansible-lockdown/SUSE15-CIS/issues)
+[![Issues Closed](https://img.shields.io/github/issues-closed-raw/ansible-lockdown/SUSE15-CIS?label=Closed%20Issues&&color=success)](https://github.com/ansible-lockdown/SUSE15-CIS/issues?q=is%3Aissue%20state%3Aclosed)
+[![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/SUSE15-CIS?label=Pull%20Requests)](https://github.com/ansible-lockdown/SUSE15-CIS/pulls)
+![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/SUSE15-CIS?label=License)
 
