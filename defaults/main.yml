@@ -220,7 +220,7 @@ suse15cis_rule_1_5_1: true
 suse15cis_rule_1_5_2: true
 suse15cis_rule_1_5_3: true
 
-# 1.6 Configure System Wide cryptopolicy
+# 1.6 Configure System Wide crypto policy
 suse15cis_rule_1_6_1: true
 suse15cis_rule_1_6_2: true
 suse15cis_rule_1_6_3: true
