@@ -7,19 +7,20 @@
     - level1-workstation
     - patch
     - rule_2.3.1.1
+    - time
     - chrony
     - systemd-timesyncd
     - NIST800-53R5_AU-3
     - NIST800-53R5_AU-12
   block:
     - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | Pkg installed"
-      when: suse15cis_time_sync_tool == 'chrony'
+      when: suse15cis_time_sync_tool == 'chronyd'
       ansible.builtin.package:
-        name: "{{ suse15cis_time_sync_tool }}"
+        name: chrony
         state: present
 
     - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | other pkgs removed"
-      when: item != suse15cis_time_sync_tool
+      when: "item not in suse15cis_time_sync_tool"
       ansible.builtin.package:
         name: "{{ item }}"
         state: absent
@@ -28,7 +29,7 @@
         - systemd-timesyncd
 
     - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | Stop and disable service"
-      when: item != suse15cis_time_sync_tool
+      when: "item not in suse15cis_time_sync_tool"
       ansible.builtin.service:
         name: "{{ item }}"
         masked: true

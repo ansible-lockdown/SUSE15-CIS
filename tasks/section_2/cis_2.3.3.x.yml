@@ -7,6 +7,7 @@
     - level1-workstation
     - patch
     - rule_2.3.3.1
+    - time
     - chrony
     - NIST800-53R5_AU-3
     - NIST800-53R5_AU-12
@@ -19,39 +20,43 @@
         owner: root
         group: root
       loop:
-        - etc/chrony.d/sources.d/pool.sources
-        - etc/chrony.d/server.sources
+        - etc/chrony.d/pool.conf
+        - etc/chrony.d/server.conf
       notify: Restart timeservice
 
     - name: "2.3.3.1 | PATCH | Ensure chrony is configured | load sources"
       ansible.builtin.lineinfile:
-        path: /etc/chrony/chrony.conf
+        path: /etc/chrony.conf
         regexp: '^sourcedir /etc/chrony.d'
         line: sourcedir /etc/chrony.d
       notify: Restart timeservice
 
-    - name: "2.3.3.1 | PATCH | Ensure chrony is configured | user _chrony"
+    - name: "2.3.3.1 | PATCH | Ensure chrony is configured | user chrony"
       ansible.builtin.lineinfile:
-        path: /etc/chrony/chrony.conf
-        regexp: '^user _chrony'
-        line: 'user _chrony'
+        path: /etc/sysconfig/chronyd
+        regexp: '^OPTIONS="(?!.* -u chrony.*)(.*)"'
+        line: OPTIONS="\1 -u chrony"
+        create: true
+        backrefs: true
+        mode: 'go-wx'
 
-- name: "2.3.3.3 | PATCH | Ensure chrony is enabled and running"
-  when: suse15cis_rule_2_3_3_3
+- name: "2.3.3.2 | PATCH | Ensure chrony is enabled and running"
+  when: suse15cis_rule_2_3_3_2
   tags:
     - level1-server
     - level1-workstation
-    - rule_2.3.3.3
+    - rule_2.3.3.2
+    - time
     - chrony
     - NIST800-53R5_AU-8
   block:
-    - name: "2.3.3.3 | PATCH | Ensure chrony is enabled and running"
+    - name: "2.3.3.2 | PATCH | Ensure chrony is enabled and running"
       ansible.builtin.systemd:
-        name: chrony
+        name: chronyd
         state: started
         enabled: true
 
-    - name: "2.3.3.3 | PATCH | Ensure chrony is enabled and running | disable other time sources | timesyncd"
+    - name: "2.3.3.2 | PATCH | Ensure chrony is enabled and running | disable other time sources | timesyncd"
       when: "'systemd-timesyncd' in ansible_facts.packages"
       ansible.builtin.systemd:
         name: systemd-timesyncd
@@ -59,7 +64,7 @@
         enabled: false
         masked: true
 
-    - name: "2.3.3.3 | PATCH | Ensure chrony is enabled and running | disable other time sources | ntpd"
+    - name: "2.3.3.2 | PATCH | Ensure chrony is enabled and running | disable other time sources | ntpd"
       when: "'ntpd' in ansible_facts.packages"
       ansible.builtin.systemd:
         name: ntpd
