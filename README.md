@@ -13,7 +13,7 @@
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/AnsibleLockdown.svg?style=social&label=Follow%20%40AnsibleLockdown)](https://twitter.com/AnsibleLockdown)
 
 ![Ansible Galaxy Quality](https://img.shields.io/ansible/quality/61781?label=Quality&&logo=ansible)
-![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)
+[![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)](https://www.lockdownenterprise.com/discord)
 
 ![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
 ![Release Tag](https://img.shields.io/github/v/release/ansible-lockdown/SUSE15-CIS)
@@ -24,10 +24,10 @@
 [![Devel Pipeline Status](https://github.com/ansible-lockdown/SUSE15-CIS/actions/workflows/devel_pipeline_validation.yml/badge.svg?)](https://github.com/ansible-lockdown/SUSE15-CIS/actions/workflows/devel_pipeline_validation.yml)
 ![Devel Commits](https://img.shields.io/github/commit-activity/m/ansible-lockdown/SUSE15-CIS/devel?color=dark%20green&label=Devel%20Branch%20Commits)
 
-![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/SUSE15-CIS?label=Open%20Issues)
-![Issues Closed](https://img.shields.io/github/issues-closed-raw/ansible-lockdown/SUSE15-CIS?label=Closed%20Issues&&color=success)
-![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/SUSE15-CIS?label=Pull%20Requests)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/SUSE15-CIS?label=Open%20Issues)](https://github.com/ansible-lockdown/SUSE15-CIS/issues)
+[![Issues Closed](https://img.shields.io/github/issues-closed-raw/ansible-lockdown/SUSE15-CIS?label=Closed%20Issues&&color=success)](https://github.com/ansible-lockdown/SUSE15-CIS/issues?q=is%3Aissue%20state%3Aclosed)
+[![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/SUSE15-CIS?label=Pull%20Requests)](https://github.com/ansible-lockdown/SUSE15-CIS/pulls)
+![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/SUSE15-CIS?label=License)
 
@@ -35,9 +35,9 @@
 
 ## Looking for support?
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_SL15_cis)
+[Lockdown Enterprise](https://www.lockdownenterprise.com)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_SL15_cis)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor)
 
 ### Community
 
@@ -95,10 +95,6 @@ Refer to [SUSE15-CIS-Audit](https://github.com/ansible-lockdown/SUSE15-CIS-Audit
 ## Documentation
 
 - [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
-- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_SL15_cis)
-- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_SL15_cis)
-- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_SL15_cis)
-- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_SL15_cis)
 
 ## Requirements
 
@@ -119,7 +115,7 @@ os_check: false
   - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
   - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
 - Functioning Ansible and/or Tower Installed, configured, and running. This includes all of the base Ansible/Tower configurations, needed packages installed, and infrastructure setup.
-- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consiquences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
+- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consequences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
 
 **Technical Dependencies:**
 
@@ -142,14 +138,14 @@ There are many tags available for added control precision. Each control has it's
 Below is an example of the tag section from a control within this role. Using this example if you set your run to skip all controls with the tag services, this task will be skipped. The opposite can also happen where you run only controls tagged with services.
 
 ```sh
-      tags:
-      - level1-server
-      - level1-workstation
-      - scored
-      - avahi
-      - services
-      - patch
-      - rule_2.2.4
+    tags:
+    - level1-server
+    - level1-workstation
+    - scored
+    - avahi
+    - services
+    - patch
+    - rule_2.2.4
 ```
 
 ## Community Contribution
