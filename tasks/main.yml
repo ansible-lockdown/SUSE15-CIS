@@ -101,7 +101,7 @@
     - suse15cis_crypto_policy_module | length > 0
   tags: always
   ansible.builtin.assert:
-    that: suse15cis_crypto_policy_module in suse15cis_allowed_crypto_policies_modules
+    that: suse15cis_additional_crypto_policy_module in suse15cis_allowed_crypto_policies_modules
     fail_msg: "Crypto policy module is not a permitted version"
     success_msg: "Crypto policy module is a permitted version"
 
