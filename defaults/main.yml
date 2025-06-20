@@ -705,7 +705,7 @@ suse15cis_crypto_policy: 'DEFAULT'
 # This variable contains the value of the crypto policy module(combinations of policies and
 # sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
 # using 'suse15cis_allowed_crypto_policies_modules' variable.
-suse15cis_crypto_policy_module: ''
+suse15cis_additional_crypto_policy_module: ''
 
 ## Controls 1.6.x  - Warning banners
 # The controls 1.6.x set various warning banners and protect the respective files
