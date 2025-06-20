@@ -296,7 +296,7 @@
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured | Warning on files found"
       when:
         - discovered_homedir_hidden_files.stdout | length > 0
-        - not rhel9cis_dotperm_ansiblemanaged
+        - not suse15cis_dotperm_ansiblemanaged
       ansible.builtin.debug:
         msg:
           - "Warning!! Please investigate that hidden files found in users home directories match control requirements."
@@ -304,14 +304,14 @@
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured | Set warning count"
       when:
         - discovered_homedir_hidden_files.stdout | length > 0
-        - not rhel9cis_dotperm_ansiblemanaged
+        - not suse15cis_dotperm_ansiblemanaged
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured"
       when:
         - discovered_homedir_hidden_files.stdout | length > 0
-        - rhel9cis_dotperm_ansiblemanaged
+        - suse15cis_dotperm_ansiblemanaged
       block:
         - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured | Changes files if configured .bash_history & .netrc"
           when:
