@@ -160,7 +160,7 @@
 
 - name: Update Crypto Policy
   ansible.builtin.set_fact:
-    suse15cis_full_crypto_policy: "{{ suse15cis_crypto_policy }}{% if suse15cis_crypto_policy_module | length > 0 %}{{ suse15cis_crypto_policy_module }}{% endif %}"
+    suse15cis_full_crypto_policy: "{{ suse15cis_crypto_policy }}{{ suse15cis_crypto_policy_module }}{% if suse15cis_additional_crypto_policy_module | length > 0 %}:{{ suse15cis_additional_crypto_policy_module }}{% endif %}"
   notify: Set Crypto Policy
 
 - name: Set Crypto Policy
