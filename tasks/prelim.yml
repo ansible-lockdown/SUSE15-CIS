@@ -6,20 +6,17 @@
 - name: "PRELIM | Update package repositories cache"
   ansible.builtin.command: zypper ref
   changed_when: false
+  check_mode: false
 
 - name: "PRELIM | Include audit specific variables"
-  when:
-    - run_audit or audit_only
-    - setup_audit
+  when: run_audit or audit_only or setup_audit
   tags:
     - setup_audit
     - run_audit
   ansible.builtin.include_vars: audit.yml
 
 - name: "PRELIM | Include pre-remediation audit tasks"
-  when:
-    - run_audit or audit_only
-    - setup_audit
+  when: run_audit or audit_only or setup_audit
   tags:
     - run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
@@ -29,13 +26,15 @@
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
   changed_when: false
+  check_mode: false
   register: prelim_interactive_usernames
 
 - name: "PRELIM | AUDIT | Interactive User accounts home directories"
   tags: always
   ansible.builtin.shell: >
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $6 }'
   changed_when: false
+  check_mode: false
   register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
@@ -43,6 +42,7 @@
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
   changed_when: false
+  check_mode: false
   register: prelim_interactive_uids
 
 - name: "PRELIM | AUDIT | capture /etc/password variables"
@@ -93,6 +93,7 @@
       ansible.builtin.shell: |
         mount | awk '{print $1, $3, $5, $6}'
       changed_when: false
+      check_mode: false
       register: prelim_mount_output
 
     - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - build fact  # This is inherited and used in mountpoints tasks
@@ -129,8 +130,7 @@
         grub2_path: /etc/grub2-efi.cfg
 
 - name: "PRELIM | PATCH | Setup crypto-policy"
-  when:
-    - suse15cis_rule_1_6_1
+  when: suse15cis_rule_1_6_1
   tags:
     - level1-server
     - level1-workstation
@@ -239,16 +239,19 @@
     - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
       ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
       changed_when: false
+      check_mode: false
       register: prelim_uid_min_id
 
     - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
       ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
       changed_when: false
+      check_mode: false
       register: prelim_uid_max_id
 
     - name: "PRELIM | AUDIT | Capture GID_MIN information from logins.def"
       ansible.builtin.shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
       changed_when: false
+      check_mode: false
       register: prelim_gid_min_id
 
     - name: "PRELIM | AUDIT | Set_facts for interactive uid/gid"
@@ -266,6 +269,7 @@
   tags: always
   ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
   changed_when: false
+  check_mode: false
   register: prelim_auditd_logfile
 
 - name: "PRELIM | AUDIT | Audit conf and rules files | list files"
@@ -286,6 +290,7 @@
   tags: always
   ansible.builtin.shell: auditctl -l | grep -c '-e 2'
   changed_when: false
+  check_mode: false
   failed_when: prelim_auditd_immutable_check.rc not in [ 0, 1 ]
   register: prelim_auditd_immutable_check
 
