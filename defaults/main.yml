@@ -443,6 +443,7 @@ suse15cis_rule_6_1_3: true
 ## 6.2.1 Configure systemd-journald service
 suse15cis_rule_6_2_1_1: true
 suse15cis_rule_6_2_1_2: true
+suse15cis_rule_6_2_1_2_automation: true
 suse15cis_rule_6_2_1_3: true
 suse15cis_rule_6_2_1_4: true
 
@@ -1153,7 +1154,7 @@ suse15cis_aide_cron_weekday: '*'
 # This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
 # or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
-suse15cis_syslog: journald
+suse15cis_syslog: rsyslog
 ## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # Current variable configures the max amount of disk space the logs will use(thus, journal files
 # will not grow without bounds)
@@ -1285,6 +1286,10 @@ suse15cis_auditd_uid_exclude:
 # suse15cis_logrotate sets the daily, weekly, monthly, yearly value for the log rotation
 # To conform to CIS standards this just needs to comply with your site policy
 suse15cis_logrotate: "daily"
+
+# 6.2.4.1
+# Value to force the group ownership of created files to root
+suse15cis_auditd_log_group_action: "root"
 
 ##  Control 6.3.1.3 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
