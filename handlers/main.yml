@@ -192,6 +192,11 @@
     name: systemd-journald
     state: restarted
 
+- name: Restart rsyslog
+  ansible.builtin.systemd:
+    name: rsyslog
+    state: restarted
+
 - name: Restart exim4
   ansible.builtin.systemd:
     name: exim4

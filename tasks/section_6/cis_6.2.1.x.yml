@@ -54,6 +54,45 @@
       vars:
         warn_control_id: "6.2.1.2"
 
+- name: "6.2.1.2 | PATCH | Ensure journald log file access is configured - AUTOMATION"
+  when:
+    - suse15cis_rule_6_2_1_2
+    - suse15cis_rule_6_2_1_2_automation
+  tags:
+    - level1-server
+    - level1-workstation
+    - audit
+    - journald
+    - rule_6.2.1.2
+  block:
+    - name: "6.2.1.2 | PATCH | Count every permission over 0640"
+      ansible.builtin.shell: "grep -P '^[a-zA-Z](?:\\+!?|!)?\\s+/\\S+\\s+~?(?:[0-7]6[4-7][1-7]|[0-7]7[0-7][0-7])\\s' /usr/lib/tmpfiles.d/systemd.conf | wc -l"
+      register: perm_count
+      changed_when: false
+
+    - name: "6.2.1.2 | PATCH | Adjust permission to 0640"
+      ansible.builtin.lineinfile:
+        path: /usr/lib/tmpfiles.d/systemd.conf
+        regexp: '^([a-zA-Z](?:\+!?|!)?\s+/\S+\s+~?)(?:[0-7]6[4-7][1-7]|[0-7]7[0-7][0-7])(\s+.+)$'
+        line: '\g<1>0640\2'
+        backrefs: true
+        backup: true
+      loop: "{{ range(0, perm_count.stdout | int) | list }}"
+
+    - name: "6.2.1.2 | PATCH | Count every permission where others have rights over 0"
+      ansible.builtin.shell: "grep -P '^[a-zA-Z](?:\\+!?|!)?\\s+/\\S+\\s+~?[0-7]?[0-7]?[0-7]?(?:[1-7])\\s' /usr/lib/tmpfiles.d/systemd.conf | wc -l"
+      register: perm_count
+      changed_when: false
+
+    - name: "6.2.1.2 | PATCH | Adjust permission to XXX0"
+      ansible.builtin.lineinfile:
+        path: /usr/lib/tmpfiles.d/systemd.conf
+        regexp: '^([a-zA-Z](?:\+!?|!)?\s+/\S+\s+~?[0-7][0-7][0-7])[1-7](\s+.+)$'
+        line: '\g<1>0\2'
+        backrefs: true
+        backup: true
+      loop: "{{ range(0, perm_count.stdout | int) | list }}"
+
 - name: "6.2.1.3 | PATCH | Ensure journald log file rotation is configured"
   when: suse15cis_rule_6_2_1_3
   tags:
