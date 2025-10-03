@@ -24,11 +24,8 @@
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -k time-change
 {% set syscalls = ["clock_settime"] %}
 {% set arch_syscalls = syscalls | select("in", supported_syscalls) | list %}
-{% if syscall in supported_syscalls %}
-{{ arch_syscalls.append(syscall) }}
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F a0=0x0 -k time-change
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F a0=0x0 -k time-change
-{% endif %}
 -w /etc/localtime -p wa -k time-change
 {% endif %}
 {% if suse15cis_rule_6_3_3_5 %}
