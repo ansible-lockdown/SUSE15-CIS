@@ -8,6 +8,14 @@
     - logfiles
     - rule_6.2.4.1
   block:
+
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | Created with root as group"
+      ansible.builtin.lineinfile:
+        path: /etc/audit/auditd.conf
+        regexp: "^log_group"
+        line: "log_group = {{ suse15cis_auditd_log_group_action }}"
+      notify: Restart auditd
+
     - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | find log files"
       ansible.builtin.shell: find /var/log/ -type f -exec ls {} \;
       changed_when: false

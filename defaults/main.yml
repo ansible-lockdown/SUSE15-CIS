@@ -1286,6 +1286,10 @@ suse15cis_auditd_uid_exclude:
 # To conform to CIS standards this just needs to comply with your site policy
 suse15cis_logrotate: "daily"
 
+# 6.2.4.1
+# Value to force the group ownership of created files to root
+suse15cis_auditd_log_group_action: "root"
+
 ##  Control 6.3.1.3 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
 # system can buffer in memory, if the audit subsystem is unable to process them in real-time.
