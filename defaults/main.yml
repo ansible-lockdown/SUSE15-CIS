@@ -91,6 +91,9 @@ get_audit_binary_method: download
 ## e.g copy from ansible control node to remote host
 audit_bin_copy_location: /some/accessible/path
 
+# Ability to limit the number of concurrent processes used by goss (default 50)
+audit_max_concurrent: 50
+
 # how to get audit files onto host options
 # options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
 audit_content: git
@@ -1285,6 +1288,10 @@ suse15cis_auditd_uid_exclude:
 # suse15cis_logrotate sets the daily, weekly, monthly, yearly value for the log rotation
 # To conform to CIS standards this just needs to comply with your site policy
 suse15cis_logrotate: "daily"
+
+# 6.2.4.1
+# Value to force the group ownership of created files to root
+suse15cis_auditd_log_group_action: "root"
 
 ##  Control 6.3.1.3 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the

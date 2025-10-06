@@ -182,9 +182,9 @@
     name: postfix
     state: restarted
 
-- name: Restart syslog service
+- name: Restart rsyslog
   ansible.builtin.systemd:
-    name: "{{ suse15cis_syslog_service }}"
+    name: rsyslog
     state: restarted
 
 - name: Restart journald
