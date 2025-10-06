@@ -4,7 +4,7 @@
 
 
 # Oct update
-audit proceses updated and max-concurrent option added
+audit processes updated and max-concurrent option added
 auditd template update
 benchmark_version used audit template
 workflow updates
@@ -14,6 +14,7 @@ thanks to @MaWahli
 #11
 #12
 #13
+6.2.1.2 - improved testing logic and alerting if issues found
 
 # June25
 pre-commit updates
