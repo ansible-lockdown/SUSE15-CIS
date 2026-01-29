@@ -1,4 +1,5 @@
 ---
+
 - name: "6.2.2.1.1 | PATCH | Ensure systemd-journal-remote is installed"
   when:
     - suse15cis_rule_6_2_2_1_1

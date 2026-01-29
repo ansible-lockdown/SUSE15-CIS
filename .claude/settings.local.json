@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(codespell:*)",
+      "Bash(yamllint:*)",
+      "Bash(ansible-lint:*)"
+    ]
+  }
+}

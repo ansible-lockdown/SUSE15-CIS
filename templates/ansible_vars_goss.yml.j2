@@ -484,7 +484,7 @@ suse15cis_screensaver_lock_delay: {{ suse15cis_screensaver_lock_delay }}  # Set 
 # Options are
 # true to leave installed if exists not changes take place
 # false - this removes the package
-# mask - if a dependancy for product so cannot be removed
+# mask - if a dependency for product so cannot be removed
 # Server Services
 suse15cis_autofs_services: false
 suse15cis_autofs_mask: {{ suse15cis_autofs_mask }}
@@ -577,7 +577,7 @@ suse15cis_ipv6_required: {{ suse15cis_ipv6_required }}
 # Options are
 # true to leave installed if exists not changes take place
 # false - this removes the package
-# mask - if a dependancy for product so cannot be removed
+# mask - if a dependency for product so cannot be removed
 suse15cis_bluetooth_service: {{ suse15cis_bluetooth_service }}
 suse15cis_bluetooth_mask: {{ suse15cis_bluetooth_mask }}
 
@@ -800,7 +800,7 @@ suse15cis_journal_upload_url: '{{ suse15cis_journal_upload_url }}'
 
 ## The paths below have the default paths/files, but allow user to create custom paths/filenames
 ## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
-# The filename in which the correct configuration shoud be stored in /etc/systemd/journal-upload.conf.d/
+# The filename in which the correct configuration should be stored in /etc/systemd/journal-upload.conf.d/
 suse15cis_journal_remote_upload_config_file: '{{ suse15cis_journal_remote_upload_config_file }}'
 
 # This variable specifies the path to the private key file used by the remote journal
