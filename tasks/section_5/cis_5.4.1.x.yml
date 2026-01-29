@@ -1,4 +1,5 @@
 ---
+
 - name: "5.4.1.1 | PATCH | Ensure password expiration is configured"
   when: suse15cis_rule_5_4_1_1
   tags:

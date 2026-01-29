@@ -1,4 +1,5 @@
 ---
+
 - name: "6.2.1.1 | PATCH | Ensure journald service is enabled and active"
   when: suse15cis_rule_6_2_1_1
   tags:
