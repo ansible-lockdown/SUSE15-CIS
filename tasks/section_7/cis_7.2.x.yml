@@ -1,4 +1,5 @@
 ---
+
 - name: "7.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords"
   when: suse15cis_rule_7_2_1
   tags:

@@ -1,4 +1,5 @@
 ---
+
 - name: "SECTION | 6.1 | Configure Integrity Checking"
   ansible.builtin.import_tasks:
     file: cis_6.1.x.yml

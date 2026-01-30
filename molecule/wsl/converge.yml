@@ -9,7 +9,7 @@
       ansible_user: "{{ lookup('env', 'USER') }}"
       system_is_container: true
       rhel8cis_selinux_disable: true
-      role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+      current_role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
       rhel8cis_rule_5_3_4: false
       rhel8cis_rule_1_1_10: false
       rhel8cis_rsyslog_ansiblemanaged: false
@@ -23,4 +23,4 @@
   tasks:
       - name: "Include tasks"
         ansible.builtin.include_role:
-            name: "{{ role_name }}"
+            name: "{{ current_role_name }}"

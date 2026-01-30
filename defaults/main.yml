@@ -101,7 +101,7 @@ audit_content: git
 # If using either archive, copy, get_url:
 ## Note will work with .tar files - zip will require extra configuration
 ### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/UBUNTU24-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
+### https://github.com/ansible-lockdown/SUSE15-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
 audit_conf_source: "some path or url to copy from"
 
 # Destination for the audit content to be placed on managed node
@@ -716,10 +716,10 @@ suse15cis_additional_crypto_policy_module: ''
 
 # This variable specifies the warning banner displayed to the user
 # after local login, remote login, and as motd (message of the day)
-# Noe that the banner text must not contain the below items in order to be
+# Note that the banner text must not contain the below items in order to be
 # compliant with CIS: \m, \r, \s, \v or references to the OS platform
 suse15cis_warning_banner: |
-        Authorized uses only. All activity may be monitored and reported.
+        Authorized users only. All activity may be monitored and reported.
 
 # This variable governs, whether dynamic motd is disabled (as required by control 1.7.1)
 suse15cis_disable_dynamic_motd: true
@@ -1009,7 +1009,7 @@ suse15cis_passwd_quality_enforce_for_root_value: enforce_for_root  # pragma: all
 ## 5.3.2.3 Configure pam_pwhistory module
 # Control 5.3.2.3.1
 # This variable represents the number of password change cycles, after which
-# a user can re-use a password. # CIS requires a value of 24 or more.
+# a user can reuse a password. # CIS requires a value of 24 or more.
 suse15cis_pamd_pwhistory_remember: '24'
 
 # Controls 5.3.2.4 - pam_unix
@@ -1103,7 +1103,7 @@ suse15cis_aide_db_recreate: false
 suse15cis_aide_db_file: /var/lib/aide/aide.db
 
 ## When Initializing aide this can take longer on some systems
-# changing the values enables user to change to thier own requirements
+# changing the values enables user to change to their own requirements
 # Maximum Time in seconds
 suse15cis_aide_init_async: 600
 # Polling Interval in seconds
@@ -1242,7 +1242,7 @@ suse15cis_journal_upload_url: 192.168.50.42
 ## The paths below have the default paths/files, but allow user to create custom paths/filenames
 
 ## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
-# The filename in which the correct configuration shoud be stored in /etc/systemd/journal-upload.conf.d/
+# The filename in which the correct configuration should be stored in /etc/systemd/journal-upload.conf.d/
 suse15cis_journal_remote_upload_config_file: remote_upload.conf
 # This variable specifies the path to the private key file used by the remote journal
 # server to authenticate itself to the client. This key is used alongside the server's
