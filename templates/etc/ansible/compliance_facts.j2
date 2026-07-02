@@ -1,6 +1,4 @@
-# CIS Hardening Carried out
-# Added as part of ansible-lockdown CIS baseline
-# provided by Mindpoint Group - A Tyto Athene Company
+{{ file_managed_by_ansible }}
 
 [lockdown_details]
 # Benchmark release
@@ -23,18 +21,5 @@ Level_1_workstation_tag_run = true
 {% endif %}
 {% if 'level2-workstation' in ansible_run_tags %}
 Level_2_workstation_tag_run = true
-{% endif %}
-{% endif %}
-
-[lockdown_audit_details]
-{% if run_audit %}
-# Audit run
-audit_run_date = {{ '%Y-%m-%d - %H:%M:%S' | ansible.builtin.strftime }}
-audit_file_local_location = {{ audit_log_dir }}
-{% if not audit_only %}
-audit_summary = {{ post_audit_results }}
-{% endif %}
-{% if fetch_audit_output %}
-audit_files_centralized_location = {{ audit_output_destination }}
 {% endif %}
 {% endif %}

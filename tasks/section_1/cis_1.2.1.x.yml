@@ -6,30 +6,42 @@
     - level1-server
     - level1-workstation
     - manual
-    - patch
-    - rule_1.2.1
+    - audit
+    - rule_1.2.1.1
     - NIST800-53R5_SI-2
   block:
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | list installed pubkey keys"
-      ansible.builtin.shell: "rpm -qa | grep {{ os_gpg_key_pubkey_name }}"  # noqa command-instead-of-module
+      ansible.builtin.shell: |  # noqa command-instead-of-module
+        set -o pipefail
+        rpm -qa | grep {{ os_gpg_key_pubkey_name }}
       changed_when: false
       failed_when: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_os_installed_pub_keys
 
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | Query found keys"
       when: discovered_os_installed_pub_keys.rc == 0
       ansible.builtin.shell: |
+        set -o pipefail
         'rpm -q --queryformat "%{PACKAGER} %{VERSION}\\n" {{ os_gpg_key_pubkey_name }} | grep "{{ os_gpg_key_pubkey_content }}"'
       changed_when: false
       failed_when: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_os_gpg_key_check
 
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | expected keys fail"
-      when:
-        - discovered_os_installed_pub_keys.rc == 1 or
-          discovered_os_gpg_key_check.rc == 1
+      when: discovered_os_installed_pub_keys.rc == 1 or discovered_os_gpg_key_check.rc == 1
       ansible.builtin.fail:
         msg: Installed GPG Keys do not meet expected values or expected keys are not installed
+
+- name: "Find repos file"
+  when: suse15cis_rule_1_2_1_2 or suse15cis_rule_1_2_1_3
+  ansible.builtin.find:
+    paths: /etc/zypp/repos.d
+    patterns: "*.repo"
+  register: discovered_repofiles
 
 - name: "1.2.1.2 | PATCH | Ensure gpgcheck is globally activated"
   when: suse15cis_rule_1_2_1_2
@@ -39,21 +51,13 @@
     - patch
     - rule_1.2.1.2
     - NIST800-53R5_SI-2
-  block:
-    - name: "1.2.1.2 | AUDIT | Ensure gpgcheck is globally activated | Find repos"
-      ansible.builtin.find:
-        paths: /etc/zypp/repos.d
-        patterns: "*.repo"
-      register: discovered_repofiles
-
-    - name: "1.2.1.2 | PATCH | Ensure gpgcheck is globally activated | Update yum.repos"
-      ansible.builtin.replace:
-        name: "{{ item.path }}"
-        regexp: ^gpgcheck\s*=\s*(0|false|no|off)
-        replace: "gpgcheck=on"
-      loop: "{{ discovered_repofiles.files }}"
-      loop_control:
-        label: "{{ item.path }}"
+  ansible.builtin.replace:
+    name: "{{ item.path }}"
+    regexp: ^gpgcheck\s*=\s*(0|false|no|off)
+    replace: "gpgcheck=on"
+  loop: "{{ discovered_repofiles.files }}"
+  loop_control:
+    label: "{{ item.path }}"
 
 - name: "1.2.1.3 | AUDIT | Ensure repo_gpgcheck is globally activated"
   when: suse15cis_rule_1_2_1_3
@@ -70,12 +74,6 @@
         path: /etc/zypp/zypp.conf
         regexp: '^repo_gpgcheck'
         line: repo_gpgcheck=1
-
-    - name: "1.2.1.3 | AUDIT| Ensure repo_gpgcheck is globally activated | get repo files"
-      ansible.builtin.find:
-        paths: /etc/zypp/repos.d
-        patterns: "*.repo"
-      register: discovered_repofiles
 
     - name: "1.2.1.3 | PATCH | Ensure repo_gpgcheck is globally activated | amend repo files"
       ansible.builtin.replace:
@@ -95,15 +93,13 @@
     - audit
     - rule_1.2.1.4
     - NIST800-53R5_SI-2
-  vars:
-    warn_control_id: '1.2.1.4'
   block:
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Get repo list"
       ansible.builtin.command: zypper lr
       changed_when: false
       failed_when: false
-      register: discovered_repolist
       check_mode: false
+      register: discovered_repolist
 
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Display repo list"
       ansible.builtin.debug:
@@ -114,3 +110,5 @@
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: '1.2.1.4'

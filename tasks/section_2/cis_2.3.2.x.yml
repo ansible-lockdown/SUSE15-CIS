@@ -36,6 +36,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - patch
     - rule_2.3.2.2
     - time
     - timesyncd
@@ -49,7 +50,7 @@
         enabled: true
 
     - name: "2.3.2.2 | PATCH | Ensure systemd-timesyncd is enabled and running | disable other time sources | chrony"
-      when: "'chrony' in ansible_facts.packages"
+      when: "'chrony' in ansible_facts['packages']"
       ansible.builtin.systemd:
         name: chrony
         state: stopped

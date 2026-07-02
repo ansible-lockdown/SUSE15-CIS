@@ -9,11 +9,9 @@
     - rule_7.2.1
     - user_accounts
     - NIST800-53R5_IA-5
-  vars:
-    warn_control_id: "7.2.1"
   block:
     - name: "7.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Get users not using shadowed passwords"
-      ansible.builtin.shell: awk -F':' '($2 != "x" ) { print $1}' /etc/passwd
+      ansible.builtin.command: awk -F':' '($2 != "x" ) { print $1}' /etc/passwd
       changed_when: false
       failed_when: false
       register: discovered_nonshadowed_users
@@ -29,6 +27,8 @@
       when: discovered_nonshadowed_users.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "7.2.1"
 
 - name: "7.2.2 | PATCH | Ensure /etc/shadow password fields are not empty"
   when: suse15cis_rule_7_2_2
@@ -40,9 +40,10 @@
     - user
     - permissions
     - NIST800-53R5_IA-5
+  no_log: true
   block:
     - name: "7.2.2 | AUDIT | Ensure /etc/shadow password fields are not empty | Find users with no password"
-      ansible.builtin.shell: awk -F":" '($2 == "" ) { print $1 }' /etc/shadow
+      ansible.builtin.command: awk -F":" '($2 == "" ) { print $1 }' /etc/shadow
       changed_when: false
       check_mode: false
       register: discovered_empty_password_acct
@@ -68,14 +69,16 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  vars:
-    warn_control_id: "7.2.3"
   block:
     - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Check /etc/passwd entries"
-      ansible.builtin.shell: pwck -r | grep 'no group' | awk '{ gsub("[:\47]",""); print $2}'
+      ansible.builtin.shell: |
+        set -o pipefail
+        pwck -r | grep 'no group' | awk '{ gsub("[:\47]",""); print $2}'
       changed_when: false
       failed_when: false
       check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_passwd_gid_check
 
     - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
@@ -87,6 +90,8 @@
       when: discovered_passwd_gid_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "7.2.3"
 
 - name: "7.2.4 | AUDIT | Ensure no duplicate UIDs exist"
   when: suse15cis_rule_7_2_4
@@ -101,14 +106,16 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  vars:
-    warn_control_id: "7.2.4"
   block:
     - name: "7.2.4 | AUDIT | Ensure no duplicate UIDs exist | Check for duplicate UIDs"
-      ansible.builtin.shell: "pwck -r | awk -F: '{if ($3 in uid) print $1 ; else uid[$3]}' /etc/passwd"
+      ansible.builtin.shell: |
+        set -o pipefail
+        pwck -r | awk -F: '{if ($3 in uid) print $1 ; else uid[$3]}' /etc/passwd
       changed_when: false
       failed_when: false
       check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_user_uid_check
 
     - name: "7.2.4 | AUDIT | Ensure no duplicate UIDs exist | Print warning about users with duplicate UIDs"
@@ -120,6 +127,8 @@
       when: discovered_user_uid_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "7.2.4"
 
 - name: "7.2.5 | AUDIT | Ensure no duplicate GIDs exist"
   when: suse15cis_rule_7_2_5
@@ -134,14 +143,16 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  vars:
-    warn_control_id: "7.2.5"
   block:
     - name: "7.2.5 | AUDIT | Ensure no duplicate GIDs exist | Check for duplicate GIDs"
-      ansible.builtin.shell: "pwck -r | awk -F: '{if ($3 in users) print $1 ; else users[$3]}' /etc/group"
+      ansible.builtin.shell: |
+        set -o pipefail
+        pwck -r | awk -F: '{if ($3 in users) print $1 ; else users[$3]}' /etc/group
       changed_when: false
       failed_when: false
       check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_user_gid_check
 
     - name: "7.2.5 | AUDIT | Ensure no duplicate GIDs exist | Print warning about users with duplicate GIDs"
@@ -153,6 +164,8 @@
       when: discovered_user_gid_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "7.2.5"
 
 - name: "7.2.6 | AUDIT | Ensure no duplicate user names exist"
   when: suse15cis_rule_7_2_6
@@ -167,14 +180,16 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  vars:
-    warn_control_id: "7.2.6"
   block:
     - name: "7.2.6 | AUDIT | Ensure no duplicate user names exist | Check for duplicate User Names"
-      ansible.builtin.shell: "pwck -r | awk -F: '{if ($1 in users) print $1 ; else users[$1]}' /etc/passwd"
+      ansible.builtin.shell: |
+        set -o pipefail
+        pwck -r | awk -F: '{if ($1 in users) print $1 ; else users[$1]}' /etc/passwd
       changed_when: false
       failed_when: false
       check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_username_check
 
     - name: "7.2.6 | WARNING | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
@@ -186,6 +201,8 @@
       when: discovered_username_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "7.2.6"
 
 - name: "7.2.7 | AUDIT | Ensure no duplicate group names exist"
   when: suse15cis_rule_7_2_7
@@ -200,14 +217,16 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  vars:
-    warn_control_id: "7.2.7"
   block:
     - name: "7.2.7 | AUDIT | Ensure no duplicate group names exist | Check for duplicate group names"
-      ansible.builtin.shell: "getent passwd | cut -d: -f1 | sort -n | uniq -d"
+      ansible.builtin.shell: |
+        set -o pipefail
+        getent passwd | cut -d: -f1 | sort -n | uniq -d
       changed_when: false
       failed_when: false
       check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_group_check
 
     - name: "7.2.7 | AUDIT | Ensure no duplicate group names exist | Print warning about users with duplicate group names"
@@ -219,6 +238,8 @@
       when: discovered_group_check.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "7.2.7"
 
 - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured"
   when: suse15cis_rule_7_2_8
@@ -251,23 +272,30 @@
     # set default ACLs so the homedir has an effective umask of 0027
     - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Set group ACL"
       when: not system_is_container
-      ansible.posix.acl:
-        path: "{{ item }}"
-        default: true
-        etype: group
-        permissions: rx
-        state: present
-      loop: "{{ prelim_interactive_users_home.stdout_lines }}"
+      block:
+        - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Add acl package if needed"
+          ansible.builtin.package:
+            name: acl
+            state: present
 
-    - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Set other ACL"
-      when: not system_is_container
-      ansible.posix.acl:
-        path: "{{ item }}"
-        default: true
-        etype: other
-        permissions: 0
-        state: present
-      loop: "{{ prelim_interactive_users_home.stdout_lines }}"
+        - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Set group ACL"
+          ansible.posix.acl:
+            path: "{{ item }}"
+            default: true
+            etype: group
+            permissions: rx
+            state: present
+          loop: "{{ prelim_interactive_users_home.stdout_lines }}"
+
+        - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Set other ACL"
+          when: not system_is_container
+          ansible.posix.acl:
+            path: "{{ item }}"
+            default: true
+            etype: other
+            permissions: 0
+            state: present
+          loop: "{{ prelim_interactive_users_home.stdout_lines }}"
 
 - name: "7.2.9 | PATCH | Ensure local interactive user dot files access is configured"
   when:
@@ -284,14 +312,16 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  vars:
-    warn_control_id: '7.2.9'
   block:
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured"
-      ansible.builtin.shell: find {{ prelim_interactive_users_home.stdout_lines | list | join(' ') }} -name "\.*" -type f
+      ansible.builtin.shell: |
+        set -o pipefail
+        find {{ prelim_interactive_users_home.stdout_lines | list | join(' ') }} -name "\.*" -type f
       changed_when: false
       failed_when: discovered_homedir_hidden_files.rc not in [ 0, 1 ]
       check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_homedir_hidden_files
 
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured | Warning on files found"
@@ -308,6 +338,8 @@
         - not suse15cis_dotperm_ansiblemanaged
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: '7.2.9'
 
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured"
       when:
@@ -329,8 +361,8 @@
           ansible.builtin.file:
             path: '{{ item }}'
             mode: 'u-x,go-wx'
-          failed_when: discovered_dot_bash_history_to_change.state not in '[ file, absent ]'
-          register: discovered_dot_bash_history_to_change
+          failed_when: discovered_dot_bash_history_to_change_mode.state not in '[ file, absent ]'
+          register: discovered_dot_bash_history_to_change_mode
           loop: "{{ discovered_homedir_hidden_files.stdout_lines }}"
 
         - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured | Changes files ownerships"
@@ -338,8 +370,8 @@
             path: "{{ item }}"
             owner: "{{ prelim_captured_passwd_data | selectattr('dir', 'in', prelim_interactive_users_home.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='uid') | last }}"
             group: "{{ prelim_captured_passwd_data | selectattr('dir', 'in', prelim_interactive_users_home.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='gid') | last }}"
-          failed_when: discovered_dot_bash_history_to_change.state not in '[ file, absent ]'
-          register: discovered_dot_bash_history_to_change
+          failed_when: discovered_dot_bash_history_to_change_owner.state not in '[ file, absent ]'
+          register: discovered_dot_bash_history_to_change_owner
           loop: "{{ discovered_homedir_hidden_files.stdout_lines }}"
 
         - name: "7.2.9 | PATCH | Ensure local interactive user dot files access is configured | Changes files if configured"

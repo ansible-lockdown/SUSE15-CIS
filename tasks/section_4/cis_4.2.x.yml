@@ -6,13 +6,22 @@
     - level1-server
     - level1-workstation
     - manual
-    - audit
+    - patch
     - rule_4.2.1
     - NIST800-55_CA-9
     - firewalld
-  ansible.builtin.package:
-    name: firewalld
-    state: present
+  block:
+    - name: "4.2.1 | PATCH | Ensure firewalld is installed | package installed"
+      ansible.builtin.package:
+        name: firewalld
+        state: present
+
+    - name: "4.2.1 | PATCH | Ensure firewalld is installed | python package installed"
+      when: suse15cis_firewall_package == 'firewalld'
+      tags: always
+      ansible.builtin.package:
+        name: python3-firewall
+        state: latest
 
 - name: "4.2.2 | AUDIT | Ensure firewalld drops unnecessary services and ports"
   when: suse15cis_rule_4_2_2
@@ -20,15 +29,20 @@
     - level1-server
     - level1-workstation
     - manual
+    - audit
     - firewalld
     - rule_4.2.2
     - NIST800-55_CA-9
   block:
     - name: "4.2.2 | AUDIT | Ensure firewalld drops unnecessary services and ports | Get list of services and ports"
-      ansible.builtin.shell: "firewall-cmd --get-active-zones | awk '!/:/ {print $1}' | while read ZN; do firewall-cmd --list-all --zone=$ZN; done"
+      ansible.builtin.shell: |
+        set -o pipefail
+        firewall-cmd --get-active-zones | awk '!/:/ {print $1}' | while read ZN; do firewall-cmd --list-all --zone=$ZN; done
       changed_when: false
       failed_when: false
       check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_services_and_ports
 
     - name: "4.2.2 | AUDIT | Ensure firewalld drops unnecessary services and ports | Show services and ports"
@@ -38,14 +52,15 @@
           - "{{ discovered_services_and_ports.stdout_lines }}"
 
 # Changed order as required by 4.2.3
-- name: "4.2.5 | PATCH | Ensure firewalld service is enabled and running | {{ suse15cis_firewall }} started and enabled"  # noqa name[template]
+- name: "4.2.5 | PATCH | Ensure firewalld service is enabled and running | {{ suse15cis_firewall_package }} started and enabled"  # noqa name[template]
   when: suse15cis_rule_4_2_5
   tags:
     - level1-server
     - level1-workstation
     - manual
+    - patch
     - firewalld
-    - rule_4.2.2
+    - rule_4.2.5
     - NIST800-55_CA-9
   ansible.builtin.systemd:
     name: firewalld

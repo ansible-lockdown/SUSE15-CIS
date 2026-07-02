@@ -32,11 +32,6 @@ suse15cis_level_2: true
 # "false", these tasks will be skipped.
 suse15cis_disruption_high: true
 
-## Unrestricted boot
-# Setting this variable to false enables the system to
-# boot *without* querying for the bootloader password.
-suse15cis_ask_passwd_to_boot: false
-
 ## Usage on containerized images
 # The role discovers dynamically (in tasks/main.yml) whether it
 # is executed on a container image and sets the variable
@@ -50,11 +45,22 @@ container_vars_file: is_container.yml
 # This allows the ability to skip tasks that may cause an issue
 suse15cis_uses_root: false
 
+# Connecting user, due to the way many users work differently this is to try and assist the use of connecting user if required
+# This is useful when part of kickstart build or running as root and not defining the ansible_user option
+# used @ rhel10 5.2.4
+suse15cis_default_user: root
+suse15cis_connecting_user: "{{ ansible_facts['env']['SUDO_USER'] | default(suse15cis_default_user) }}"
+suse15cis_playbook_user: "{{ ansible_user | default(suse15cis_connecting_user) }}"
+
 ## OS check - to turn off at your own risk
 os_check: true
 
 ## Allow sysctl to be updated
 suse15cis_sysctl_update: true
+
+# A location that can be used as as a temporary location to execute scripts
+# note the drive with need exec permissions used by 1.1.1.9
+suse15cis_temp_exec_location: /var
 
 # Create managed not custom local_facts files
 create_benchmark_facts: true
@@ -68,62 +74,22 @@ ansible_facts_path: /etc/ansible/facts.d
 ### Goss is required on the remote host ###
 ### vars/auditd.yml for other settings  ###
 
+# If the any of the following are set the variables used by them are loaded in vars/audit.yml these can be overridden by your
+# preferred method of variable management (e.g., vault, group_vars, host_vars, inventory etc.)
+
 # Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
 setup_audit: false
 
 # enable audits to run - this runs the audit and get the latest content
 run_audit: false
-# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
-audit_run_heavy_tests: true
 
 ## Only run Audit do not remediate
 audit_only: false
 
-#############################
-
-# How to retrieve audit binary
-# Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already downloaded
-get_audit_binary_method: download
-
-## if get_audit_binary_method - copy the following needs to be updated for your environment
-## it is expected that it will be copied from somewhere accessible to the control node
-## e.g copy from ansible control node to remote host
-audit_bin_copy_location: /some/accessible/path
-
-# Ability to limit the number of concurrent processes used by goss (default 50)
-audit_max_concurrent: 50
-
-# how to get audit files onto host options
-# options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
-audit_content: git
-
-# If using either archive, copy, get_url:
-## Note will work with .tar files - zip will require extra configuration
-### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/SUSE15-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
-audit_conf_source: "some path or url to copy from"
-
-# Destination for the audit content to be placed on managed node
-# note may not need full path e.g. /opt with the directory being the {{ benchmark }}-Audit directory
-audit_conf_dest: "/opt"
-
-# Where the audit logs are stored
-audit_log_dir: '/opt'
-
-## Ability to collect and take audit files moving to a centralised location
-# This enables the collection of the files from the host
+# Fetch audit output files back to the controller
 fetch_audit_output: false
 
-# Method of getting,uploading the summary files
-## Ensure access and permissions are available for these to occur.
-## options are
-# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
-# copy - copies file to a location available to the managed node
-audit_output_collection_method: fetch
-
-# Location to put the audit files
-audit_output_destination: /opt/audit_summaries/
+#############################
 
 ### Goss Settings ##
 ####### END ########
@@ -155,7 +121,6 @@ suse15cis_rule_1_1_1_6: true
 suse15cis_rule_1_1_1_7: true
 suse15cis_rule_1_1_1_8: true
 suse15cis_rule_1_1_1_9: true
-suse15cis_rule_1_1_1_10: true
 
 # 1.1.2 Configure Filesystem Partitions
 # /tmp
@@ -240,7 +205,7 @@ suse15cis_rule_1_7_4: true
 suse15cis_rule_1_7_5: true
 suse15cis_rule_1_7_6: true
 
-# 1.7 Configure GNOME Display Manager
+# 1.8 Configure GNOME Display Manager
 suse15cis_rule_1_8_1: true
 suse15cis_rule_1_8_2: true
 suse15cis_rule_1_8_3: true
@@ -473,19 +438,19 @@ suse15cis_rule_6_2_3_7: true
 ## 6.2.4 Configure Logfiles
 suse15cis_rule_6_2_4_1: true
 
-# 6.2.1 Configure auditd services
+# 6.3.1 Configure auditd services
 suse15cis_rule_6_3_1_1: true
 suse15cis_rule_6_3_1_2: true
 suse15cis_rule_6_3_1_3: true
 suse15cis_rule_6_3_1_4: true
 
-# 6.2.2 Configure auditd data retention
+# 6.3.2 Configure auditd data retention
 suse15cis_rule_6_3_2_1: true
 suse15cis_rule_6_3_2_2: true
 suse15cis_rule_6_3_2_3: true
 suse15cis_rule_6_3_2_4: true
 
-# 6.2.3 Configure auditd rules
+# 6.3.3 Configure auditd rules
 suse15cis_rule_6_3_3_1: true
 suse15cis_rule_6_3_3_2: true
 suse15cis_rule_6_3_3_3: true
@@ -508,7 +473,7 @@ suse15cis_rule_6_3_3_19: true
 suse15cis_rule_6_3_3_20: true
 suse15cis_rule_6_3_3_21: true
 
-# 6.2.4 Configure audit file access
+# 6.3.4 Configure audit file access
 suse15cis_rule_6_3_4_1: true
 suse15cis_rule_6_3_4_2: true
 suse15cis_rule_6_3_4_3: true
@@ -632,19 +597,14 @@ suse15cis_ipv4_required: true
 # This variable governs whether ipv6 is enabled or disabled.
 suse15cis_ipv6_required: false
 
-## Desktop requirement toggle
-# This variable governs, whether CIS rules regarding GDM
-# and X-Windows are carried out.
-suse15cis_desktop_required: false
-
-## Purge apt packages
-# This will allow the purging of any packages that are marked to be removed
-# This will also purge any packages not removed via this playbook
-suse15cis_purge_apt: false
-
 ##
 ## Section 1 Control Variables
 ##
+
+## Control 1.1.1.9 - Ensure unused filesystems kernel modules are not available
+# This variable governs whether the discovery script is removed.
+# By setting to true this can affect the audit of the rule.
+suse15is_remove_kernel_discovery_script: false
 
 ## Ability to enable debug on mounts to assist in troubleshooting
 # Mount point changes are set based upon facts created in Prelim
@@ -680,26 +640,18 @@ suse15cis_apparmor_mode: complain
 # THIS VALUE IS WHAT THE ROOT PW WILL BECOME!!!!!!!!
 # HAVING THAT PW EXPOSED IN RAW TEXT IS NOT SECURE!!!!
 suse15cis_grub_user: root
-suse15cis_set_grub_user_pass: false
-suse15cis_grub_user_passwd: '$y$j9T$MBA5l/tQyWifM869nQjsi.$cTy0ConcNjIYOn6Cppo5NAky20osrkRxz4fEWA8xac6'  # Set to changeme
 suse15cis_grub_user_file: /etc/grub.d/40_custom
 suse15cis_bootloader_password_hash: "grub.pbkdf2.sha512.changethispassword"  # pragma: allowlist secret
 suse15cis_set_boot_pass: false
-
-suse15cis_grub_file: /boot/grub/grub.cfg
 
 ## Controls 1.5.x
 # Ability to set file in which the kernel sysctl changes are placed
 suse15cis_sysctl_kernel_conf: /etc/sysctl.d/98_cis_kernel.conf
 
-# 1.5.2 Ability to choose ptrace value
-# options = 1, 2 or 3
-suse15_ptrace_value: 1
-
 ## Control 1.6
 # This variable contains the value to be set as the system-wide crypto policy. Current rule enforces NOT USING
 # 'LEGACY' value(as it is less secure, it just ensures compatibility with legacy systems), therefore
-# possible values for this variable are, as explained by RedHat docs:
+# possible values are, as explained by RedHat docs:
 #  -'DEFAULT': reasonable default policy for today's standards (balances usability and security)
 #  -'FUTURE': conservative security level that is believed to withstand any near-term future attacks
 #  -'FIPS': A level that conforms to the FIPS140-2 requirements
@@ -710,8 +662,8 @@ suse15cis_crypto_policy: 'DEFAULT'
 # using 'suse15cis_allowed_crypto_policies_modules' variable.
 suse15cis_additional_crypto_policy_module: ''
 
-## Controls 1.6.x  - Warning banners
-# The controls 1.6.x set various warning banners and protect the respective files
+## Controls 1.7.x  - Warning banners
+# The controls 1.7.x set various warning banners and protect the respective files
 # by tightening the access rights.
 
 # This variable specifies the warning banner displayed to the user
@@ -724,12 +676,17 @@ suse15cis_warning_banner: |
 # This variable governs, whether dynamic motd is disabled (as required by control 1.7.1)
 suse15cis_disable_dynamic_motd: true
 
-## Controls 1.7.x - Settings for GDM
-# This variable specifies the GNOME configuration database file to which configurations are written.
-# (See https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en)
-## Graphical/Gnome interface required
+## Controls 1.8.x - Settings for GDM
+# To set whether this is required
+# If set to true and finds gui installed below is will run CIS
+# if set to false it will remove the gdm package and disable the service
+# then skip al the controls in 1.8.x
+suse15cis_desktop_required: false
+## Graphical/Gnome interface installed
 suse15cis_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
 
+# This variable specifies the GNOME configuration database file to which configurations are written.
+# (See https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en)
 # The default database is `local`.
 suse15cis_dconf_db_name: "{{ prelim_dconf_db | default('local') }}"
 # This variable governs the number of seconds of inactivity before the screen goes blank.
@@ -747,14 +704,14 @@ suse15cis_screensaver_lock_delay: 5
 suse15cis_time_sync_tool: "chronyd"
 
 ## Controls 2.3.x - Configure time pools & servers for chronyd and timesyncd
-# The following variable represents a list of of time server pools used
+# The following variable represents a list of time server pools used
 # for configuring chronyd and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
 suse15cis_time_pool_name: time.nist.gov
 suse15cis_time_pool_options: iburst maxsources 4
-# The following variable represents a list of of time servers used
+# The following variable represents a list of time servers used
 # for configuring chronyd and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `iburst` -- please refer to the documentation
@@ -770,16 +727,6 @@ suse15cis_time_servers:
 ##
 ## Section 3 Control Variables
 ##
-
-## Control 3.1.1 - Ensure system is checked to determine if IPv6 is enabled
-
-## Control 3.1.2 - Ensure wireless interfaces are disabled
-# This variable is used for a preliminary task regarding the installation of Network Manager
-# If it is set to `true`, Network Manager is installed during the "prelim" section of
-# the role. If set to `false`, Network Manager is not installed. Bear in mind that without
-# it, ensuring that wireless interfaces are disabled will not be possible!
-suse15cis_install_network_manager: true
-
 ## Control 3.1.3 - Ensure bluetooth Services are not in use
 # This control managed how the bluetooth service is managed
 # Options are
@@ -810,35 +757,6 @@ suse15cis_default_zone: public
 ## Section 5 Control Variables
 ##
 ## Controls 5.1.x -- various sshd settings
-suse15cis_sshd_default_log_level: "INFO"
-suse15cis_sshd_default_max_auth_tries: 4
-suse15cis_sshd_default_max_sessions: 10  # Must be set to 10 or less
-suse15cis_sshd_default_max_startups: '10:30:60'
-suse15cis_sshd_default_login_grace_time: 60
-suse15cis_sshd_default_client_alive_interval: 15
-suse15cis_sshd_default_client_alive_count_max: 3
-# Removed chacha20-poly1305 due to cve2023-48795
-# all Ciphers, KEX and Macs set to FIPS 140
-# This will need to be adjusted according to your site requirements
-suse15cis_sshd_default_ciphers:
-  - aes256-gcm@openssh.com
-  - aes128-gcm@openssh.com
-  - aes256-ctr
-  - aes192-ctr
-  - aes128-ctr
-suse15cis_sshd_default_macs:
-  - hmac-sha1
-  - hmac-sha2-256
-  #  - hmac-sha2-384  # hashed out seen as bad ssh2 MAC
-  - hmac-sha2-512
-suse15cis_sshd_default_kex_algorithms:
-  - ecdh-sha2-nistp256
-  - ecdh-sha2-nistp384
-  - ecdh-sha2-nistp521
-  - diffie-hellman-group-exchange-sha256
-  - diffie-hellman-group16-sha512
-  - diffie-hellman-group18-sha512
-  - diffie-hellman-group14-sha256
 suse15cis_sshd_weak_ciphers:
   - 3des-cbc
   - aes128-cbc
@@ -869,34 +787,25 @@ suse15cis_sshd_weak_macs:
 # - `INFO`: logs informational messages in addition to errors;
 # - `VERBOSE`: logs a higher level of detail, including login attempts and key exchanges;
 # - `DEBUG`: generates very detailed debugging information including sensitive information.
-suse15cis_sshd_log_level: "{{ suse15cis_sshd_default_log_level }}"
+suse15cis_sshd_log_level: "INFO"
 # This variable specifies the maximum number of authentication attempts that are
 # allowed for a single SSH session.
-suse15cis_sshd_max_auth_tries: "{{ suse15cis_sshd_default_max_auth_tries }}"
-# This variable specifies the encryption algorithms that can be used for securing
-# data transmission.
-suse15cis_sshd_ciphers: "{{ suse15cis_sshd_default_ciphers }}"
-# This variable specifies a list of message authentication code algorithms (MACs) that are allowed for verifying
-# the integrity of data exchanged.
-suse15cis_sshd_macs: "{{ suse15cis_sshd_default_macs }}"
-# This variable is used to state the key exchange algorithms used to establish secure encryption
-# keys during the initial connection setup.
-suse15cis_sshd_kex_algorithms: "{{ suse15cis_sshd_default_kex_algorithms }}"
+suse15cis_sshd_max_auth_tries: 4
 # This variable sets the time interval in seconds between sending "keep-alive"
 # messages from the server to the client. These types of messages are intended to
 # keep the connection alive and prevent it being terminated due to inactivity.
-suse15cis_sshd_client_alive_interval: "{{ suse15cis_sshd_default_client_alive_interval }}"
+suse15cis_sshd_client_alive_interval: 15
 # This variable sets the maximum number of unresponsive "keep-alive" messages
 # that can be sent from the server to the client before the connection is considered
 # inactive and thus, closed.
-suse15cis_sshd_client_alive_count_max: "{{ suse15cis_sshd_default_client_alive_count_max }}"
+suse15cis_sshd_client_alive_count_max: 3
 # This variable specifies the amount of seconds allowed for successful authentication to
 # the SSH server.
-suse15cis_sshd_login_grace_time: "{{ suse15cis_sshd_default_login_grace_time }}"
-# This variables is used to set the maximum number of open sessions per connection. Must be 10 or less
-suse15cis_sshd_max_sessions: "{{ suse15cis_sshd_default_max_sessions }}"
+suse15cis_sshd_login_grace_time: 60
+# This variable is used to set the maximum number of open sessions per connection. Must be 10 or less
+suse15cis_sshd_max_sessions: 10  # Must be set to 10 or less
 # The MaxStartups parameter specifies the maximum number of concurrent unauthenticated connections to the SSH daemon.
-suse15cis_sshd_max_startups: "{{ suse15cis_sshd_default_max_startups }}"
+suse15cis_sshd_max_startups: '10:30:60'
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
 # access for users whose user name matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
@@ -926,11 +835,6 @@ suse15cis_sshd_deny_groups: ""
 
 suse15cis_sshd_config_file: /etc/ssh/sshd_config
 
-## Control 5.2.1
-# This variable represents the name of the sudo package to install
-# CIS recommends `sudo` or, if LDAP functionality is required, `sudo-ldap`.
-suse15cis_sudo_package: "sudo"
-
 ## Control 5.2.3
 # This variable defines the path and file name of the sudo log file.
 suse15cis_sudolog_location: "/var/log/sudo.log"
@@ -957,8 +861,7 @@ suse15cis_sugroup: nosugroup
 # Ability to use pam-config tool to set pam settings
 # NOTE: This changes as pwhistory.conf no longer valid Manual changes may need to be complete
 suse15cis_use_pam_config: true
-# Path to find templates and where to put file for pam-auth
-suse15cis_pam_confd_dir: 'usr/share/pam-configs/'
+
 ### Note: controls also managed with disruption high due to the nature of pam changes
 # Create file will create/replace with the name
 
@@ -971,7 +874,6 @@ suse15cis_pam_faillock_unlock_time: 900
 # 5.3.2.1.3 - lock root
 # This allow optional - even_deny_root or root_unlock_time
 suse15cis_pamroot_lock_option: even_deny_root
-suse15cis_pamroot_lock_string: even_deny_root
 
 # 5.3.2.2.x - pam_pwquality
 # 5.3.2.2.1 - password difok
@@ -984,7 +886,8 @@ suse15cis_passwd_minlen_value: '14'
 
 # 5.3.2.2.3 - password complex
 suse15cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
-suse15cis_passwd_minclass_value: '4'  # Defaults to minclass
+suse15cis_passwd_complex_option: 'minclass'  # Options: 'minclass' or 'credits'
+suse15cis_passwd_minclass_value: '4'
 suse15cis_passwd_dcredit_value: '-1'
 suse15cis_passwd_ucredit_value: '-2'
 suse15cis_passwd_ocredit_value: '0'
@@ -999,12 +902,11 @@ suse15cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequenc
 suse15cis_passwd_maxsequence_value: '3'
 
 # 5.3.2.2.6 - password dictcheck
-suse15cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
 suse15cis_passwd_dictcheck_value: '1'
 
 # 5.3.2.2.7 - password quality enforce for root included with 5.3.2.2.7
 suse15cis_passwd_quality_enforce_for_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
-suse15cis_passwd_quality_enforce_for_root_value: enforce_for_root  # pragma: allowlist secret
+suse15cis_passwd_quality_enforce_root_value: 'enforce_for_root'
 
 ## 5.3.2.3 Configure pam_pwhistory module
 # Control 5.3.2.3.1
@@ -1030,7 +932,7 @@ suse15cis_force_user_mindays: false
 # CIS requires a value of at least 1.
 suse15cis_pass_min_days: 1
 ## Control 5.5.1.3
-##  Allow the forcing of of number of days before warning users of password expiry
+##  Allow the forcing of number of days before warning users of password expiry
 # This can break current connecting user access
 suse15cis_force_user_warnage: false
 # This variable governs, how many days before a password expires, the user will be warned.
@@ -1056,8 +958,6 @@ suse15cis_system_users_shell: []
 ## Control 5.4.4
 # suse15cis_passwd_hash_algo is the hashing algorithm used - SHA512 default as yescrypt not available at release
 suse15cis_passwd_hash_algo: sha512 # pragma: allowlist secret
-# Set pam as well as login defs if PAM is required
-suse15cis_passwd_setpam_hash_algo: false
 
 ## Control 5.4.3 - Default user mask
 # The following variable specifies the "umask" to set in the `/etc/bash.bashrc` and `/etc/profile`.
@@ -1101,13 +1001,6 @@ suse15cis_aide_db_recreate: false
 
 # allows to change db file, not config need to be adjusted too
 suse15cis_aide_db_file: /var/lib/aide/aide.db
-
-## When Initializing aide this can take longer on some systems
-# changing the values enables user to change to their own requirements
-# Maximum Time in seconds
-suse15cis_aide_init_async: 600
-# Polling Interval in seconds
-suse15cis_aide_init_poll: 15
 
 ## Control 6.1.2
 # Set how aide is scanned either cron or timer
@@ -1180,7 +1073,7 @@ suse15cis_journald_runtimekeepfree: 100G
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values is interpreted as seconds, unless suffixed with the units
+# The given values are interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
 # ATTENTION: Uncomment the keyword below when values are set!
@@ -1234,6 +1127,22 @@ suse15cis_remote_log_retrycount: 100
 # of rsyslog forwarding must be enabled('suse15cis_remote_log_server: true').
 suse15cis_remote_log_queuesize: 1000
 
+## Control 6.2.3.7 - Ensure rsyslog logrotate is configured
+# Frequency of log rotation: daily, weekly, or monthly
+suse15cis_rsyslog_logrotate_rotated_when: weekly
+# Number of rotated log files to retain
+suse15cis_rsyslog_logrotate_rotation_keep: 4
+# Compress rotated log files
+suse15cis_rsyslog_logrotate_compress: true
+# Do not raise an error if log file is missing
+suse15cis_rsyslog_logrotate_missingok: true
+# Do not rotate if log file is empty
+suse15cis_rsyslog_logrotate_notifempty: true
+# Create a new empty log file after rotation
+suse15cis_rsyslog_logrotate_create: true
+# Optional create options: mode owner group (e.g. '0640 root adm')
+suse15cis_rsyslog_logrotate_create_opts: '0640 root adm'
+
 ## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # 'suse15cis_journal_upload_url' is the ip address to upload the journal entries to
 #  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
@@ -1284,14 +1193,9 @@ suse15cis_allow_auditd_uid_user_exclusions: false
 suse15cis_auditd_uid_exclude:
   - 1999
 
-# 6.2.3.8
-# suse15cis_logrotate sets the daily, weekly, monthly, yearly value for the log rotation
-# To conform to CIS standards this just needs to comply with your site policy
-suse15cis_logrotate: "daily"
-
 # 6.2.4.1
 # Value to force the group ownership of created files to root
-suse15cis_auditd_log_group_action: "root"
+suse15cis_auditd_log_group: "root"
 
 ##  Control 6.3.1.3 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
@@ -1311,7 +1215,7 @@ suse15cis_auditd_max_log_file_size: 10
 ## Control 6.3.2.2
 # This variable determines what action the audit system should take when the maximum
 # size of a log file is reached.
-# The options for setting this variable are as follows:
+# The optional settings are as follows:
 # - `ignore`: the system does nothing when the size of a log file is full;
 # - `syslog`: a message is sent to the system log indicating the problem;
 # - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;
@@ -1357,16 +1261,7 @@ suse15cis_auditd_extra_conf:
 ##
 
 ## Controls 7.2.11 & 7.2.12
-# The minimum and maximum UIDs to be used when enforcing
-# and checking controls 7.2.11 and 7.2.12 can either be
-# discovered automatically via logins.def or set manually
-# in this file
-# If min/maxx UIDs are to be discovered automatically,
-# set this variable to `true`, otherwise to `false`.
-discover_int_uid: false
 # This variable sets the minimum number from which to search for UID
-# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
-# been set to `true`.
 min_int_uid: 1000
 
 # This variable sets the maximum number at which the search stops for UID

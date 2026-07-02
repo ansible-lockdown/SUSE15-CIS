@@ -21,36 +21,56 @@
   loop:
     - etc/sysctl.d/60-disable_ipv6.conf
 
-- name: "3.1.2 | PATCH | Ensure wireless interfaces are not available"
-  when:
-    - suse15cis_rule_3_1_2
-    - prelim_wireless_adapters_exist
+- name: 3.1.2 | PATCH | Ensure wireless interfaces are not available
+  when: suse15cis_rule_3_1_2
   tags:
     - level1-server
     - patch
     - rule_3.1.2
     - wireless
     - NIST800-53R5_CM-7
-  vars:
-    warn_control_id: '3.1.2'
   block:
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available | Create modprobe.d file"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/{{ item }}.conf
-        regexp: '^(#)?install true(\\s|$)'
-        line: install {{ item }} true
-        create: true
-        mode: 'go-wx'
-      loop: "{{ prelim_wireless_modules.stdout_lines }}"
+    - name: 3.1.2 | AUDIT | Ensure wireless interfaces are not available | Discover is wireless adapter on system
+      ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
+      changed_when: false
+      failed_when: discovered_wireless_adapters_exist.rc not in [ 0, 1 ]
+      register: discovered_wireless_adapters_exist
 
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available | blacklist"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/blacklist.conf
-        regexp: "^(#)?blacklist {{ item }}(\\s|$)"
-        line: "blacklist {{ item }}"
-        create: true
-        mode: 'go-rwx'
-      loop: "{{ prelim_wireless_modules.stdout_lines }}"
+    - name: 3.1.2 | AUDIT | Ensure wireless interfaces are not available | If wireless adapter present capture module
+      when: discovered_wireless_adapters_exist.rc == 0
+      ansible.builtin.shell: |
+        set -o pipefail
+        for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);
+          do basename "$(readlink -f "$driverdir"/device/driver/module)";
+        done | sort -u
+      changed_when: false
+      failed_when: discovered_wireless_modules.rc not in [ 0, 1 ]
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
+      register: discovered_wireless_modules
+
+    - name: 3.1.2 | PATCH | Ensure wireless interfaces are not available
+      when:
+        - discovered_wireless_modules.stdout_lines is defined
+        - discovered_wireless_modules.stdout_lines | length > 0
+      block:
+        - name: 3.1.2 | PATCH | Ensure wireless interfaces are not available | Create modprobe.d file
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/{{ item }}.conf
+            regexp: '^(#)?install true(\\s|$)'
+            line: install {{ item }} true
+            create: true
+            mode: 'go-wx'
+          loop: "{{ discovered_wireless_modules.stdout_lines }}"
+
+        - name: 3.1.2 | PATCH | Ensure wireless interfaces are not available | blacklist
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist {{ item }}(\\s|$)"
+            line: "blacklist {{ item }}"
+            create: true
+            mode: 'go-rwx'
+          loop: "{{ discovered_wireless_modules.stdout_lines }}"
 
 - name: "3.1.3 | PATCH | Ensure bluetooth services are not in use"
   when: suse15cis_rule_3_1_3

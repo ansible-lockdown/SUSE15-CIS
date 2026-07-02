@@ -1,9 +1,7 @@
 ---
 
-- name: "1.1.2.2.1 | PATCH | Ensure /dev/shm is a separate partition"
-  when:
-    - suse15cis_rule_1_1_2_2_1
-    - required_mount not in prelim_mount_names
+- name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition"
+  when: suse15cis_rule_1_1_2_2_1
   tags:
     - level1-server
     - level1-workstation
@@ -12,7 +10,6 @@
     - rule_1.1.2.2.1
     - NIST800-53R5_CM-7
   vars:
-    warn_control_id: "1.1.2.2.1"
     required_mount: "/dev/shm"
   block:
     - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition | check for mount"
@@ -30,6 +27,8 @@
       when: discovered_dev_shm_mount is undefined
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "1.1.2.2.1"
 
 - name: "1.1.2.2.2 | PATCH | Ensure nodev option set on /dev/shm partition"
   when:

@@ -8,26 +8,77 @@
 
 # Firewall
 suse15cis_firewall: None
+suse15cis_firewall_package: "none"
 
-# SElinux
+# compliance facts include run timestamp - not idempotent in molecule/containers
+create_benchmark_facts: false
+
+# GUI / GDM - not applicable in containers
+suse15cis_gui: false
+
 suse15cis_selinux_disable: true
 
 ## Related individual rules
-# Aide
+# bootloader
 suse15cis_rule_1_4_1: false
 suse15cis_rule_1_4_2: false
 
-# auditd
-suse15cis_rule_4_1_1_1: false
-suse15cis_rule_4_1_2_1: false
-suse15cis_rule_4_1_2_2: false
-suse15cis_rule_4_1_2_3: false
+# AppArmor / SELinux benchmark IDs
+suse15cis_rule_1_3_1_1: false
+suse15cis_rule_1_3_1_2: false
+suse15cis_rule_1_3_1_3: false
+suse15cis_rule_1_3_1_4: false
 
-# time sync
-suse15cis_rule_2_2_1_1: false
-suse15cis_rule_2_2_1_2: false
+# GDM
+suse15cis_rule_1_8_1: false
+suse15cis_rule_1_8_2: false
+suse15cis_rule_1_8_3: false
+suse15cis_rule_1_8_4: false
+suse15cis_rule_1_8_5: false
+suse15cis_rule_1_8_6: false
+suse15cis_rule_1_8_7: false
+suse15cis_rule_1_8_8: false
+suse15cis_rule_1_8_9: false
+suse15cis_rule_1_8_10: false
 
-# cron
+# time synchronization
+suse15cis_rule_2_3_1_1: false
+suse15cis_rule_2_3_2_1: false
+suse15cis_rule_2_3_2_2: false
+suse15cis_rule_2_3_3_1: false
+suse15cis_rule_2_3_3_2: false
+
+# kernel params / systemd boot
+suse15cis_rule_1_5_1: false
+suse15cis_rule_1_5_2: false
+suse15cis_rule_1_5_3: false
+
+# special purpose services
+suse15cis_rule_2_1_1: false
+suse15cis_rule_2_1_2: false
+suse15cis_rule_2_1_3: false
+suse15cis_rule_2_1_4: false
+suse15cis_rule_2_1_5: false
+suse15cis_rule_2_1_6: false
+suse15cis_rule_2_1_7: false
+suse15cis_rule_2_1_8: false
+suse15cis_rule_2_1_9: false
+suse15cis_rule_2_1_10: false
+suse15cis_rule_2_1_11: false
+suse15cis_rule_2_1_12: false
+suse15cis_rule_2_1_13: false
+suse15cis_rule_2_1_14: false
+suse15cis_rule_2_1_15: false
+suse15cis_rule_2_1_16: false
+suse15cis_rule_2_1_17: false
+suse15cis_rule_2_1_18: false
+suse15cis_rule_2_1_19: false
+suse15cis_rule_2_1_20: false
+suse15cis_rule_2_1_21: false
+suse15cis_rule_2_1_22: false
+suse15cis_rule_2_1_23: false
+
+# SSH server
 suse15cis_rule_5_1_1: false
 suse15cis_rule_5_1_2: false
 suse15cis_rule_5_1_3: false
@@ -36,54 +87,154 @@ suse15cis_rule_5_1_5: false
 suse15cis_rule_5_1_6: false
 suse15cis_rule_5_1_7: false
 suse15cis_rule_5_1_8: false
+suse15cis_rule_5_1_9: false
+suse15cis_rule_5_1_10: false
+suse15cis_rule_5_1_11: false
+suse15cis_rule_5_1_12: false
+suse15cis_rule_5_1_13: false
+suse15cis_rule_5_1_14: false
+suse15cis_rule_5_1_15: false
+suse15cis_rule_5_1_16: false
+suse15cis_rule_5_1_17: false
+suse15cis_rule_5_1_18: false
+suse15cis_rule_5_1_19: false
+suse15cis_rule_5_1_20: false
+suse15cis_rule_5_1_21: false
+suse15cis_rule_5_1_22: false
 
-# crypto
-suse15cis_rule_1_10: false
+# PAM su
+suse15cis_rule_5_2_7: false
 
-# grub
-suse15cis_rule_1_5_1: false
-suse15cis_rule_1_5_2: false
-suse15cis_rule_1_5_3: false
+# PAM
+suse15cis_rule_5_3_2_1_1: false
+suse15cis_rule_5_3_2_1_2: false
+suse15cis_rule_5_3_2_1_3: false
+suse15cis_rule_5_3_2_2_1: false
+suse15cis_rule_5_3_2_2_2: false
+suse15cis_rule_5_3_2_2_3: false
+suse15cis_rule_5_3_2_2_4: false
+suse15cis_rule_5_3_2_2_5: false
+suse15cis_rule_5_3_2_2_6: false
+suse15cis_rule_5_3_2_2_7: false
+suse15cis_rule_5_3_2_3_1: false
+suse15cis_rule_5_3_2_3_2: false
+suse15cis_rule_5_3_2_3_3: false
+suse15cis_rule_5_3_2_4_1: false
+suse15cis_rule_5_3_2_4_2: false
+suse15cis_rule_5_3_2_4_3: false
+suse15cis_rule_5_3_2_4_4: false
 
-## mounts
-# /tmp
-suse15cis_rule_1_1_2: false
-suse15cis_rule_1_1_3: false
-suse15cis_rule_1_1_4: false
-suse15cis_rule_1_1_5: false
-# /var
-suse15cis_rule_1_1_6: false
-# /var/tmp
-suse15cis_rule_1_1_7: false
-suse15cis_rule_1_1_8: false
-suse15cis_rule_1_1_9: false
-suse15cis_rule_1_1_10: false
-# /var/log
-suse15cis_rule_1_1_11: false
-# /var/log/audit
-suse15cis_rule_1_1_12: false
-# /home
-suse15cis_rule_1_1_13: false
-suse15cis_rule_1_1_14: false
-# /dev/shm
-suse15cis_rule_1_1_15: false
-suse15cis_rule_1_1_16: false
-suse15cis_rule_1_1_17: false
-# usb-storage
-suse15cis_rule_1_1_23: false
+# login.defs / password policy
+suse15cis_rule_5_4_1_1: false
+suse15cis_rule_5_4_1_2: false
+suse15cis_rule_5_4_1_3: false
+suse15cis_rule_5_4_1_4: false
+suse15cis_rule_5_4_1_5: false
+suse15cis_rule_5_4_1_6: false
+suse15cis_rule_5_4_2_1: false
+suse15cis_rule_5_4_2_2: false
+suse15cis_rule_5_4_2_3: false
+suse15cis_rule_5_4_2_4: false
+suse15cis_rule_5_4_2_5: false
+suse15cis_rule_5_4_2_6: false
+suse15cis_rule_5_4_2_7: false
+suse15cis_rule_5_4_2_8: false
+suse15cis_rule_5_4_3_1: false
+suse15cis_rule_5_4_3_2: false
+suse15cis_rule_5_4_3_3: false
 
-# logging
-suse15cis_rule_4_2_1_1: false
-suse15cis_rule_4_2_1_2: false
-suse15cis_rule_4_2_1_3: false
-suse15cis_rule_4_2_1_4: false
-suse15cis_rule_4_2_1_5: false
-suse15cis_rule_4_2_1_6: false
-suse15cis_rule_4_2_2_1: false
-suse15cis_rule_4_2_2_2: false
-suse15cis_rule_4_2_2_3: false
+# logging and audit
+suse15cis_rule_6_1_1: false
+suse15cis_rule_6_1_2: false
+suse15cis_rule_6_1_3: false
+suse15cis_rule_6_2_1_1: false
+suse15cis_rule_6_2_1_2: false
+suse15cis_rule_6_2_1_3: false
+suse15cis_rule_6_2_1_4: false
+suse15cis_rule_6_2_2_1_1: false
+suse15cis_rule_6_2_2_1_2: false
+suse15cis_rule_6_2_2_1_3: false
+suse15cis_rule_6_2_2_1_4: false
+suse15cis_rule_6_2_2_2: false
+suse15cis_rule_6_2_2_3: false
+suse15cis_rule_6_2_2_4: false
+suse15cis_rule_6_2_3_1_1: false
+suse15cis_rule_6_2_3_1_2: false
+suse15cis_rule_6_2_3_2: false
+suse15cis_rule_6_2_3_3: false
+suse15cis_rule_6_2_3_4: false
+suse15cis_rule_6_2_3_5: false
+suse15cis_rule_6_2_3_6: false
+suse15cis_rule_6_2_3_7: false
+suse15cis_rule_6_2_4_1: false
+suse15cis_rule_6_3_1_1: false
+suse15cis_rule_6_3_1_2: false
+suse15cis_rule_6_3_1_3: false
+suse15cis_rule_6_3_1_4: false
+suse15cis_rule_6_3_2_1: false
+suse15cis_rule_6_3_2_2: false
+suse15cis_rule_6_3_2_3: false
+suse15cis_rule_6_3_2_4: false
+suse15cis_rule_6_3_3_1: false
+suse15cis_rule_6_3_3_2: false
+suse15cis_rule_6_3_3_3: false
+suse15cis_rule_6_3_3_4: false
+suse15cis_rule_6_3_3_5: false
+suse15cis_rule_6_3_3_6: false
+suse15cis_rule_6_3_3_7: false
+suse15cis_rule_6_3_3_8: false
+suse15cis_rule_6_3_3_9: false
+suse15cis_rule_6_3_3_10: false
+suse15cis_rule_6_3_3_11: false
+suse15cis_rule_6_3_3_12: false
+suse15cis_rule_6_3_3_13: false
+suse15cis_rule_6_3_3_14: false
+suse15cis_rule_6_3_3_15: false
+suse15cis_rule_6_3_3_16: false
+suse15cis_rule_6_3_3_17: false
+suse15cis_rule_6_3_3_18: false
+suse15cis_rule_6_3_3_19: false
+suse15cis_rule_6_3_3_20: false
+suse15cis_rule_6_3_3_21: false
+suse15cis_rule_6_3_4_1: false
+suse15cis_rule_6_3_4_2: false
+suse15cis_rule_6_3_4_3: false
+suse15cis_rule_6_3_4_4: false
+suse15cis_rule_6_3_4_5: false
+suse15cis_rule_6_3_4_6: false
+suse15cis_rule_6_3_4_7: false
+suse15cis_rule_6_3_4_8: false
+suse15cis_rule_6_3_4_9: false
+suse15cis_rule_6_3_4_10: false
 
-# systemd
+# interactive user dotfiles
+suse15cis_rule_7_2_8: false
+suse15cis_rule_7_2_9: false
 
-# Users/passwords/accounts
-suse15cis_rule_5_5_2: false
+# mounts
+suse15cis_rule_1_1_2_1_1: false
+suse15cis_rule_1_1_2_1_2: false
+suse15cis_rule_1_1_2_1_3: false
+suse15cis_rule_1_1_2_1_4: false
+suse15cis_rule_1_1_2_2_1: false
+suse15cis_rule_1_1_2_2_2: false
+suse15cis_rule_1_1_2_2_3: false
+suse15cis_rule_1_1_2_2_4: false
+suse15cis_rule_1_1_2_3_1: false
+suse15cis_rule_1_1_2_3_2: false
+suse15cis_rule_1_1_2_3_3: false
+suse15cis_rule_1_1_2_4_1: false
+suse15cis_rule_1_1_2_4_2: false
+suse15cis_rule_1_1_2_4_3: false
+suse15cis_rule_1_1_2_5_1: false
+suse15cis_rule_1_1_2_5_2: false
+suse15cis_rule_1_1_2_5_3: false
+suse15cis_rule_1_1_2_5_4: false
+suse15cis_rule_1_1_2_6_1: false
+suse15cis_rule_1_1_2_6_2: false
+suse15cis_rule_1_1_2_6_3: false
+suse15cis_rule_1_1_2_6_4: false
+suse15cis_rule_1_1_2_7_1: false
+suse15cis_rule_1_1_2_7_2: false
+suse15cis_rule_1_1_2_7_3: false
+suse15cis_rule_1_1_2_7_4: false
