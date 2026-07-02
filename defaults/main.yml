@@ -604,7 +604,7 @@ suse15cis_ipv6_required: false
 ## Control 1.1.1.9 - Ensure unused filesystems kernel modules are not available
 # This variable governs whether the discovery script is removed.
 # By setting to true this can affect the audit of the rule.
-suse15is_remove_kernel_discovery_script: false
+suse15cis_remove_kernel_discovery_script: false
 
 ## Ability to enable debug on mounts to assist in troubleshooting
 # Mount point changes are set based upon facts created in Prelim
