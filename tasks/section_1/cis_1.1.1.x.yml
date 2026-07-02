@@ -269,13 +269,13 @@
     - name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
       ansible.builtin.copy:
         src: fs_with_cves.sh
-        dest: "{{ suse15cis_temp_exec_location }}"/fs_with_cves.sh"
+        dest: "{{ suse15cis_temp_exec_location }}/fs_with_cves.sh"
         owner: root
         group: root
         mode: 'u+x,go-rwx'
 
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Run discovery script"
-      ansible.builtin.command: "{{ suse15cis_temp_exec_location }}"/fs_with_cves.sh"
+      ansible.builtin.command: "{{ suse15cis_temp_exec_location }}/fs_with_cves.sh"
       changed_when: false
       failed_when: discovered_fs_modules_loaded.rc not in [ 0, 99 ]
       register: discovered_fs_modules_loaded
