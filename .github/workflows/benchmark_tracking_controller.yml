@@ -40,15 +40,3 @@ jobs:
       TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
       BADGE_PUSH_TOKEN: ${{ secrets.BADGE_PUSH_TOKEN }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-
-  call-monitor-promotions:
-    # Run on schedule or manual dispatch, but only for Private-* repos
-    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && startsWith(github.repository, 'ansible-lockdown/Private-')
-    name: Monitor Promotions and Auto-Promote
-    uses: ansible-lockdown/github_linux_IaC/.github/workflows/benchmark_promote.yml@self_hosted
-    with:
-      repo_name: ${{ github.repository }}
-    secrets:
-      TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-      BADGE_PUSH_TOKEN: ${{ secrets.BADGE_PUSH_TOKEN }}
-      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
