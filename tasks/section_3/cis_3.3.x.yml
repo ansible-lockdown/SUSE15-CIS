@@ -26,8 +26,7 @@
         state: present
         reload: true
         ignoreerrors: true
-      notify:
-        - Flush ipv4 route table
+      notify: Flush ipv4 route table
 
     - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | IPv6 settings"
       ansible.posix.sysctl:
@@ -38,8 +37,7 @@
         state: present
         reload: true
         ignoreerrors: true
-      notify:
-        - Flush ipv6 route table
+      notify: Flush ipv6 route table
 
 - name: "3.3.2 | PATCH | Ensure packet redirect sending is disabled"
   when:

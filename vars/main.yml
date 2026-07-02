@@ -1,9 +1,28 @@
 ---
 # vars file for SUSE15-CIS
 
+# Note that some of these variables are used in multiple controls and may be used across multiple sections.
+# These are included here for ease of maintenance and to avoid duplication across multiple sections.
+# If a variable is only used in a single control it will be included in the tasks file for that control.
+
+# Ability to change the default shell
+# Note this can change how some of the ansible.builtin.shell tasks work and may require adjustments to args.executable for those tasks
+# Used mainly for overriding to use a more POSIX compliant shell such as dash or ash when running in a container environment
+suse15cis_shell_executable: /bin/bash
+
+# Minimal Supported version for ansible-lockdown community roles
+min_ansible_version: 2.16.1
+
+# Set a default variable for if running in a container environment. This can be overridden by setting to true in the inventory or playbook dynamic discovery.
 system_is_container: false
-min_ansible_version: 2.12.1
+
+# Default setting on whether to update the audit template or not. This is used in multiple controls and can be overridden if needed.
+update_audit_template: false
+
+# Default setting so changes do not require a reboot unless value is dynamically changed.
 change_requires_reboot: false
+
+# Default allowed crypto policies in accordance with the CIS Benchmark. This is used in multiple controls and can be overridden if needed.
 suse15cis_allowed_crypto_policies:
   - 'DEFAULT'
   - 'FUTURE'
@@ -130,7 +149,7 @@ web_proxy_services:
 web_server_pkgs:
   - httpd
   - nginx
-web_service_services:
+web_server_services:
   - httpd.socket
   - httpd.service
   - nginx.service
@@ -153,3 +172,10 @@ auditd_binaries:
   - /usr/sbin/ausearch
   - /usr/sbin/auditd
   - /usr/sbin/augenrules
+
+company_title: 'MindPoint Group - A Tyto Athene Company'
+
+file_managed_by_ansible: |-
+  # File managed by ansible as part of {{ benchmark }} benchmark
+  # As part of Ansible-lockdown
+  # Provided by {{ company_title }}

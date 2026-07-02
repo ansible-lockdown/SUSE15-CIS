@@ -1,0 +1,27 @@
+{{ file_managed_by_ansible }}
+/var/log/messages {
+    {{ suse15cis_rsyslog_logrotate_rotated_when }}
+    rotate {{ suse15cis_rsyslog_logrotate_rotation_keep }}
+{% if suse15cis_rsyslog_logrotate_compress %}
+    compress
+{% else %}
+    nocompress
+{% endif %}
+{% if suse15cis_rsyslog_logrotate_missingok %}
+    missingok
+{% else %}
+    nomissingok
+{% endif %}
+{% if suse15cis_rsyslog_logrotate_notifempty %}
+    notifempty
+{% else %}
+    ifempty
+{% endif %}
+{% if suse15cis_rsyslog_logrotate_create %}
+    create{% if suse15cis_rsyslog_logrotate_create_opts is defined and suse15cis_rsyslog_logrotate_create_opts | length > 0 %} {{ suse15cis_rsyslog_logrotate_create_opts }}{% endif %}
+
+{% endif %}
+    postrotate
+        /usr/bin/systemctl reload rsyslog.service >/dev/null || true
+    endscript
+}

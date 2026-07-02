@@ -30,8 +30,6 @@
 - name: POST | reboot system if changes require it and not skipped
   when: change_requires_reboot
   tags: always
-  vars:
-    warn_control_id: Reboot_required
   block:
     - name: POST | Reboot system if changes require it and not skipped
       when: not skip_reboot
@@ -47,3 +45,5 @@
       when: skip_reboot
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: Reboot_required

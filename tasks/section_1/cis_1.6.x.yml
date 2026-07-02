@@ -1,6 +1,6 @@
 ---
 
-- name: "1.6.1 | AUDIT | Ensure crypto-policies-scripts package is installed"
+- name: "1.6.1 | PATCH | Ensure crypto-policies-scripts package is installed"
   when: suse15cis_rule_1_6_1
   tags:
     - level1-server
@@ -14,7 +14,7 @@
     name: crypto-policies-scripts
     state: present
 
-- name: "1.6.2 | AUDIT | Ensure system wide crypto policy is not set to legacy"
+- name: "1.6.2 | PATCH | Ensure system wide crypto policy is not set to legacy"
   when: suse15cis_rule_1_6_2
   tags:
     - level1-server
@@ -24,11 +24,24 @@
     - crypto
     - rule_1.6.2
     - NIST800-53R5_SC-8
-  ansible.builtin.debug:
-    msg: "Captured in prelim to ensure not LEGACY. Runs handler to update"
-  notify:
-    - Update Crypto Policy
-    - Set Crypto Policy
+  block:
+    - name: "1.6.2 | AUDIT | Ensure system wide crypto policy is not set to legacy | Gather system-wide crypto-policy"
+      ansible.builtin.command: 'update-crypto-policies --show'
+      changed_when: false
+      check_mode: false
+      register: discovered_system_wide_crypto_policy
+
+    - name: "1.6.2 | AUDIT | Ensure system wide crypto policy is not set to legacy | set fact system policy"
+      ansible.builtin.set_fact:
+        current_crypto_policy: "{{ discovered_system_wide_crypto_policy.stdout.split(':')[0] }}"
+
+    - name: "1.6.2 | AUDIT | Ensure system wide crypto policy is not set to legacy| set fact system policy submodule"
+      when: "':' in discovered_system_wide_crypto_policy.stdout"
+      ansible.builtin.set_fact:
+        current_crypto_module: "{{ discovered_system_wide_crypto_policy.stdout.split(':')[1] }}"
+      notify:
+        - Update Crypto Policy
+        - Set Crypto Policy
 
 - name: "1.6.3 | PATCH | Ensure system wide crypto policy is not set in sshd configuration"
   when: suse15cis_rule_1_6_3

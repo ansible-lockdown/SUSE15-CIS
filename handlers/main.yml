@@ -1,32 +1,8 @@
 ---
 
-- name: "Adding options for /tmp"
-  when: not suse15cis_tmp_svc
-  vars:
-    mount_point: '/tmp'
-  ansible.posix.mount:
-    path: "{{ mount_point }}"
-    src: "{{ prelim_mount_point_fs_and_options[mount_point]['src'] }}"
-    state: present
-    fstype: "{{ prelim_mount_point_fs_and_options[mount_point]['fs_type'] }}"
-    opts: "{{ prelim_mount_point_fs_and_options[mount_point]['options'] | unique | join(',') }}"
-  listen: "Remount /tmp"
-
-- name: "Remounting /tmp"
-  vars:
-    mount_point: '/tmp'
-  ansible.posix.mount:
-    path: "{{ mount_point }}"
-    state: remounted
-  listen: "Remount /tmp"
-
-- name: "Remounting /tmp systemd"
-  vars:
-    mount_point: '/tmp'
-  ansible.builtin.systemd:
-    name: tmp.mount
-    state: restarted
-    daemon_reload: true
+- name: "Remount tmp filesystem"
+  ansible.builtin.include_tasks:
+    file: remount_tmp.yml
   listen: "Remount /tmp"
 
 - name: "Adding options for /dev/shm"
@@ -157,6 +133,7 @@
 - name: Reload systemctl
   ansible.builtin.systemd:
     daemon_reload: true
+  listen: Systemd_daemon_reload
 
 - name: Update Crypto Policy
   ansible.builtin.set_fact:
@@ -164,7 +141,7 @@
   notify: Set Crypto Policy
 
 - name: Set Crypto Policy
-  when: prelim_system_wide_crypto_policy.stdout != suse15cis_full_crypto_policy
+  when: discovered_system_wide_crypto_policy.stdout != suse15cis_full_crypto_policy
   ansible.builtin.command: |
     update-crypto-policies --set "{{ suse15cis_full_crypto_policy }}"
   changed_when: true
@@ -176,6 +153,7 @@
   ansible.builtin.command: dconf update
   changed_when: true
   failed_when: false
+  listen: Reload dconf
 
 - name: Restart postfix
   ansible.builtin.service:
@@ -197,8 +175,12 @@
     name: exim4
     state: restarted
 
+- name: Reload sysctl
+  ansible.builtin.command: sysctl --system
+  changed_when: true
+
 - name: Flush ipv4 route table
-  when: ansible_facts.virtualization_type != "docker"
+  when: ansible_facts['virtualization_type'] != "docker"
   ansible.posix.sysctl:
     name: net.ipv4.route.flush
     value: '1'
@@ -206,23 +188,21 @@
 
 - name: Flush ipv6 route table
   when:
-    - ansible_facts.virtualization_type != "docker"
+    - ansible_facts['virtualization_type'] != "docker"
     - suse15cis_ipv6_required
   ansible.posix.sysctl:
     name: net.ipv6.route.flush
     value: '1'
     sysctl_set: true
 
-- name: Reload ufw
-  community.general.ufw:
-    state: reloaded
-
 - name: Auditd rules reload
   when:
-    - not prelim_auditd_immutable_check or
+    - not system_is_container
+    - not discovered_auditd_immutable_check or
       "'No change' not in discovered_audit_rules_diff"
   ansible.builtin.command: augenrules --load
   changed_when: true
+  listen: update auditd
 
 - name: Audit_immutable_fact
   when:
@@ -233,11 +213,13 @@
   notify: Set_reboot_required
 
 - name: Stop auditd process
+  when: not system_is_container
   ansible.builtin.command: systemctl kill auditd  # noqa command-instead-of-module
   changed_when: true
   listen: Restart auditd
 
 - name: Start auditd process
+  when: not system_is_container
   ansible.builtin.systemd_service:
     name: auditd
     state: started
@@ -247,6 +229,11 @@
   ansible.builtin.systemd:
     name: sshd
     state: restarted
+
+- name: Update pam-config
+  when: suse15cis_use_pam_config
+  ansible.builtin.command: pam-config --update
+  changed_when: true
 
 - name: Set_reboot_required
   ansible.builtin.set_fact:

@@ -45,6 +45,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - patch
     - rule_2.3.3.2
     - time
     - chrony
@@ -57,7 +58,7 @@
         enabled: true
 
     - name: "2.3.3.2 | PATCH | Ensure chrony is enabled and running | disable other time sources | timesyncd"
-      when: "'systemd-timesyncd' in ansible_facts.packages"
+      when: "'systemd-timesyncd' in ansible_facts['packages']"
       ansible.builtin.systemd:
         name: systemd-timesyncd
         state: stopped
@@ -65,7 +66,7 @@
         masked: true
 
     - name: "2.3.3.2 | PATCH | Ensure chrony is enabled and running | disable other time sources | ntpd"
-      when: "'ntpd' in ansible_facts.packages"
+      when: "'ntpd' in ansible_facts['packages']"
       ansible.builtin.systemd:
         name: ntpd
         state: stopped

@@ -18,7 +18,9 @@
     state: present
 
 - name: "6.3.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled"
-  when: suse15cis_rule_6_3_1_2
+  when:
+    - suse15cis_rule_6_3_1_2
+    - not system_is_container
   tags:
     - level2-server
     - level2-workstation
@@ -28,22 +30,26 @@
     - rule_6.3.1.2
   block:
     - name: "6.3.1.2 | AUDIT | Ensure auditing for processes that start prior to auditd is enabled | Get GRUB_CMDLINE_LINUX"
-      ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
       changed_when: false
       failed_when: false
       check_mode: false
-      register: discovered_grub_cmdline_settings
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
+      register: discovered_grub_auditd_cmdline_settings
 
     - name: "6.3.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Add setting if doesn't exist"
-      when: "'audit=' not in discovered_grub_cmdline_settings.stdout"
+      when: "'audit=' not in discovered_grub_auditd_cmdline_settings.stdout"
       ansible.builtin.lineinfile:
         path: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX='
-        line: 'GRUB_CMDLINE_LINUX="{{ discovered_grub_cmdline_settings.stdout }} audit=1"'
+        line: 'GRUB_CMDLINE_LINUX="{{ discovered_grub_auditd_cmdline_settings.stdout }} audit=1"'
       notify: Grub update
 
     - name: "6.3.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Update setting if exists"
-      when: "'audit=' in discovered_grub_cmdline_settings.stdout"
+      when: "'audit=' in discovered_grub_auditd_cmdline_settings.stdout"
       ansible.builtin.replace:
         dest: /etc/default/grub
         regexp: 'audit=([0-9]+)'
@@ -53,7 +59,9 @@
       notify: Grub update
 
 - name: "6.3.1.3 | PATCH | Ensure audit_backlog_limit is sufficient"
-  when: suse15cis_rule_6_3_1_3
+  when:
+    - suse15cis_rule_6_3_1_3
+    - not system_is_container
   tags:
     - level2-server
     - level2-workstation
@@ -66,10 +74,14 @@
     - NIST800-53R5_SI-5
   block:
     - name: "6.3.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Get current GRUB_CMDLINE_LINUX"
-      ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
       changed_when: false
       failed_when: false
       check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
       register: discovered_audit_backlog_grub_cmdline_settings
 
     - name: "6.3.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Add setting if doesn't exist"
@@ -90,7 +102,9 @@
       notify: Grub update
 
 - name: "6.3.1.4 | PATCH | Ensure auditd service is enabled and active"
-  when: suse15cis_rule_6_3_1_4
+  when:
+    - suse15cis_rule_6_3_1_4
+    - not system_is_container
   tags:
     - level2-server
     - level2-workstation

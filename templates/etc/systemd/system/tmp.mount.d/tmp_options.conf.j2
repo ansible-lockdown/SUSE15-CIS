@@ -1,0 +1,4 @@
+{{ file_managed_by_ansible }}
+
+[Mount]
+Options=mode=1777,strictatime,{% if suse15cis_rule_1_1_2_1_2 %}nodev,{% endif %}{% if suse15cis_rule_1_1_2_1_3 %}nosuid,{% endif %}{% if suse15cis_rule_1_1_2_1_4 %}noexec{% endif %}
