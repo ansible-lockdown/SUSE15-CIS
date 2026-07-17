@@ -56,7 +56,7 @@
     - level1-server
     - level1-workstation
     - patch
-    - permissionss
+    - permissions
     - rule_7.1.4
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
@@ -169,11 +169,11 @@
     owner: root
     group: root
     mode: 'u-x,go-rwx'
-  failed_when: discovered_file_exists.state not in '[ file, absent ]'
-  register: discovered_file_exists
   loop:
     - /etc/security/opasswd
     - /etc/security/opasswd.old
+  failed_when: discovered_file_exists.state not in '[ file, absent ]'
+  register: discovered_file_exists
 
 - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured"
   when: suse15cis_rule_7_1_11
