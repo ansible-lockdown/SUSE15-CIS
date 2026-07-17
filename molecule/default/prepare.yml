@@ -1,0 +1,58 @@
+---
+# Prepares the molecule container before converge.
+# The geerlingguy/docker-opensuseleap15-ansible image already provides
+# systemd-as-init, python and ansible, so this only installs the
+# SUSE 15 CIS role-supporting packages that a minimal image lacks.
+- name: Prepare
+  hosts: all
+  gather_facts: false
+
+  tasks:
+      - name: Install packages needed for SUSE 15 CIS hardening in container
+        ansible.builtin.package:
+            name:
+                # python311-rpm gives the geerlingguy image's python3.11 (the
+                # interpreter Ansible runs under here) the rpm bindings that
+                # package_facts/zypper need. Real SUSE 15 hosts run the system
+                # python 3.6 and the role's own python3-rpm prereq covers them.
+                - python311-rpm
+                - openssh
+                - audit
+                - aide
+                - chrony
+                - rsyslog
+                - logrotate
+                - cron
+                - firewalld
+                - apparmor-parser
+                - apparmor-utils
+                - apparmor-profiles
+                - libpwquality-tools
+                - cracklib
+                - acl
+                - sudo
+                - iproute2
+            state: present
+
+      - name: Create directories that minimal images lack
+        ansible.builtin.file:
+            path: "{{ item }}"
+            state: directory
+            mode: '0755'
+        loop:
+            - /run/sshd
+            - /etc/ssh/sshd_config.d
+            - /etc/sysctl.d
+            - /var/log/audit
+
+      - name: Start and enable cron
+        ansible.builtin.systemd:
+            name: cron
+            state: started
+            enabled: true
+
+      - name: Start and enable rsyslog
+        ansible.builtin.systemd:
+            name: rsyslog
+            state: started
+            enabled: true
