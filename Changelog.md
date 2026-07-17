@@ -2,6 +2,18 @@
 
 # Based on CIS v2.0.1
 
+# 2026 July — QA pass: goss, handler, lint fixes
+
+- handlers/main.yml: remount_tmp handler changed to import_tasks (was include_tasks)
+- vars/audit.yml: goss binary URL updated goss-org -> krameff
+- vars/audit.yml: goss version updated v0.4.8 -> v0.5.0 with new checksums
+- vars/audit.yml: ansible_facts dot notation converted to bracket notation
+- tasks/section_7/cis_7.1.x.yml: typo permissionss -> permissions (7.1.4 tag)
+- tasks/section_7/cis_7.1.x.yml: task key order fixed on 7.1.10 (loop before failed_when/register)
+- .github/workflows: actions/checkout updated v6.0.2 -> v7.0.0
+- .gitignore: added qa_report.md and AL_QA_Report* patterns
+- README.md: goss URL updated goss-org -> krameff, size 12MB -> 16MB
+
 # 2026 July
 - added new vars for 1.1.1.9
   - suse15is_remove_kernel_discovery_script: false
