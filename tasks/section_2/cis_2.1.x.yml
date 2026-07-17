@@ -3,7 +3,7 @@
 - name: "2.1.1 | PATCH | Ensure autofs services are not in use"
   when:
     - suse15cis_rule_2_1_1
-    - "'autofs' in ansible_facts.packages"
+    - "'autofs' in ansible_facts['packages']"
     - not system_is_ec2
   tags:
     - level1-server
@@ -27,8 +27,8 @@
         - suse15cis_autofs_mask
       ansible.builtin.systemd:
         name: autofs.service
-        enabled: false
-        state: stopped
+        enabled: "{{ ('autofs' in ansible_facts['packages']) | ternary(false, omit) }}"
+        state: "{{ ('autofs' in ansible_facts['packages']) | ternary('stopped', omit) }}"
         masked: true
       notify: Systemd_daemon_reload
 
@@ -55,10 +55,13 @@
         - not suse15cis_avahi_server
         - suse15cis_avahi_mask
       ansible.builtin.systemd:
-        name: "{{ avahi_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ avahi_installed | ternary(false, omit) }}"
+        state: "{{ avahi_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ avahi_services }}"
+      vars:
+        avahi_installed: "{{ (avahi_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.3 | PATCH | Ensure dhcp server services are not in use"
@@ -84,10 +87,13 @@
         - not suse15cis_dhcp_server
         - suse15cis_dhcp_mask
       ansible.builtin.systemd:
-        name: "{{ dhcp_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ dhcp_installed | ternary(false, omit) }}"
+        state: "{{ dhcp_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ dhcp_services }}"
+      vars:
+        dhcp_installed: "{{ (dhcp_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.4 | PATCH | Ensure dns server services are not in use"
@@ -113,10 +119,13 @@
         - not suse15cis_dns_server
         - suse15cis_dns_mask
       ansible.builtin.systemd:
-        name: "{{ dns_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ dns_installed | ternary(false, omit) }}"
+        state: "{{ dns_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ dns_services }}"
+      vars:
+        dns_installed: "{{ (dns_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use"
@@ -142,10 +151,13 @@
         - not suse15cis_dnsmasq_server
         - suse15cis_dnsmasq_mask
       ansible.builtin.systemd:
-        name: "{{ dnsmasq_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ dnsmasq_installed | ternary(false, omit) }}"
+        state: "{{ dnsmasq_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ dnsmasq_services }}"
+      vars:
+        dnsmasq_installed: "{{ (dnsmasq_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.6 | PATCH | Ensure samba file server services are not in use"
@@ -164,7 +176,7 @@
         - not suse15cis_samba_server
         - not suse15cis_samba_mask
       ansible.builtin.package:
-        name: samba
+        name: "{{ samba_pkgs }}"
         state: absent
 
     - name: "2.1.6 | PATCH | Ensure samba file server services are not in use | Mask service"
@@ -172,10 +184,13 @@
         - not suse15cis_samba_server
         - suse15cis_samba_mask
       ansible.builtin.systemd:
-        name: smb.service
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ samba_installed | ternary(false, omit) }}"
+        state: "{{ samba_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ samba_services }}"
+      vars:
+        samba_installed: "{{ (samba_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.7 | PATCH | Ensure ldap server services are not in use"
@@ -190,7 +205,7 @@
   block:
     - name: "2.1.7 | PATCH | Ensure ldap server services are not in use | Remove package"
       when:
-        - "'slapd' in ansible_facts.packages"
+        - "'slapd' in ansible_facts['packages']"
         - not suse15cis_ldap_server
         - not suse15cis_ldap_mask
       ansible.builtin.package:
@@ -202,10 +217,13 @@
         - not suse15cis_ldap_server
         - suse15cis_ldap_mask
       ansible.builtin.systemd:
-        name: "{{ ldap_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ ldap_installed | ternary(false, omit) }}"
+        state: "{{ ldap_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ ldap_services }}"
+      vars:
+        ldap_installed: "{{ (ldap_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.8 | PATCH | Ensure ftp server services are not in use"
@@ -221,7 +239,7 @@
   block:
     - name: "2.1.8 | PATCH | Ensure ftp server services are not in use | Remove package"
       when:
-        - "'vsftp' in ansible_facts.packages"
+        - "'vsftp' in ansible_facts['packages']"
         - not suse15cis_ftp_server
         - not suse15cis_ftp_mask
       ansible.builtin.package:
@@ -233,14 +251,17 @@
         - not suse15cis_ftp_server
         - suse15cis_ftp_mask
       ansible.builtin.systemd:
-        name: "{{ ldap_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ ftp_installed | ternary(false, omit) }}"
+        state: "{{ ftp_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ ftp_services }}"
+      vars:
+        ftp_installed: "{{ (ftp_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.9 | PATCH | Ensure message access server services are not in use"
-  when: suse15cis_rule_2_1_8
+  when: suse15cis_rule_2_1_9
   tags:
     - level1-server
     - level1-workstation
@@ -253,7 +274,7 @@
   block:
     - name: "2.1.9 | PATCH | Ensure message access server services are not in use | Remove package"
       when:
-        - "'dovecot-pop3d' in ansible_facts.packages or 'dovecot-imapd' in ansible_facts.packages"
+        - "'dovecot-pop3d' in ansible_facts['packages'] or 'dovecot-imapd' in ansible_facts['packages']"
         - not suse15cis_message_server
         - not suse15cis_message_mask
       ansible.builtin.package:
@@ -265,14 +286,17 @@
         - not suse15cis_message_server
         - suse15cis_message_mask
       ansible.builtin.systemd:
-        name: "{{ messaging_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ messaging_installed | ternary(false, omit) }}"
+        state: "{{ messaging_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ messaging_services }}"
+      vars:
+        messaging_installed: "{{ (messaging_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.10 | PATCH | Ensure network file system services are not in use"
-  when: suse15cis_rule_2_1_9
+  when: suse15cis_rule_2_1_10
   tags:
     - level1-server
     - level1-workstation
@@ -296,10 +320,13 @@
         - not suse15cis_nfs_server
         - suse15cis_nfs_mask
       ansible.builtin.systemd:
-        name: "{{ nfs_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ nfs_installed | ternary(false, omit) }}"
+        state: "{{ nfs_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ nfs_services }}"
+      vars:
+        nfs_installed: "{{ (nfs_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.11 | PATCH | Ensure nis server services are not in use"
@@ -326,10 +353,13 @@
         - not suse15cis_nis_server
         - suse15cis_nis_mask
       ansible.builtin.systemd:
-        name: "{{ nis_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ nis_installed | ternary(false, omit) }}"
+        state: "{{ nis_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ nis_services }}"
+      vars:
+        nis_installed: "{{ (nis_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.12 | PATCH | Ensure print server services are not in use"
@@ -354,10 +384,13 @@
         - not suse15cis_print_server
         - suse15cis_print_mask
       ansible.builtin.systemd:
-        name: "{{ print_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ print_installed | ternary(false, omit) }}"
+        state: "{{ print_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ print_services }}"
+      vars:
+        print_installed: "{{ (print_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.13 | PATCH | Ensure rpcbind services are not in use"
@@ -384,10 +417,13 @@
         - not suse15cis_rpc_server
         - suse15cis_rpc_mask
       ansible.builtin.systemd:
-        name: "{{ rpcbind_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ rpcbind_installed | ternary(false, omit) }}"
+        state: "{{ rpcbind_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ rpcbind_services }}"
+      vars:
+        rpcbind_installed: "{{ (rpcbind_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.14 | PATCH | Ensure rsync services are not in use"
@@ -413,21 +449,23 @@
         - not suse15cis_rsync_server
         - suse15cis_rsync_mask
       ansible.builtin.systemd:
-        name: "{{ rsync_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ rsync_installed | ternary(false, omit) }}"
+        state: "{{ rsync_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ rsync_services }}"
+      vars:
+        rsync_installed: "{{ (rsync_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.15 | PATCH | Ensure snmp services are not in use"
-  when:
-    - suse15cis_rule_2_1_15
+  when: suse15cis_rule_2_1_15
   tags:
     - level1-server
     - level1-workstation
     - automation
     - patch
-    - samba
+    - snmp
     - rule_2.1.15
     - NIST800-53R5_CM-7
   block:
@@ -444,10 +482,13 @@
         - not suse15cis_snmp_server
         - suse15cis_snmp_mask
       ansible.builtin.systemd:
-        name: "{{ snmp_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ snmp_installed | ternary(false, omit) }}"
+        state: "{{ snmp_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ snmp_services }}"
+      vars:
+        snmp_installed: "{{ (snmp_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.16 | PATCH | Ensure telnet server services are not in use"
@@ -473,10 +514,13 @@
         - not suse15cis_telnet_server
         - suse15cis_telnet_mask
       ansible.builtin.systemd:
-        name: "{{ telnet_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ telnet_installed | ternary(false, omit) }}"
+        state: "{{ telnet_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ telnet_services }}"
+      vars:
+        telnet_installed: "{{ (telnet_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.17 | PATCH | Ensure tftp server services are not in use"
@@ -486,7 +530,7 @@
     - level1-workstation
     - patch
     - tftp
-    - rule_2.1.16
+    - rule_2.1.17
     - NIST800-53R5_CM-7
   block:
     - name: "2.1.17 | PATCH | Ensure tftp server services are not in use | Remove package"
@@ -502,10 +546,13 @@
         - not suse15cis_tftp_server
         - suse15cis_tftp_mask
       ansible.builtin.systemd:
-        name: "{{ tftp_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ tftp_installed | ternary(false, omit) }}"
+        state: "{{ ('tftp-server'in ansible_facts['packages']) | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ tftp_services }}"
+      vars:
+        tftp_installed: "{{ (tftp_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.18 | PATCH | Ensure web proxy server services are not in use"
@@ -531,10 +578,13 @@
         - not suse15cis_squid_server
         - suse15cis_squid_mask
       ansible.builtin.systemd:
-        name: "{{ web_proxy_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ web_proxy_installed | ternary(false, omit) }}"
+        state: "{{ web_proxy_installed | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ web_proxy_services }}"
+      vars:
+        web_proxy_installed: "{{ (web_proxy_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.19 | PATCH | Ensure web server services are not in use"
@@ -561,12 +611,13 @@
       when:
         - not suse15cis_apache2_server
         - suse15cis_apache2_mask
-        - "'apache2' in ansible_facts.packages"
+        - "'apache2' in ansible_facts['packages']"
       ansible.builtin.systemd:
-        name: "{{ web_server_services }}"
-        enabled: false
-        state: stopped
+        name: "{{ item }}"
+        enabled: "{{ ('apache2' in ansible_facts['packages']) | ternary(false, omit) }}"
+        state: "{{ ('apache2' in ansible_facts['packages']) | ternary('stopped', omit) }}"
         masked: true
+      loop: "{{ web_server_services }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.20 | PATCH | Ensure xinetd services are not in use"
@@ -592,10 +643,13 @@
         - not suse15cis_xinetd_server
         - suse15cis_xinetd_mask
       ansible.builtin.systemd:
-        name: "{{ xinetd_services }}"
-        enabled: false
+        name: "{{ item }}"
+        enabled: "{{ xinetd_installed | ternary(false, omit) }}"
+        state: "{{ xinetd_installed | ternary('stopped', omit) }}"
         masked: true
-        state: stopped
+      loop: "{{ xinetd_services }}"
+      vars:
+        xinetd_installed: "{{ (xinetd_pkgs | select('in', ansible_facts['packages']) | list | length) > 0 }}"
       notify: Systemd_daemon_reload
 
 - name: "2.1.21 | PATCH | Ensure X window server services are not in use"
@@ -621,13 +675,11 @@
     - level1-workstation
     - patch
     - mail
-    - rule_2.1.21
+    - rule_2.1.22
     - NIST800-53R5_CM-7
-  vars:
-    warn_control_id: "2.1.22"
   block:
     - name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode | Make changes if exim4 installed"
-      when: "'exim4' in ansible_facts.packages"
+      when: "'exim4' in ansible_facts['packages']"
       ansible.builtin.lineinfile:  # noqa: args[module]
         path: /etc/exim4/update-exim4.conf.conf
         regexp: "{{ item.regexp }}"
@@ -647,7 +699,7 @@
       notify: Restart exim4
 
     - name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode | Make changes if postfix is installed"
-      when: "'postfix' in ansible_facts.packages"
+      when: "'postfix' in ansible_facts['packages']"
       notify: Restart postfix
       ansible.builtin.lineinfile:
         path: /etc/postfix/main.cf
@@ -656,8 +708,8 @@
 
     - name: "2.1.22 | WARN | Ensure mail transfer agents are configured for local-only mode | Message out other main agents"
       when:
-        - "'exim4' not in ansible_facts.packages"
-        - "'postfix' not in ansible_facts.packages"
+        - "'exim4' not in ansible_facts['packages']"
+        - "'postfix' not in ansible_facts['packages']"
       ansible.builtin.debug:
         msg:
           - "Warning!! You are not using either exim4 or postfix, please ensure mail services set for local only mode"
@@ -665,10 +717,12 @@
 
     - name: "2.1.22 | WARN | Ensure mail transfer agents are configured for local-only mode | warn_count"
       when:
-        - "'exim4' not in ansible_facts.packages"
-        - "'postfix' not in ansible_facts.packages"
+        - "'exim4' not in ansible_facts['packages']"
+        - "'postfix' not in ansible_facts['packages']"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "2.1.22"
 
 - name: "2.1.23 | AUDIT | Ensure only approved services are listening on a network interface"
   when: suse15cis_rule_2_1_23
@@ -677,10 +731,8 @@
     - level1-workstation
     - audit
     - services
-    - rule_2.1.22
+    - rule_2.1.23
     - NIST800-53R5_CM-7
-  vars:
-    warn_control_id: "2.1.23"
   block:
     - name: "2.1.23 | AUDIT | Ensure only approved services are listening on a network interface | Get list of services"
       ansible.builtin.command: systemctl list-units --type=service # noqa command-instead-of-module
@@ -699,3 +751,5 @@
     - name: "2.1.23 | AUDIT | Ensure only approved services are listening on a network interface | Warn Count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "2.1.23"

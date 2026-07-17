@@ -160,7 +160,7 @@
         name: jffs2
         state: absent
 
-- name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available"
+- name: "1.1.1.6 | PATCH | Ensure overlay kernel module is not available"
   when: suse15cis_rule_1_1_1_6
   tags:
     - level2-server
@@ -170,7 +170,7 @@
     - squashfs
     - NIST800-53R5_CM-7
   block:
-    - name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available | Edit modprobe config"
+    - name: "1.1.1.6 | PATCH | Ensure overlay kernel module is not available | Edit modprobe config"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/CIS.conf
         regexp: "^(#)?install overlay(\\s|$)"
@@ -178,7 +178,7 @@
         create: true
         mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available | blacklist"
+    - name: "1.1.1.6 | PATCH | Ensure overlay kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
         regexp: "^(#)?blacklist overlay(\\s|$)"
@@ -186,13 +186,13 @@
         create: true
         mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available | Disable overlayfs"
+    - name: "1.1.1.6 | PATCH | Ensure overlay kernel module is not available | Disable overlayfs"
       when: not system_is_container
       community.general.modprobe:
         name: overlay
         state: absent
 
-- name: "1.1.1.7 | PATCH | Ensure mounting of squashfs filesystems is disabled"
+- name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available"
   when: suse15cis_rule_1_1_1_7
   tags:
     - level2-server
@@ -202,7 +202,7 @@
     - squashfs
     - NIST800-53R5_CM-7
   block:
-    - name: "1.1.1.7 | PATCH | Ensure mounting of squashfs filesystems is disabled | Edit modprobe config"
+    - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | Edit modprobe config"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/CIS.conf
         regexp: "^(#)?install squashfs(\\s|$)"
@@ -210,7 +210,7 @@
         create: true
         mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.7 | PATCH | Ensure mounting of squashfs filesystems is disabled | blacklist"
+    - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
         regexp: "^(#)?blacklist squashfs(\\s|$)"
@@ -218,13 +218,13 @@
         create: true
         mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.7 | PATCH | Ensure mounting of squashfs filesystems is disabled | Disable squashfs"
+    - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | Disable squashfs"
       when: not system_is_container
       community.general.modprobe:
         name: squashfs
         state: absent
 
-- name: "1.1.1.8 | PATCH | Ensure mounting of udf filesystems is disabled"
+- name: "1.1.1.8 | PATCH | Ensure udf kernel module is not available"
   when: suse15cis_rule_1_1_1_8
   tags:
     - level2-server
@@ -234,7 +234,7 @@
     - udf
     - NIST800-53R5_CM-7
   block:
-    - name: "1.1.1.8 | PATCH | Ensure mounting of udf filesystems is disable | Edit modprobe config"
+    - name: "1.1.1.8 | PATCH | Ensure mounting of udf filesystems is disabled | Edit modprobe config"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/CIS.conf
         regexp: "^(#)?install udf(\\s|$)"
@@ -242,7 +242,7 @@
         create: true
         mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.8 | PATCH | Ensure mounting of udf filesystems is disabled | blacklist"
+    - name: "1.1.1.8 | PATCH | Ensure udf kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
         regexp: "^(#)?blacklist udf(\\s|$)"
@@ -250,7 +250,7 @@
         create: true
         mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.8 | PATCH | Ensure mounting of udf filesystems is disable | Disable udf"
+    - name: "1.1.1.8 | PATCH | Ensure mounting of udf filesystems is disabled | Disable udf"
       when: not system_is_container
       community.general.modprobe:
         name: udf
@@ -265,19 +265,17 @@
     - rule_1.1.1.9
     - filesystems
     - NIST800-53R5_NA
-  vars:
-    warn_control_id: '1.1.1.9'
   block:
     - name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
       ansible.builtin.copy:
         src: fs_with_cves.sh
-        dest: /var/fs_with_cves.sh
+        dest: "{{ suse15cis_temp_exec_location }}/fs_with_cves.sh"
         owner: root
         group: root
         mode: 'u+x,go-rwx'
 
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Run discovery script"
-      ansible.builtin.command: /var/fs_with_cves.sh
+      ansible.builtin.command: "{{ suse15cis_temp_exec_location }}/fs_with_cves.sh"
       changed_when: false
       failed_when: discovered_fs_modules_loaded.rc not in [ 0, 99 ]
       register: discovered_fs_modules_loaded
@@ -291,3 +289,11 @@
       when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: '1.1.1.9'
+
+    - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
+      when: suse15cis_remove_kernel_discovery_script
+      ansible.builtin.file:
+        path: "{{ suse15cis_temp_exec_location }}/fs_with_cves.sh"
+        state: absent

@@ -1,7 +1,12 @@
 ---
 
-- name: "PREREQ | If required install libselinux package to manage file changes."
-  when: '"libselinux-python3" not in ansible_facts.packages'
+- name: "PREREQ | PATCH | If required install libselinux package to manage file changes."
   ansible.builtin.package:
-    name: libselinux-python3
+    name: python3-selinux
+    state: present
+
+- name: "PREREQ | PATCH | Ensure python3-rpm package is available"
+  tags: always
+  ansible.builtin.package:
+    name: python3-rpm
     state: present

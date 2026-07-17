@@ -15,8 +15,16 @@
         path: /etc/motd
         state: absent
 
-    - name: "1.7.1 | PATCH | Ensure /etc/motd is configured | disable dynamic_motd"
+    - name: "1.7.1 | PATCH | Ensure /etc/motd is configured | check pam sshd exists"
       when: suse15cis_disable_dynamic_motd
+      ansible.builtin.stat:
+        path: /etc/pam.d/sshd
+      register: discovered_pam_sshd
+
+    - name: "1.7.1 | PATCH | Ensure /etc/motd is configured | disable dynamic_motd"
+      when:
+        - suse15cis_disable_dynamic_motd
+        - discovered_pam_sshd.stat.exists
       ansible.builtin.lineinfile:
         path: /etc/pam.d/sshd
         regexp: "{{ item.regexp }}"

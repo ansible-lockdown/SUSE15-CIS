@@ -1,9 +1,7 @@
 ---
 
-- name: "1.1.2.3.1 | PATCH | Ensure /home is a separate partition"
-  when:
-    - suse15cis_rule_1_1_2_3_1
-    - required_mount not in prelim_mount_names
+- name: "1.1.2.3.1 | AUDIT | Ensure separate partition exists for /home"
+  when: suse15cis_rule_1_1_2_3_1
   tags:
     - level1-server
     - level1-workstation
@@ -12,7 +10,6 @@
     - rule_1.1.2.3.1
     - NIST800-53R5_CM-7
   vars:
-    warn_control_id: "1.1.2.3.1"
     required_mount: "/home"
   block:
     - name: "1.1.2.3.1 | AUDIT | Ensure /home is a separate partition | check for mount"
@@ -30,6 +27,8 @@
       when: discovered_home_mount is undefined
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: "1.1.2.3.1"
 
 - name: "1.1.2.3.2 | PATCH | Ensure nodev option set on /home partition"
   when:

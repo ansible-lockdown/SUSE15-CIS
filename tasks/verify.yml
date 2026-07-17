@@ -1,0 +1,5 @@
+---
+
+- name: Verify | Molecule converge completed
+  ansible.builtin.debug:
+    msg: "{{ role_name | default('suse15_cis') }} role converged successfully in container scenario"

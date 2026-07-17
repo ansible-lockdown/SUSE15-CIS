@@ -12,7 +12,7 @@
 ![Stars](https://img.shields.io/github/stars/ansible-lockdown/SUSE15-CIS?label=Repo%20Stars&style=social)
 ![Forks](https://img.shields.io/github/forks/ansible-lockdown/SUSE15-CIS?style=social)
 ![Followers](https://img.shields.io/github/followers/ansible-lockdown?style=social)
-[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/AnsibleLockdown.svg?style=social&label=Follow%20%40AnsibleLockdown)](https://twitter.com/AnsibleLockdown)
+[![X URL](https://img.shields.io/twitter/url/https/x.com/AnsibleLockdown.svg?style=social&label=Follow%20%40AnsibleLockdown)](https://x.com/AnsibleLockdown)
 ![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/SUSE15-CIS?label=License)
@@ -86,7 +86,7 @@ This role **will make changes to the system** which may have unintended conseque
 
 ## Coming From A Previous Release ⏪
 
-CIS release always contains changes, it is highly recommended to review the new references and available variables. This have changed significantly since ansible-lockdown initial release.
+CIS release always contains changes, it is highly recommended to review the new references and available variables. This has changed significantly since ansible-lockdown initial release.
 This is now compatible with python3 if it is found to be the default interpreter. This does come with pre-requisites which it configures the system accordingly.
 
 Further details can be seen in the [Changelog](./ChangeLog.md)
@@ -126,9 +126,8 @@ SUSE 15 - Other versions are not supported.
 - Access to download or add the goss binary and content to the system if using auditing
 (other options are available on how to get the content to the system.)
 - Python3.8
-- Ansible 2.12+
-- python-def
-- libselinux-python
+- Ansible 2.16+
+- python3
 
 ---
 
@@ -138,7 +137,7 @@ This can be turned on or off within the defaults/main.yml file with the variable
 
 This is a much quicker, very lightweight, checking (where possible) config compliance and live/running settings.
 
-A new form of auditing has been developed, by using a small (12MB) go binary called [goss](https://github.com/goss-org/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
+A new form of auditing has been developed, by using a small (16MB) go binary called [goss](https://github.com/krameff/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
 This audit will not only check the config has the correct setting but aims to capture if it is running with that configuration also trying to remove [false positives](https://www.mindpointgroup.com/blog/is-compliance-scanning-still-relevant/) in the process.
 
 Refer to [SUSE15-CIS-Audit](https://github.com/ansible-lockdown/SUSE15-CIS-Audit).
@@ -233,6 +232,7 @@ uses:
 
 ## Known Issues
 
+1.2.2.1 with rc 4 - On some installations - This is a Suse packaging change, fixed by installing the new package - gio-branding-upstream - this will ask to remove also if carrying out manually
 
 ## Local Testing 💻
 

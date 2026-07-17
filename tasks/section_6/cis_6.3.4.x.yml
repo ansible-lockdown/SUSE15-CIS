@@ -1,5 +1,25 @@
 ---
 
+- name: "Discovered | AUDIT | Discover audit logfiles location"
+  when: suse15cis_rule_6_3_4_1 or suse15cis_rule_6_3_4_2 or suse15cis_rule_6_3_4_3 or suse15cis_rule_6_3_4_4
+  tags:
+    - level2-server
+    - level2-workstation
+    - audit
+    - auditd
+    - rule_6.3.4.1
+    - rule_6.3.4.2
+    - rule_6.3.4.3
+    - rule_6.3.4.4
+  ansible.builtin.shell: |
+    set -o pipefail
+    grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
+  changed_when: false
+  check_mode: false
+  args:
+    executable: "{{ suse15cis_shell_executable }}"
+  register: discovered_auditd_logfile
+
 - name: "6.3.4.1 | PATCH | Ensure the audit log file directory mode is configured"
   when: suse15cis_rule_6_3_4_1
   tags:
@@ -10,50 +30,96 @@
     - rule_6.3.4.1
     - NIST800-53R5_AU-3
   ansible.builtin.file:
-    path: "{{ prelim_auditd_logfile.stdout | dirname }}"
+    path: "{{ ((discovered_auditd_logfile.stdout | dirname) | default('/var/log/audit')) }}"
     state: directory
     mode: 'g-w,o-rwx'
 
-- name: |
-    "6.3.4.2 | PATCH | Ensure audit log files mode is configured"
-    "6.3.4.3 | PATCH | Ensure audit log files owner is configured"
-    "6.3.4.4 | PATCH | Ensure audit log files group owner is configured"
-  when:
-    - suse15cis_rule_6_3_4_2 or
-      suse15cis_rule_6_3_4_3 or
-      suse15cis_rule_6_3_4_4
+- name: "Discovered | AUDIT | Discover audit logfiles"
+  when: suse15cis_rule_6_3_4_2 or suse15cis_rule_6_3_4_3 or suse15cis_rule_6_3_4_4
+  tags:
+    - level2-server
+    - level2-workstation
+    - audit
+    - auditd
+    - rule_6.3.4.2
+    - rule_6.3_4_3
+    - rule_6.3_4_4
+  ansible.builtin.find:
+    paths: "{{ discovered_auditd_logfile.stdout | dirname }}"
+    patterns: "*.log"
+    file_type: file
+  register: discovered_audit_log_files
+
+- name: 6.3.4.2 | PATCH | Ensure audit log files mode is configured
+  when: suse15cis_rule_6_3_4_2
   tags:
     - level2-server
     - level2-workstation
     - patch
     - auditd
     - rule_6.3.4.2
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: 'o-x,g-wx,o-rwx'
+  loop: "{{ discovered_audit_log_files.files }}"
+
+- name: 6.3.4.3 | PATCH | Ensure audit log files owner is configured"
+  when: suse15cis_rule_6_3_4_3
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
     - rule_6.3.4.3
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: root
+  loop: "{{ discovered_audit_log_files.files }}"
+
+- name: 6.3.4.4 | PATCH | Ensure audit log files group owner is configured
+  when: suse15cis_rule_6_3_4_4
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
     - rule_6.3.4.4
     - NIST800-53R5_AU-3
   block:
-    - name: |
-        "6.3.4.2 | PATCH | Ensure audit log files mode is configured
-         6.3.4.3 | PATCH | Ensure audit log files owner is configured
-         6.3.4.4 | PATCH | Ensure audit log files group owner is configured"
-      ansible.builtin.file:
-        path: "{{ prelim_auditd_logfile.stdout }}"
-        mode: 'o-x,g-wx,o-rwx'
-        owner: root
-        group: root
+    - name: 6.3.4.4 | AUDIT | Ensure audit log files group owner is configured
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep ^log_group /etc/audit/auditd.conf | awk '{ print $NF }'
+      changed_when: false
+      check_mode: false
+      args:
+        executable: "{{ suse15cis_shell_executable }}"
+      register: discovered_auditd_log_group
 
-    - name: |
-        "6.3.4.2 | PATCH | Ensure audit log files mode is configured
-         6.3.4.3 | PATCH | Ensure audit log files owner is configured
-         6.3.4.4 | PATCH | Ensure audit log files group owner is configured"
-      when: "'conf' in item.path"
-      ansible.builtin.replace:
+    - name: 6.3.4.4 | PATCH | Ensure audit log files group owner is configured
+      ansible.builtin.file:
         path: "{{ item.path }}"
-        regexp: log_group.*$
-        replace: log_group = root
-      loop: "{{ prelim_auditd_conf_files.files }}"
-      loop_control:
-        label: "{{ item.path }}"
+        group: "{{ discovered_auditd_log_group.stdout | default( suse15cis_auditd_log_group ) }}"
+      loop: "{{ discovered_audit_log_files.files }}"
+
+- name: "Discover | AUDIT | Audit conf and rules files | list files"
+  when: suse15cis_rule_6_3_4_5 or suse15cis_rule_6_3_4_6 or suse15cis_rule_6_3_4_7
+  tags:
+    - level2-server
+    - level2-workstation
+    - audit
+    - auditd
+    - rule_6.3.4.5
+    - rule_6.3.4.6
+    - rule_6.3.4.7
+  ansible.builtin.find:
+    path: /etc/audit
+    file_type: file
+    recurse: true
+    patterns: "*.conf,*.rules"
+  register: discovered_auditd_conf_files
 
 - name: "6.3.4.5 | PATCH | Ensure audit configuration files mode is configured"
   when: suse15cis_rule_6_3_4_5
@@ -66,9 +132,9 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     mode: 'u-x,g-wx,o-rwx'
-  failed_when: discovered_audit_conf_file_list.state not in '[ file, absent ]'
-  register: discovered_audit_conf_file_list
-  loop: "{{ prelim_auditd_conf_files.files }}"
+  failed_when: discovered_audit_conf_file_mode.state not in '[ file, absent ]'
+  register: discovered_audit_conf_file_mode
+  loop: "{{ discovered_auditd_conf_files.files }}"
   loop_control:
     label: "{{ item.path }}"
 
@@ -83,9 +149,9 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     owner: root
-  failed_when: discovered_audit_conf_file_list.state not in '[ file, absent ]'
-  register: discovered_audit_conf_file_list
-  loop: "{{ prelim_auditd_conf_files.files | default([]) }}"
+  failed_when: discovered_audit_conf_file_owner.state not in '[ file, absent ]'
+  register: discovered_audit_conf_file_owner
+  loop: "{{ discovered_auditd_conf_files.files | default([]) }}"
   loop_control:
     label: "{{ item.path }}"
 
@@ -100,9 +166,9 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     group: root
-  failed_when: discovered_audit_conf_file_list.state not in '[ file, absent ]'
-  register: discovered_audit_conf_file_list
-  loop: "{{ prelim_auditd_conf_files.files | default([]) }}"
+  failed_when: discovered_audit_conf_file_group.state not in '[ file, absent ]'
+  register: discovered_audit_conf_file_group
+  loop: "{{ discovered_auditd_conf_files.files | default([]) }}"
   loop_control:
     label: "{{ item.path }}"
 

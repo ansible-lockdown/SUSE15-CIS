@@ -1,4 +1,4 @@
-# CIS Configurations
+{{ file_managed_by_ansible }}
 # 5.3.3.2.3 Ensure password complexity is configured
 {% if suse15cis_passwd_complex_option == 'minclass' %}  # pragma: allowlist secret
 minclass = {{ suse15cis_passwd_minclass_value }}

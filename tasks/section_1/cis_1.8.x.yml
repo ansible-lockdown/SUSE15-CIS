@@ -3,8 +3,8 @@
 - name: "1.8.1 | PATCH | Ensure GNOME Display Manager is removed"
   when:
     - suse15cis_rule_1_8_1
-    - "'gdm' in ansible_facts.packages"
-    - not suse15cis_gui
+    - suse15cis_gui
+    - not suse15cis_desktop_required
   tags:
     - level2-server
     - patch

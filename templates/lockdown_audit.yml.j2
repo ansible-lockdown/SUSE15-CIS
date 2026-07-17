@@ -1,6 +1,4 @@
-
-## This file is managed by Ansible, YOUR CHANGED WILL BE LOST!
-## metadata for benchmark
+{{ file_managed_by_ansible }}
 
 ## metadata for Audit benchmark
 benchmark_version: {{ benchmark_version }}
@@ -27,11 +25,6 @@ suse15cis_level_2: {{ suse15cis_level_2 }}
 # to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
 run_heavy_tests: true
 
-#  True is BIOS based system else set to false
-{% if suse15cis_legacy_boot is defined %}
-suse15cis_legacy_boot: {{ suse15cis_legacy_boot }}
-{% endif %}
-
 suse15cis_set_boot_pass: {{ suse15cis_set_boot_pass }}
 
 ##
@@ -55,7 +48,6 @@ suse15cis_rule_1_1_1_6: {{ suse15cis_rule_1_1_1_6 }}
 suse15cis_rule_1_1_1_7: {{ suse15cis_rule_1_1_1_7 }}
 suse15cis_rule_1_1_1_8: {{ suse15cis_rule_1_1_1_8 }}
 suse15cis_rule_1_1_1_9: {{ suse15cis_rule_1_1_1_9 }}
-suse15cis_rule_1_1_1_10: {{ suse15cis_rule_1_1_1_10 }}
 
 # 1.1.2 Configure Filesystem Partitions
 # /tmp
@@ -468,14 +460,19 @@ suse15cis_bootloader_password_hash: {{ suse15cis_bootloader_password_hash }}
 rhel9_aide_scan: cron
 
 # 1.8 Gnome Desktop
-## Desktop requirement toggle
-# This variable governs, whether CIS rules regarding GDM
-# and X-Windows are carried out.
+## Controls 1.8.x - Settings for GDM
+# To set whether this is required
+# If sett to true and finds gui installed below is will run CIS
+# if set to false it will remove the gdm package and disable the service
+# then skip al the controls in 1.8.x
 suse15cis_desktop_required: {{ suse15cis_desktop_required }}
 
-# Whether or not to run tasks related to auditing/patching the desktop environment
-suse15cis_gui: {{ suse15cis_gui }}
+## Graphical/Gnome interface installed
+suse15cis_gui: "{{ suse15cis_gui }}"
 
+# This variable specifies the GNOME configuration database file to which configurations are written.
+# (See https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en)
+# The default database is `local`.
 suse15cis_dconf_db_name: {{ suse15cis_dconf_db_name }}
 suse15cis_screensaver_idle_delay: {{ suse15cis_screensaver_idle_delay }}  # Set max value for idle-delay in seconds (between 1 and 900)
 suse15cis_screensaver_lock_delay: {{ suse15cis_screensaver_lock_delay }}  # Set max value for lock-delay in seconds (between 0 and 5)
@@ -619,7 +616,6 @@ suse15cis_sshd_client_alive_interval: "{{ suse15cis_sshd_client_alive_interval }
 suse15cis_sshd_client_alive_count_max: "{{ suse15cis_sshd_client_alive_count_max }}"
 
 ## 5.1.7 Note the following to understand precedence and layout
-suse15cis_sshd_limited: false
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
 # access for users whose user name matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
@@ -748,7 +744,7 @@ suse15cis_journald_runtimekeepfree: {{ suse15cis_journald_runtimekeepfree }}
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values is interpreted as seconds, unless suffixed with the units
+# The given values are interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
 # ATTENTION: Uncomment the keyword below when values are set!
@@ -762,7 +758,7 @@ suse15cis_remote_log_server: {{ suse15cis_remote_log_server }}
 # forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
 # destination server. For this value to be reflected in the configuration, the variable which enables the
 # automatic configuration of rsyslog forwarding must be enabled('suse15cis_remote_log_server: true').
-#suse15cis_remote_log_host: {{ suse15cis_remote_log_host }}
+suse15cis_remote_log_host: {{ suse15cis_remote_log_host }}
 
 ## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable configures the value of the 'port' parameter to be configured when enabling

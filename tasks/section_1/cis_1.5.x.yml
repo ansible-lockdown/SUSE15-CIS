@@ -49,9 +49,13 @@
         ignoreerrors: true
 
     - name: "1.5.2 | PATCH | Ensure core dumps are restricted | sysctl"
-      when: "'systemd-coredump' in ansible_facts.packages"
+      when: "'systemd-coredump' in ansible_facts['packages']"
       ansible.builtin.lineinfile:
         path: /etc/systemd/coredump.conf
+        create: true
+        owner: root
+        group: root
+        mode: 'go-wx'
         regexp: "(?i){{ item.regexp }}"
         line: "{{ item.line }}"
       loop:
@@ -59,7 +63,7 @@
         - {regexp: ProcessSizeMax, line: ProcessSizeMax=0}
       notify: Reload systemctl
 
-- name: "1.5.3 | PATCH | Ensure prelink is not installed"
+- name: "1.5.3 | PATCH | Ensure prelink is disabled"
   when: suse15cis_rule_1_5_3
   tags:
     - level1-server
@@ -72,7 +76,7 @@
     - prelink
   block:
     - name: "1.5.3 | PATCH | Ensure prelink is disabled | Reset binaries"
-      when: "'prelink' in ansible_facts.packages"
+      when: "'prelink' in ansible_facts['packages']"
       ansible.builtin.command: prelink -ua
       changed_when: true
 
