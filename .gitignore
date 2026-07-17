@@ -56,6 +56,8 @@ benchparse/
 *history.md
 *plan.md
 *qa_report*
+qa_report.md
+AL_QA_Report*
 
 # GitHub Action/Workflow files
 .github/
