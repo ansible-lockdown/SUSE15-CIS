@@ -8,7 +8,8 @@
   vars:
       ansible_user: "{{ lookup('env', 'USER') }}"
       current_role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
-      rhel9cis_rule_5_3_4: false
+      # Skip potentially disruptive tasks when running against a real local host
+      suse15cis_disruption_high: false
 
   pre_tasks:
   tasks:
