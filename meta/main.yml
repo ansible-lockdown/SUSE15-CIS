@@ -3,7 +3,7 @@
 galaxy_info:
   author: "Ansible-Lockdown Team"
   description: "Apply the SUSE 15 CIS"
-  company: "MindPoint Group - A Tyto Athene Company and SVA gmbh"
+  company: "MindPoint Group and SVA gmbh"
   license: MIT
   role_name: suse15_cis
   namespace: mindpointgroup
