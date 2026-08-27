@@ -42,8 +42,8 @@
     - audit
     - auditd
     - rule_6.3.4.2
-    - rule_6.3_4_3
-    - rule_6.3_4_4
+    - rule_6.3.4.3
+    - rule_6.3.4.4
   ansible.builtin.find:
     paths: "{{ discovered_auditd_logfile.stdout | dirname }}"
     patterns: "*.log"

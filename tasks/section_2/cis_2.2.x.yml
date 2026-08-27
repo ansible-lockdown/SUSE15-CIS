@@ -20,8 +20,8 @@
     - not suse15cis_ldap_clients_required
     - suse15cis_rule_2_2_2
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - ldap
     - rule_2.2.2

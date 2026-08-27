@@ -16,7 +16,7 @@
       failed_when: false
       register: discovered_logfiles
 
-    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured| change permissions SSSD min 660"
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions SSSD min 660"
       when:
         - discovered_logfiles.stdout_lines | length > 0
         - item is match("/var/log/(gdm|sssd)")

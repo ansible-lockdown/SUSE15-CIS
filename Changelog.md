@@ -2,6 +2,18 @@
 
 # Based on CIS v2.0.1
 
+# 2026 August - Alignment with CIS v2.0.1
+
+- Task titles resynced to the v2.0.1 benchmark (13 files): 1.1.1.8, 1.1.2.3.1,
+  1.1.2.4.1, 1.1.2.5.1, 1.1.2.6.1, 1.1.2.7.1, 1.6.2, 2.4.1.2-2.4.1.7, 5.1.1,
+  5.1.2, 5.1.3, 5.1.18, 5.4.2.4, 6.2.3.1.2, 6.2.3.7, 6.2.4.1
+- tasks/section_6/cis_6.3.4.x.yml: rule tags rule_6.3_4_3 and rule_6.3_4_4 used
+  underscores instead of dots, so the audit-log discovery task was not selected by
+  --tags rule_6.3.4.3 or rule_6.3.4.4 and the loop those controls depend on had no
+  files to act on
+- Level tags corrected against the v2.0.1 Profile Applicability on 8 controls:
+  1.8.8, 1.8.9, 2.2.2, 5.1.11, 5.3.2.1.3, 5.4.1.2, 6.2.2.2, 6.3.3.15
+
 # 2026 July — QA pass: goss, handler, lint fixes
 
 - handlers/main.yml: remount_tmp handler changed to import_tasks (was include_tasks)
