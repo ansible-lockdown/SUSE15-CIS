@@ -2,6 +2,60 @@
 
 # Based on CIS v2.0.1
 
+# 2026 August - QA pass fixes
+
+- tasks/remount_tmp.yml rewritten
+- defaults split into defaults/main/main.yml and defaults/main/audit.yml
+- CONTRIBUTING.rst replaced with the canonical CONTRIBUTING.md, README Contributing
+- README emoji stripped
+
+Defects found by the 2026-08-27 QA pass, several proven on a real openSUSE Leap 15.6 host.
+
+- 5.3.2.2.1: pam-config -a -cracklib used a single dash, which exits 1 and aborted the
+  playbook on any host where cracklib was not already configured
+- 7.1.13: find -perm \( -02000 or -04000 \) made find treat the paren as its mode
+  argument, so the SUID/SGID review returned nothing and passed vacuously on every host
+- 5.4.3.3: single-quoted '#\\1' is not a backreference, so every umask line in
+  /etc/profile.d/*.sh was overwritten with the literal text
+- 3.2.1: the dccp control wrote "blacklist cramfs"
+- 1.7.4: failed_when rejected state "file", so the control failed wherever /etc/motd exists
+- 1.2.1.1: stray quotes around the shell body made it exit 127, so the GPG key check
+  never ran
+- 4.1.1: the module hardcoded nftables while looping three services, so ufw and iptables
+  were never masked
+- 6.2.1.2: failed_when [0, 257] is unreachable above 255 and rejected the compliant case,
+  where a pipefail grep with no match exits 1
+- 6.2.1.3: targeted /etc/systemd/journal.conf, and read .rc from a lineinfile result
+- 6.3.1.1: a when-condition was sitting in the tags list
+- 1.2.1.2/1.2.1.3: the shared repo discovery task had no tags, so any tagged run skipped it
+  and both controls failed on an undefined variable
+- 5.3.2.2.1 stripped dictcheck unconditionally with no path to write it back; added the
+  missing not-pam-config template task and suse15cis_passwd_dictcheck_file
+- 7.2.6 referenced discovered_user_username_check; the register is discovered_username_check
+- 3.1.x/3.2.x: single-quoted (\\s|$) is a literal backslash-s, so the regexp never matched
+  the line it wrote and a duplicate was appended on every run
+- remount_tmp set a fact named after a handler, so the required reboot never happened
+- 1.4.1: the grub file carrying the password hash was world-readable
+- ansible_facts dot notation converted to bracket notation
+- Section 1.8 was gated on the Debian package name gdm3, so none of the GNOME Display
+  Manager controls ever ran on SLES; the section heading also read DNOME
+- 5.3.2.2.x: item != <var> compared a find result dict to a string in six controls, so
+  each one stripped its own setting; the 5.3.2.2.x comment block was a position out
+  against the benchmark
+- Stale section comments corrected and STIG galaxy tags removed from a CIS role
+
+# 2026 August - Alignment with CIS v2.0.1
+
+- Task titles resynced to the v2.0.1 benchmark (13 files): 1.1.1.8, 1.1.2.3.1,
+  1.1.2.4.1, 1.1.2.5.1, 1.1.2.6.1, 1.1.2.7.1, 1.6.2, 2.4.1.2-2.4.1.7, 5.1.1,
+  5.1.2, 5.1.3, 5.1.18, 5.4.2.4, 6.2.3.1.2, 6.2.3.7, 6.2.4.1
+- tasks/section_6/cis_6.3.4.x.yml: rule tags rule_6.3_4_3 and rule_6.3_4_4 used
+  underscores instead of dots, so the audit-log discovery task was not selected by
+  --tags rule_6.3.4.3 or rule_6.3.4.4 and the loop those controls depend on had no
+  files to act on
+- Level tags corrected against the v2.0.1 Profile Applicability on 8 controls:
+  1.8.8, 1.8.9, 2.2.2, 5.1.11, 5.3.2.1.3, 5.4.1.2, 6.2.2.2, 6.3.3.15
+
 # 2026 July — QA pass: goss, handler, lint fixes
 
 - handlers/main.yml: remount_tmp handler changed to import_tasks (was include_tasks)
@@ -21,6 +75,12 @@
 - removed var not used
 - linting
 - vars moved to subtask in block
+- molecule: force `fetch_audit_output: true` and `audit_output_destination` via `set_fact` in the
+  default `converge.yml` pre_tasks so the audit JSONs fetch to the controller `_temp_fetched_audits/`.
+  `vars/audit.yml` is loaded via `include_vars` (precedence 17) and otherwise clobbers those host_vars;
+  removed the now-dead host_vars from `molecule/default/molecule.yml` and updated the QuickStart.
+- defaults/main.yml: added `# pragma: allowlist secret` to `suse15cis_passwd_complex_option` and
+  `suse15cis_passwd_quality_enforce_root_value` to clear detect-secrets false positives
 
 # 2026 June — Molecule container testing
 
