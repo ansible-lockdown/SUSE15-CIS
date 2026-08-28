@@ -2,6 +2,60 @@
 
 # Based on CIS v2.0.1
 
+# 2026 August - QA pass fixes
+
+- tasks/remount_tmp.yml rewritten from the corrected Private-RHEL9-CIS version. The
+  handler was declared as import_tasks with listen: "Remount /tmp", and that listen does
+  not reach the imported tasks, so only the one task carrying its own listen fired - and
+  it skipped, because it gates on suse15cis_tmp_svc. The block that writes the fstab
+  options never ran. Proven on a real host: 1.1.2.1.4 reported changed on every converge
+  and /tmp never gained noexec. Every task now carries its own listen, and the reboot
+  condition uses .failed | default(false) rather than .failed is defined, which is always
+  true once failed_when: false is set
+
+- defaults split into defaults/main/main.yml and defaults/main/audit.yml, matching
+  RHEL8/9/10, Debian11/12/13, ubuntu22 and Ubuntu24. vars/audit.yml is removed and the
+  PRELIM include_vars task with it: the audit settings are role defaults now, so
+  inventory, host_vars and molecule can override them. Previously include_vars gave them
+  vars precedence and only --extra-vars could win
+- CONTRIBUTING.rst replaced with the canonical CONTRIBUTING.md, README Contributing
+  section added and README emoji stripped
+
+Defects found by the 2026-08-27 QA pass, several proven on a real openSUSE Leap 15.6 host.
+
+- 5.3.2.2.1: pam-config -a -cracklib used a single dash, which exits 1 and aborted the
+  playbook on any host where cracklib was not already configured
+- 7.1.13: find -perm \( -02000 or -04000 \) made find treat the paren as its mode
+  argument, so the SUID/SGID review returned nothing and passed vacuously on every host
+- 5.4.3.3: single-quoted '#\\1' is not a backreference, so every umask line in
+  /etc/profile.d/*.sh was overwritten with the literal text
+- 3.2.1: the dccp control wrote "blacklist cramfs"
+- 1.7.4: failed_when rejected state "file", so the control failed wherever /etc/motd exists
+- 1.2.1.1: stray quotes around the shell body made it exit 127, so the GPG key check
+  never ran
+- 4.1.1: the module hardcoded nftables while looping three services, so ufw and iptables
+  were never masked
+- 6.2.1.2: failed_when [0, 257] is unreachable above 255 and rejected the compliant case,
+  where a pipefail grep with no match exits 1
+- 6.2.1.3: targeted /etc/systemd/journal.conf, and read .rc from a lineinfile result
+- 6.3.1.1: a when-condition was sitting in the tags list
+- 1.2.1.2/1.2.1.3: the shared repo discovery task had no tags, so any tagged run skipped it
+  and both controls failed on an undefined variable
+- 5.3.2.2.1 stripped dictcheck unconditionally with no path to write it back; added the
+  missing not-pam-config template task and suse15cis_passwd_dictcheck_file
+- 7.2.6 referenced discovered_user_username_check; the register is discovered_username_check
+- 3.1.x/3.2.x: single-quoted (\\s|$) is a literal backslash-s, so the regexp never matched
+  the line it wrote and a duplicate was appended on every run
+- remount_tmp set a fact named after a handler, so the required reboot never happened
+- 1.4.1: the grub file carrying the password hash was world-readable
+- ansible_facts dot notation converted to bracket notation
+- Section 1.8 was gated on the Debian package name gdm3, so none of the GNOME Display
+  Manager controls ever ran on SLES; the section heading also read DNOME
+- 5.3.2.2.x: item != <var> compared a find result dict to a string in six controls, so
+  each one stripped its own setting; the 5.3.2.2.x comment block was a position out
+  against the benchmark
+- Stale section comments corrected and STIG galaxy tags removed from a CIS role
+
 # 2026 August - Alignment with CIS v2.0.1
 
 - Task titles resynced to the v2.0.1 benchmark (13 files): 1.1.1.8, 1.1.2.3.1,

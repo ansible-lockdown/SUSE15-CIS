@@ -64,9 +64,8 @@
       notify: Grub update
 
     - name: "1.3.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Replace apparmor settings when exists"
-      when:
-        - "'apparmor' in discovered_grub_cmdline_settings.stdout or
-          'security' in discovered_grub_cmdline_settings.stdout"
+      when: "'apparmor' in discovered_grub_cmdline_settings.stdout or
+        'security' in discovered_grub_cmdline_settings.stdout"
       ansible.builtin.replace:
         path: /etc/default/grub
         regexp: "{{ item.regexp }}"

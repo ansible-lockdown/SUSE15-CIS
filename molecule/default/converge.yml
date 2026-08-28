@@ -10,6 +10,11 @@
       system_is_container: true
 
   pre_tasks:
+      - name: "Molecule | Fetch the audit output to the controller"
+        ansible.builtin.set_fact:
+            fetch_audit_output: true
+            audit_output_destination: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/../../_temp_fetched_audits/"
+
   tasks:
       - name: "Include tasks"
         ansible.builtin.include_role:

@@ -1,7 +1,9 @@
 ---
 
 - name: "6.3.1.1 | PATCH | Ensure auditd packages are installed"
-  when: suse15cis_rule_6_3_1_1
+  when:
+    - suse15cis_rule_6_3_1_1
+    - "'audit' not in ansible_facts['packages']"
   tags:
     - level2-server
     - level2-workstation
@@ -12,7 +14,6 @@
     - NIST800-53R5_AU-3
     - NIST800-53R5_AU-12
     - NIST800-53R5_SI-5
-    - '"auditd" not in ansible_facts.packages'
   ansible.builtin.package:
     name: audit
     state: present

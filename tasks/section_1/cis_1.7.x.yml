@@ -85,8 +85,6 @@
     owner: root
     group: root
     mode: 'u-x,go-wx'
-  failed_when: discovered_etc_motd_exists.state not in [ 'change', 'absent' ]
-  register: discovered_etc_motd_exists
 
 - name: "1.7.5 | PATCH | Ensure access to /etc/issue is configured"
   when: suse15cis_rule_1_7_5

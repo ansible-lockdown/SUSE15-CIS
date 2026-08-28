@@ -5,9 +5,9 @@
   when: os_check
   tags: always
   ansible.builtin.assert:
-    that: (ansible_facts.os_family == 'Suse' and ansible_facts.distribution_version is version_compare('15.6', '>='))
-    fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts.os_family }} {{ ansible_facts.distribution_version }} is not supported."
-    success_msg: "This role is running against a supported OS {{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }}"
+    that: (ansible_facts['os_family'] == 'Suse' and ansible_facts['distribution_version'] is version_compare('15.6', '>='))
+    fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts['os_family'] }} {{ ansible_facts['distribution_version'] }} is not supported."
+    success_msg: "This role is running against a supported OS {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
 
 - name: Check ansible version
   tags: always
@@ -119,10 +119,10 @@
     msg: "This role will not be able to run single user password commands as suse15cis_bootloader_password_hash variable has not been set correctly"
 
 - name: "Include OS specific variables"
-  when: ansible_facts.distribution == "SLES"
+  when: ansible_facts['distribution'] == "SLES"
   tags: always
   ansible.builtin.include_vars:
-    file: "{{ ansible_facts.distribution }}.yml"
+    file: "{{ ansible_facts['distribution'] }}.yml"
 
 - name: "Include rules for checking and remediating controls"
   tags: always

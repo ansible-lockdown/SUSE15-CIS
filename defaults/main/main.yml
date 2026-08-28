@@ -47,7 +47,7 @@ suse15cis_uses_root: false
 
 # Connecting user, due to the way many users work differently this is to try and assist the use of connecting user if required
 # This is useful when part of kickstart build or running as root and not defining the ansible_user option
-# used @ rhel10 5.2.4
+# used @ 5.2.4
 suse15cis_default_user: root
 suse15cis_connecting_user: "{{ ansible_facts['env']['SUDO_USER'] | default(suse15cis_default_user) }}"
 suse15cis_playbook_user: "{{ ansible_user | default(suse15cis_connecting_user) }}"
@@ -58,8 +58,8 @@ os_check: true
 ## Allow sysctl to be updated
 suse15cis_sysctl_update: true
 
-# A location that can be used as as a temporary location to execute scripts
-# note the drive with need exec permissions used by 1.1.1.9
+# A location that can be used as a temporary location to execute scripts
+# note the drive will need exec permissions used by 1.1.1.9
 suse15cis_temp_exec_location: /var
 
 # Create managed not custom local_facts files
@@ -74,7 +74,7 @@ ansible_facts_path: /etc/ansible/facts.d
 ### Goss is required on the remote host ###
 ### vars/auditd.yml for other settings  ###
 
-# If the any of the following are set the variables used by them are loaded in vars/audit.yml these can be overridden by your
+# If the any of the following are set the variables used by them are loaded from defaults/main/audit.yml these can be overridden by your
 # preferred method of variable management (e.g., vault, group_vars, host_vars, inventory etc.)
 
 # Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
@@ -357,7 +357,7 @@ suse15cis_rule_5_3_2_1_1: true
 suse15cis_rule_5_3_2_1_2: true
 suse15cis_rule_5_3_2_1_3: true
 
-# 5.3.2.2 Configure pam_quality module
+# 5.3.2.2 Configure pam_pwquality module
 suse15cis_rule_5_3_2_2_1: true
 suse15cis_rule_5_3_2_2_2: true
 suse15cis_rule_5_3_2_2_3: true
@@ -397,7 +397,7 @@ suse15cis_rule_5_4_2_6: true
 suse15cis_rule_5_4_2_7: true
 suse15cis_rule_5_4_2_8: true
 
-# 5.4.2 Configure user default environment
+# 5.4.3 Configure user default environment
 suse15cis_rule_5_4_3_1: true
 suse15cis_rule_5_4_3_2: true
 suse15cis_rule_5_4_3_3: true
@@ -876,15 +876,15 @@ suse15cis_pam_faillock_unlock_time: 900
 suse15cis_pamroot_lock_option: even_deny_root
 
 # 5.3.2.2.x - pam_pwquality
-# 5.3.2.2.1 - password difok
+# 5.3.2.2.2 - password difok (number of changed characters)
 suse15cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pragma: allowlist secret
 suse15cis_passwd_difok_value: '2'
 
-# 5.3.2.2.2 - password minlength
+# 5.3.2.2.3 - password minlength
 suse15cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # pragma: allowlist secret
 suse15cis_passwd_minlen_value: '14'
 
-# 5.3.2.2.3 - password complex
+# 5.3.2.2.4 - password complexity
 suse15cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
 suse15cis_passwd_complex_option: 'minclass'  # Options: 'minclass' or 'credits'  # pragma: allowlist secret
 suse15cis_passwd_minclass_value: '4'
@@ -893,18 +893,19 @@ suse15cis_passwd_ucredit_value: '-2'
 suse15cis_passwd_ocredit_value: '0'
 suse15cis_passwd_lcredit_value: '-2'
 
-# 5.3.2.2.4 - password maxrepeat
+# 5.3.2.2.5 - password maxrepeat (same consecutive characters)
 suse15cis_passwd_maxrepeat_file: etc/security/pwquality.conf.d/50-pwrepeat.conf  # pragma: allowlist secret
 suse15cis_passwd_maxrepeat_value: '3'
 
-# 5.3.2.2.5 - password maxsequence
+# 5.3.2.2.6 - password maxsequence
 suse15cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence.conf  # pragma: allowlist secret
 suse15cis_passwd_maxsequence_value: '3'
 
-# 5.3.2.2.6 - password dictcheck
+# 5.3.2.2.1 - password dictcheck
+suse15cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
 suse15cis_passwd_dictcheck_value: '1'
 
-# 5.3.2.2.7 - password quality enforce for root included with 5.3.2.2.7
+# 5.3.2.2.7 - password quality enforced for the root user
 suse15cis_passwd_quality_enforce_for_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
 suse15cis_passwd_quality_enforce_root_value: 'enforce_for_root'  # pragma: allowlist secret
 
@@ -931,7 +932,7 @@ suse15cis_force_user_mindays: false
 # This variable specifies the minimum number of days allowed between changing passwords.
 # CIS requires a value of at least 1.
 suse15cis_pass_min_days: 1
-## Control 5.5.1.3
+## Control 5.4.1.3
 ##  Allow the forcing of number of days before warning users of password expiry
 # This can break current connecting user access
 suse15cis_force_user_warnage: false
@@ -950,12 +951,12 @@ suse15cis_futurepwchgdate_autofix: true
 # 5.4.2.6 root umask
 suse15cis_root_umask: '0027'  # 0027 or more restrictive
 
-## Control 5.4.2.7 - Ensure system accounts are secured | Set nologin
+## Control 5.4.2.7 - Ensure system accounts do not have a valid login shell
 # The system users on this list are allowed to have a shell (e.g. applications
 # that require a shell to function)
 suse15cis_system_users_shell: []
 
-## Control 5.4.4
+## Control 5.4.1.4
 # suse15cis_passwd_hash_algo is the hashing algorithm used - SHA512 default as yescrypt not available at release
 suse15cis_passwd_hash_algo: sha512 # pragma: allowlist secret
 

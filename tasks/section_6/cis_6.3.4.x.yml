@@ -50,7 +50,7 @@
     file_type: file
   register: discovered_audit_log_files
 
-- name: 6.3.4.2 | PATCH | Ensure audit log files mode is configured
+- name: "6.3.4.2 | PATCH | Ensure audit log files mode is configured"
   when: suse15cis_rule_6_3_4_2
   tags:
     - level2-server
@@ -64,7 +64,7 @@
     mode: 'o-x,g-wx,o-rwx'
   loop: "{{ discovered_audit_log_files.files }}"
 
-- name: 6.3.4.3 | PATCH | Ensure audit log files owner is configured"
+- name: "6.3.4.3 | PATCH | Ensure audit log files owner is configured"
   when: suse15cis_rule_6_3_4_3
   tags:
     - level2-server
@@ -78,7 +78,7 @@
     owner: root
   loop: "{{ discovered_audit_log_files.files }}"
 
-- name: 6.3.4.4 | PATCH | Ensure audit log files group owner is configured
+- name: "6.3.4.4 | PATCH | Ensure audit log files group owner is configured"
   when: suse15cis_rule_6_3_4_4
   tags:
     - level2-server
@@ -88,7 +88,7 @@
     - rule_6.3.4.4
     - NIST800-53R5_AU-3
   block:
-    - name: 6.3.4.4 | AUDIT | Ensure audit log files group owner is configured
+    - name: "6.3.4.4 | AUDIT | Ensure audit log files group owner is configured"
       ansible.builtin.shell: |
         set -o pipefail
         grep ^log_group /etc/audit/auditd.conf | awk '{ print $NF }'
@@ -98,10 +98,10 @@
         executable: "{{ suse15cis_shell_executable }}"
       register: discovered_auditd_log_group
 
-    - name: 6.3.4.4 | PATCH | Ensure audit log files group owner is configured
+    - name: "6.3.4.4 | PATCH | Ensure audit log files group owner is configured"
       ansible.builtin.file:
         path: "{{ item.path }}"
-        group: "{{ discovered_auditd_log_group.stdout | default( suse15cis_auditd_log_group ) }}"
+        group: "{{ discovered_auditd_log_group.stdout | default(suse15cis_auditd_log_group) }}"
       loop: "{{ discovered_audit_log_files.files }}"
 
 - name: "Discover | AUDIT | Audit conf and rules files | list files"
