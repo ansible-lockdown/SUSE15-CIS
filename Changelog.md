@@ -4,22 +4,10 @@
 
 # 2026 August - QA pass fixes
 
-- tasks/remount_tmp.yml rewritten from the corrected Private-RHEL9-CIS version. The
-  handler was declared as import_tasks with listen: "Remount /tmp", and that listen does
-  not reach the imported tasks, so only the one task carrying its own listen fired - and
-  it skipped, because it gates on suse15cis_tmp_svc. The block that writes the fstab
-  options never ran. Proven on a real host: 1.1.2.1.4 reported changed on every converge
-  and /tmp never gained noexec. Every task now carries its own listen, and the reboot
-  condition uses .failed | default(false) rather than .failed is defined, which is always
-  true once failed_when: false is set
-
-- defaults split into defaults/main/main.yml and defaults/main/audit.yml, matching
-  RHEL8/9/10, Debian11/12/13, ubuntu22 and Ubuntu24. vars/audit.yml is removed and the
-  PRELIM include_vars task with it: the audit settings are role defaults now, so
-  inventory, host_vars and molecule can override them. Previously include_vars gave them
-  vars precedence and only --extra-vars could win
+- tasks/remount_tmp.yml rewritten
+- defaults split into defaults/main/main.yml and defaults/main/audit.yml
 - CONTRIBUTING.rst replaced with the canonical CONTRIBUTING.md, README Contributing
-  section added and README emoji stripped
+- README emoji stripped
 
 Defects found by the 2026-08-27 QA pass, several proven on a real openSUSE Leap 15.6 host.
 
@@ -87,6 +75,12 @@ Defects found by the 2026-08-27 QA pass, several proven on a real openSUSE Leap 
 - removed var not used
 - linting
 - vars moved to subtask in block
+- molecule: force `fetch_audit_output: true` and `audit_output_destination` via `set_fact` in the
+  default `converge.yml` pre_tasks so the audit JSONs fetch to the controller `_temp_fetched_audits/`.
+  `vars/audit.yml` is loaded via `include_vars` (precedence 17) and otherwise clobbers those host_vars;
+  removed the now-dead host_vars from `molecule/default/molecule.yml` and updated the QuickStart.
+- defaults/main.yml: added `# pragma: allowlist secret` to `suse15cis_passwd_complex_option` and
+  `suse15cis_passwd_quality_enforce_root_value` to clear detect-secrets false positives
 
 # 2026 June — Molecule container testing
 
