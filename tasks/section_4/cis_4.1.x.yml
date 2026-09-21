@@ -12,7 +12,7 @@
     - nftables
     - rule_4.1.1
   ansible.builtin.systemd:
-    name: nftables
+    name: "{{ item }}"
     masked: true
   loop:
     - nftables

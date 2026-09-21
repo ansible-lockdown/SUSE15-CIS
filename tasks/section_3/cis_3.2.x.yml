@@ -14,7 +14,7 @@
     - name: "3.2.1 | PATCH | Ensure dccp kernel module is not available | modprobe"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/dccp.conf
-        regexp: '^(#)?install dccp(\\s|$)'
+        regexp: "^(#)?install dccp(\\s|$)"
         line: install dccp /bin/true
         create: true
         owner: root
@@ -24,8 +24,8 @@
     - name: "3.2.1 | PATCH | Ensure dccp kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
-        regexp: "^(#)?blacklist cramfs(\\s|$)"
-        line: "blacklist cramfs"
+        regexp: "^(#)?blacklist dccp(\\s|$)"
+        line: "blacklist dccp"
         create: true
         mode: 'go-wx'
 
@@ -43,7 +43,7 @@
     - name: "3.2.2 | PATCH | Ensure tipc kernel module is not available | modprobe"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/tipc.conf
-        regexp: '^(#)?install tipc(\\s|$)'
+        regexp: "^(#)?install tipc(\\s|$)"
         line: install tipc /bin/true
         create: true
         owner: root
@@ -72,7 +72,7 @@
     - name: "3.2.3 | PATCH | Ensure rds kernel module is not available | modprobe"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/rds.conf
-        regexp: '^(#)?install rds(\\s|$)'
+        regexp: "^(#)?install rds(\\s|$)"
         line: install rds /bin/true
         create: true
         owner: root
@@ -101,7 +101,7 @@
     - name: "3.2.4 | PATCH | Ensure sctp kernel module is not available | modprobe"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/sctp.conf
-        regexp: '^(#)?install sctp(\\s|$)'
+        regexp: "^(#)?install sctp(\\s|$)"
         line: install sctp /bin/true
         create: true
         owner: root

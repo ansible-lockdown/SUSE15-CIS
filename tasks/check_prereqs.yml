@@ -1,12 +1,25 @@
 ---
 
+- name: "PREREQ | Update package repositories cache"
+  tags: always
+  ansible.builtin.command: zypper refresh
+  changed_when: false
+  check_mode: false
+  environment:
+    ZYPP_LOCK_TIMEOUT: "{{ suse15_zypp_timeout_value }}"
+
 - name: "PREREQ | PATCH | If required install libselinux package to manage file changes."
+  tags: always
   ansible.builtin.package:
     name: python3-selinux
     state: present
+  environment:
+    ZYPP_LOCK_TIMEOUT: "{{ suse15_zypp_timeout_value }}"
 
 - name: "PREREQ | PATCH | Ensure python3-rpm package is available"
   tags: always
   ansible.builtin.package:
     name: python3-rpm
     state: present
+  environment:
+    ZYPP_LOCK_TIMEOUT: "{{ suse15_zypp_timeout_value }}"

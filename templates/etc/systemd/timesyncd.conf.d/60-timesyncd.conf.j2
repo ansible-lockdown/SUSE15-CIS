@@ -1,7 +1,7 @@
 {{ file_managed_by_ansible }}
 
 [Time]
-NTP={{ suse15cis_time_pool_name}}
+NTP={{ suse15cis_time_pool_name }}
 
 
 FallbackNTP={% for servers in suse15cis_time_servers %}{{ servers.name }} {% endfor %}
