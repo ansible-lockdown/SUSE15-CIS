@@ -17,6 +17,7 @@
 - zypp cache moved from tasks/prelim to pre_checks.yml
 - 4.2.x.yml remved always tag not needed
 - add suse15_zypp_timeout_value to enable override set to 60
+- update vars with company_title: 'MindPoint Group - A Quantum Sky Company'
 
 # 2026 August - QA pass fixes
 
