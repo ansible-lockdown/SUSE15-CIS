@@ -88,20 +88,17 @@
     - rule_6.3.4.4
     - NIST800-53R5_AU-3
   block:
-    - name: "6.3.4.4 | AUDIT | Ensure audit log files group owner is configured"
-      ansible.builtin.shell: |
-        set -o pipefail
-        grep ^log_group /etc/audit/auditd.conf | awk '{ print $NF }'
-      changed_when: false
-      check_mode: false
-      args:
-        executable: "{{ suse15cis_shell_executable }}"
-      register: discovered_auditd_log_group
+    - name: "6.3.4.4 | PATCH | Ensure audit log files group owner is configured | set log_group in auditd.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/audit/auditd.conf
+        regexp: '^log_group'
+        line: "log_group = {{ suse15cis_auditd_log_group }}"
+      notify: Restart auditd
 
-    - name: "6.3.4.4 | PATCH | Ensure audit log files group owner is configured"
+    - name: "6.3.4.4 | PATCH | Ensure audit log files group owner is configured | set group on log files"
       ansible.builtin.file:
         path: "{{ item.path }}"
-        group: "{{ discovered_auditd_log_group.stdout | default(suse15cis_auditd_log_group) }}"
+        group: "{{ suse15cis_auditd_log_group }}"
       loop: "{{ discovered_audit_log_files.files }}"
 
 - name: "Discover | AUDIT | Audit conf and rules files | list files"

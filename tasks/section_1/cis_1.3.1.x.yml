@@ -23,56 +23,24 @@
     - NIST800-53R5_AC-3
     - apparmor
   block:
-    - name: "1.3.1.2 | AUDIT | Ensure AppArmor is enabled in the bootloader configuration | Get current settings"
-      ansible.builtin.shell: |
-        set -o pipefail
-        grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
-      changed_when: false
-      failed_when: false
-      check_mode: false
-      args:
-        executable: "{{ suse15cis_shell_executable }}"
-      register: discovered_grub_cmdline_settings
-
-    - name: "1.3.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
-      when: discovered_grub_cmdline_settings.stdout is not search('apparmor=')
-      ansible.builtin.lineinfile:
-        path: /etc/default/grub
-        regexp: ^(GRUB_CMDLINE_LINUX=")(|apparmor=\d\s|security=.*\b)(||security=.*\bapparmor=\d\s)(.*\w+")
-        line: \1apparmor=1 security=apparmor\4
-        backrefs: true
-      notify: Grub update
-
-    - name: "1.3.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set security settings if none exist"
-      when: discovered_grub_cmdline_settings.stdout is not search('security=')
-      ansible.builtin.lineinfile:
-        path: /etc/default/grub
-        regexp: ^(GRUB_CMDLINE_LINUX=")(|security=\w+\s)(.*\w+")
-        line: \1security=apparmor \3
-        backrefs: true
-      notify: Grub update
-
-    - name: "1.3.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
-      when:
-        - "'apparmor' not in discovered_grub_cmdline_settings.stdout"
-        - "'security' not in discovered_grub_cmdline_settings.stdout"
-      ansible.builtin.lineinfile:
-        path: /etc/default/grub
-        regexp: '^GRUB_CMDLINE_LINUX='
-        line: 'GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor {{ discovered_grub_cmdline_settings.stdout }}"'
-        insertafter: '^GRUB_'
-      notify: Grub update
-
-    - name: "1.3.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Replace apparmor settings when exists"
-      when: "'apparmor' in discovered_grub_cmdline_settings.stdout or
-        'security' in discovered_grub_cmdline_settings.stdout"
+    - name: "1.3.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Update existing settings"
       ansible.builtin.replace:
         path: /etc/default/grub
-        regexp: "{{ item.regexp }}"
-        replace: "{{ item.replace }}"
-      with_items:
-        - { regexp: 'apparmor=\w+', replace: 'apparmor=1' }
-        - { regexp: 'security=\w+', replace: 'security=apparmor' }
+        regexp: '^(GRUB_CMDLINE_LINUX="(?:[^"\n]*[ \t])?{{ item.name }}=)(?!{{ item.value }}[ \t"])[^ \t"\n]*'
+        replace: '\g<1>{{ item.value }}'
+      loop:
+        - { name: apparmor, value: '1' }
+        - { name: security, value: apparmor }
+      notify: Grub update
+
+    - name: "1.3.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Add missing settings"
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: '^(GRUB_CMDLINE_LINUX="(?!(?:[^"\n]*[ \t])?{{ item.name }}=)[^"\n]*?)[ \t]*"'
+        replace: '\g<1> {{ item.name }}={{ item.value }}"'
+      loop:
+        - { name: apparmor, value: '1' }
+        - { name: security, value: apparmor }
       notify: Grub update
 
 # Controls 1.3.1.4 and 1.3.1.3 target the same setting and thus should not be run together.

@@ -2,6 +2,22 @@
 
 # Based on CIS v2.0.1
 
+## September 2026
+
+- 5.2.4 sudoers_exclude_nopasswd_list passed to the audit
+- 2.3.1.1 masking task moved from service to systemd module
+- container discovery guarded against undefined virtualization_type
+- gitleaks pre-commit rev v8.30.1 -> v8.30.0
+- 1.2.1.3 repo_gpgcheck set under [main] in zypp.conf via ini_file
+- 1.2.1.1 openSUSE os_gpg_key_pubkey_name now a list
+- 6.3.4.4 writes log_group to auditd.conf and applies suse15cis_auditd_log_group to the log files
+- 6.3.4.4 dead discovery task removed; the variable was previously unreachable
+- 1.3.1.2, 6.3.1.2, 6.3.1.3 GRUB_CMDLINE_LINUX edited in place; duplicate lines no longer corrupt /etc/default/grub
+- 1.2.1.1 gpg keys tidy up and logic
+- zypp cache moved from tasks/prelim to pre_checks.yml
+- 4.2.x.yml remved always tag not needed
+- add suse15_zypp_timeout_value to enable override set to 60
+
 # 2026 August - QA pass fixes
 
 - tasks/remount_tmp.yml rewritten

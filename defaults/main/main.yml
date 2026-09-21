@@ -597,6 +597,10 @@ suse15cis_ipv4_required: true
 # This variable governs whether ipv6 is enabled or disabled.
 suse15cis_ipv6_required: false
 
+##  Suse can oftem fail espcially on ec2 instances due to zypp timeout issues
+# Allow override value
+suse15_zypp_timeout_value: 60
+
 ##
 ## Section 1 Control Variables
 ##
