@@ -548,7 +548,7 @@
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: "{{ tftp_installed | ternary(false, omit) }}"
-        state: "{{ ('tftp-server'in ansible_facts['packages']) | ternary('stopped', omit) }}"
+        state: "{{ ('tftp-server' in ansible_facts['packages']) | ternary('stopped', omit) }}"
         masked: true
       loop: "{{ tftp_services }}"
       vars:

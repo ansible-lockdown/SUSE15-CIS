@@ -35,7 +35,7 @@
       ansible.builtin.set_fact:
         current_crypto_policy: "{{ discovered_system_wide_crypto_policy.stdout.split(':')[0] }}"
 
-    - name: "1.6.2 | AUDIT | Ensure system wide crypto policy is not set to legacy| set fact system policy submodule"
+    - name: "1.6.2 | AUDIT | Ensure system wide crypto policy is not set to legacy | set fact system policy submodule"
       when: "':' in discovered_system_wide_crypto_policy.stdout"
       ansible.builtin.set_fact:
         current_crypto_module: "{{ discovered_system_wide_crypto_policy.stdout.split(':')[1] }}"

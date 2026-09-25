@@ -72,9 +72,9 @@
   ansible.builtin.import_tasks:
     file: cis_1.7.x.yml
 
-- name: "SECTION | 1.8 | Configure DNOME Display Manager"
+- name: "SECTION | 1.8 | Configure GNOME Display Manager"
   when:
-    - "'gdm3' in ansible_facts.packages"
+    - "'gdm' in ansible_facts['packages']"
     - not system_is_container
   ansible.builtin.import_tasks:
     file: cis_1.8.x.yml

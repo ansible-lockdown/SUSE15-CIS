@@ -3,21 +3,10 @@
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 
-- name: "PRELIM | Update package repositories cache"
-  tags: always
-  ansible.builtin.command: zypper refresh
-  changed_when: false
-  check_mode: false
-
 - name: "PRELIM | Gather the package facts"
   tags: always
   ansible.builtin.package_facts:
     manager: auto
-
-- name: "PRELIM | Include audit specific variables"
-  when: run_audit or audit_only
-  tags: always
-  ansible.builtin.include_vars: audit.yml
 
 - name: "PRELIM | Include pre-remediation audit tasks"
   when: run_audit or audit_only
@@ -101,11 +90,13 @@
   ansible.builtin.package:
     name: cron
     state: present
+  environment:
+    ZYPP_LOCK_TIMEOUT: "{{ suse15_zypp_timeout_value }}"
 
 - name: "PRELIM | PATCH | Set sshd config file"
   when:
     - suse15cis_sshd_config_file != '/etc/ssh/sshd_config'
-    - "'openssh-server' in ansible_facts.packages"
+    - "'openssh-server' in ansible_facts['packages']"
   tags: always
   ansible.builtin.file:
     path: "{{ suse15cis_sshd_config_file }}"

@@ -44,7 +44,8 @@ warn_control_list: ""
 warn_count: 0
 
 # Note is using SLES these values differ and will load the SLES variables file
-os_gpg_key_pubkey_name: gpg-pubkey-39db7c82-5f68629b
+os_gpg_key_pubkey_name:
+  - gpg-pubkey-39db7c82-5f68629b
 os_gpg_key_pubkey_content: "SuSE Package Signing Key <build@suse.de> 39db7c82"
 
 # Default settings for apparmor to allow override
@@ -173,7 +174,7 @@ auditd_binaries:
   - /usr/sbin/auditd
   - /usr/sbin/augenrules
 
-company_title: 'MindPoint Group - A Tyto Athene Company'
+company_title: 'MindPoint Group - A Quantum Sky Company'
 
 file_managed_by_ansible: |-
   # File managed by ansible as part of {{ benchmark }} benchmark

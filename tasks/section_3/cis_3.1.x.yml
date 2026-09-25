@@ -57,8 +57,8 @@
         - name: 3.1.2 | PATCH | Ensure wireless interfaces are not available | Create modprobe.d file
           ansible.builtin.lineinfile:
             path: /etc/modprobe.d/{{ item }}.conf
-            regexp: '^(#)?install true(\\s|$)'
-            line: install {{ item }} true
+            regexp: "^(#)?install {{ item }} /bin/true(\\s|$)"
+            line: "install {{ item }} /bin/true"
             create: true
             mode: 'go-wx'
           loop: "{{ discovered_wireless_modules.stdout_lines }}"
