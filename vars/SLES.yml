@@ -3,5 +3,8 @@
 
 # SLES specific Variables
 
-os_gpg_key_pubkey_name: gpg-pubkey-6f5da62b-6218cecb
-os_gpg_key_pubkey_content: "SuSE Package Signing Key <build@suse.de> 39db7c82"
+os_gpg_key_pubkey_name:
+  - gpg-pubkey-6f5da62b-6218cecb
+  - gpg-pubkey-09d9ea69-67c857f3
+  - gpg-pubkey-09d9ea69-68595a8c
+os_gpg_key_pubkey_content: "(SUSE|ALP)( [0-9][0-9]|) Package Signing Key <(build|alp).*@suse.de> (6f5da62b|09d9ea69)"

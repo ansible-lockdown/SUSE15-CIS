@@ -234,7 +234,7 @@
     - udf
     - NIST800-53R5_CM-7
   block:
-    - name: "1.1.1.8 | PATCH | Ensure mounting of udf filesystems is disabled | Edit modprobe config"
+    - name: "1.1.1.8 | PATCH | Ensure udf kernel module is not available | Edit modprobe config"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/CIS.conf
         regexp: "^(#)?install udf(\\s|$)"
@@ -250,7 +250,7 @@
         create: true
         mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.8 | PATCH | Ensure mounting of udf filesystems is disabled | Disable udf"
+    - name: "1.1.1.8 | PATCH | Ensure udf kernel module is not available | Disable udf"
       when: not system_is_container
       community.general.modprobe:
         name: udf

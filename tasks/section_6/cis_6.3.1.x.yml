@@ -1,7 +1,9 @@
 ---
 
 - name: "6.3.1.1 | PATCH | Ensure auditd packages are installed"
-  when: suse15cis_rule_6_3_1_1
+  when:
+    - suse15cis_rule_6_3_1_1
+    - "'audit' not in ansible_facts['packages']"
   tags:
     - level2-server
     - level2-workstation
@@ -12,7 +14,6 @@
     - NIST800-53R5_AU-3
     - NIST800-53R5_AU-12
     - NIST800-53R5_SI-5
-    - '"auditd" not in ansible_facts.packages'
   ansible.builtin.package:
     name: audit
     state: present
@@ -29,33 +30,18 @@
     - grub
     - rule_6.3.1.2
   block:
-    - name: "6.3.1.2 | AUDIT | Ensure auditing for processes that start prior to auditd is enabled | Get GRUB_CMDLINE_LINUX"
-      ansible.builtin.shell: |
-        set -o pipefail
-        grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
-      changed_when: false
-      failed_when: false
-      check_mode: false
-      args:
-        executable: "{{ suse15cis_shell_executable }}"
-      register: discovered_grub_auditd_cmdline_settings
-
-    - name: "6.3.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Add setting if doesn't exist"
-      when: "'audit=' not in discovered_grub_auditd_cmdline_settings.stdout"
-      ansible.builtin.lineinfile:
+    - name: "6.3.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Update setting if exists"
+      ansible.builtin.replace:
         path: /etc/default/grub
-        regexp: '^GRUB_CMDLINE_LINUX='
-        line: 'GRUB_CMDLINE_LINUX="{{ discovered_grub_auditd_cmdline_settings.stdout }} audit=1"'
+        regexp: '^(GRUB_CMDLINE_LINUX="(?:[^"\n]*[ \t])?audit=)(?!1[ \t"])[^ \t"\n]*'
+        replace: '\g<1>1'
       notify: Grub update
 
-    - name: "6.3.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Update setting if exists"
-      when: "'audit=' in discovered_grub_auditd_cmdline_settings.stdout"
+    - name: "6.3.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Add setting if doesn't exist"
       ansible.builtin.replace:
-        dest: /etc/default/grub
-        regexp: 'audit=([0-9]+)'
-        replace: 'audit=1'
-        after: '^GRUB_CMDLINE_LINUX="'
-        before: '"'
+        path: /etc/default/grub
+        regexp: '^(GRUB_CMDLINE_LINUX="(?!(?:[^"\n]*[ \t])?audit=)[^"\n]*?)[ \t]*"'
+        replace: '\g<1> audit=1"'
       notify: Grub update
 
 - name: "6.3.1.3 | PATCH | Ensure audit_backlog_limit is sufficient"
@@ -73,32 +59,18 @@
     - NIST800-53R5_AU-12
     - NIST800-53R5_SI-5
   block:
-    - name: "6.3.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Get current GRUB_CMDLINE_LINUX"
-      ansible.builtin.shell: |
-        set -o pipefail
-        grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
-      changed_when: false
-      failed_when: false
-      check_mode: false
-      args:
-        executable: "{{ suse15cis_shell_executable }}"
-      register: discovered_audit_backlog_grub_cmdline_settings
-
-    - name: "6.3.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Add setting if doesn't exist"
-      when: "'audit_backlog_limit=' not in discovered_audit_backlog_grub_cmdline_settings.stdout"
-      ansible.builtin.lineinfile:
-        path: /etc/default/grub
-        regexp: '^GRUB_CMDLINE_LINUX='
-        line: 'GRUB_CMDLINE_LINUX="{{ discovered_audit_backlog_grub_cmdline_settings.stdout }} audit_backlog_limit={{ suse15cis_audit_back_log_limit }}"'
-      notify: Grub update
-
     - name: "6.3.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Update setting if exists"
       ansible.builtin.replace:
-        dest: /etc/default/grub
-        regexp: 'audit_backlog_limit=([0-9]+)'
-        replace: 'audit_backlog_limit={{ suse15cis_audit_back_log_limit }}'
-        after: '^GRUB_CMDLINE_LINUX="'
-        before: '"'
+        path: /etc/default/grub
+        regexp: '^(GRUB_CMDLINE_LINUX="(?:[^"\n]*[ \t])?audit_backlog_limit=)(?!{{ suse15cis_audit_back_log_limit }}[ \t"])[^ \t"\n]*'
+        replace: '\g<1>{{ suse15cis_audit_back_log_limit }}'
+      notify: Grub update
+
+    - name: "6.3.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Add setting if doesn't exist"
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: '^(GRUB_CMDLINE_LINUX="(?!(?:[^"\n]*[ \t])?audit_backlog_limit=)[^"\n]*?)[ \t]*"'
+        replace: '\g<1> audit_backlog_limit={{ suse15cis_audit_back_log_limit }}"'
       notify: Grub update
 
 - name: "6.3.1.4 | PATCH | Ensure auditd service is enabled and active"

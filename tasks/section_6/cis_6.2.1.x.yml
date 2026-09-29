@@ -27,7 +27,7 @@
         set -o pipefail
         grep -P '^(f|z|Z)(?:\+!?|!)?\s+\S+\s+~?[0-7]?[0-7]?[0-7]?(?:[1-7])\s' /usr/lib/tmpfiles.d/systemd.conf | wc -l
       changed_when: false
-      failed_when: discovered_file_perm_count.rc not in [ 0, 257 ]
+      failed_when: discovered_file_perm_count.rc not in [ 0, 1 ]
       args:
         executable: "{{ suse15cis_shell_executable }}"
       register: discovered_file_perm_count
@@ -43,7 +43,7 @@
         set -o pipefail
         grep -P '^(f|z|Z)(?:\+!?|!)?\s+\S+\s+~?[0-7]?[0-7]?[0-7]?(?:[1-7])\s' /etc/tmpfiles.d/systemd.conf | wc -l
       changed_when: false
-      failed_when: discovered_override_file_perm_count.rc not in [ 0, 257 ]
+      failed_when: discovered_override_file_perm_count.rc not in [ 0, 1 ]
       args:
         executable: "{{ suse15cis_shell_executable }}"
       register: discovered_override_file_perm_count
@@ -61,7 +61,7 @@
         msg: "Warning!! - tmpfiles override found in /etc/tmpfiles.d/systemd.conf affecting journald files please confirm matches site policy"
 
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Warning if override found"
-      when: (discovered_file_perm_count.stdout | int) > 0 or ( discovered_tmpfile_override.stat.exists and discovered_file_perm_count.stdout | int > 0)
+      when: (discovered_file_perm_count.stdout | int) > 0 or ( discovered_tmpfile_override.stat.exists and discovered_override_file_perm_count.stdout | int > 0)
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:
@@ -87,7 +87,7 @@
 
     - name: "6.2.1.3 | PATCH | Ensure journald log file rotation is configured | comment out current entries"
       ansible.builtin.lineinfile:
-        path: /etc/systemd/journal.conf
+        path: /etc/systemd/journald.conf
         regexp: "{{ item }}"
         line: "#\\1"
         backrefs: true

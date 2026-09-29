@@ -205,6 +205,7 @@
   when: suse15cis_rule_6_3_3_15
   tags:
     - level2-server
+    - level2-workstation
     - level2- workstation
     - patch
     - auditd

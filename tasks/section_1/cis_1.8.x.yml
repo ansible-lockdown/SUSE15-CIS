@@ -205,7 +205,7 @@
     - suse15cis_gui
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - gui
     - rule_1.8.8
@@ -234,7 +234,7 @@
     - suse15cis_gui
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - gui
     - rule_1.8.9

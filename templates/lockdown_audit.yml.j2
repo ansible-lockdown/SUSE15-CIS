@@ -5,7 +5,7 @@ benchmark_version: {{ benchmark_version }}
 
 # Set if genuine RHEL (subscription manager check) not for derivatives e.g. CentOS
 # If run via script this is discovered and set
-host_os_distribution: {{ ansible_facts.distribution | lower }}
+host_os_distribution: {{ ansible_facts['distribution'] | lower }}
 
 #  timeout for each command to run where set - default = 10seconds/10000ms
 timeout_ms: {{ audit_cmd_timeout }}
@@ -468,7 +468,7 @@ rhel9_aide_scan: cron
 suse15cis_desktop_required: {{ suse15cis_desktop_required }}
 
 ## Graphical/Gnome interface installed
-suse15cis_gui: "{{ suse15cis_gui }}"
+suse15cis_gui: {{ suse15cis_gui }}
 
 # This variable specifies the GNOME configuration database file to which configurations are written.
 # (See https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en)
@@ -642,6 +642,12 @@ suse15cis_sshd_deny_users: {{ suse15cis_sshd_deny_users }}
 # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
 # For more info, see https://linux.die.net/man/5/sshd_config
 suse15cis_sshd_deny_groups: {{ suse15cis_sshd_deny_groups }}
+
+# 5.2.4 users whose NOPASSWD sudo rules the role leaves in place
+suse15cis_sudoers_exclude_nopasswd_list:
+{% for name in suse15cis_sudoers_exclude_nopasswd_list %}
+- {{ name }}
+{% endfor %}
 
 # 5.2.7
 suse15cis_sugroup: {{ suse15cis_sugroup }}
